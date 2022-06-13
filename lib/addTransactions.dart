@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:moneymanager/controllers/db_helper.dart';
 import 'static.dart' as customcolor;
 
 class AddTransactions extends StatefulWidget {
@@ -205,7 +206,12 @@ class _AddTransactionsState extends State<AddTransactions> {
             height: 50,
             child: ElevatedButton(
               onPressed: () {
-                print({amount.toString(), note, type,selectedDate.toString()});
+                if (amount != null && note.isNotEmpty) {
+                  Dbhelper dbhelper = Dbhelper();
+                  dbhelper.addData(amount!, selectedDate, note, type);
+                } else {
+                  print('All fields are required');
+                }
               },
               child: Text('Add'),
             ))
