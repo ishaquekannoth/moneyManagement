@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'static.dart' as customcolor;
@@ -78,30 +79,55 @@ class _HomePageState extends State<HomePage> {
                 ),
 
                 Container(
+                  color: Colors.red,
                   width: MediaQuery.of(context).size.width*0.9,
-                  margin: EdgeInsets.all(12.0),
+                  margin: EdgeInsets.all(20.0),
                   child: Container(
+                    
                     decoration: BoxDecoration(
-                      
+                      gradient: LinearGradient(colors: [
+                        customcolor.PrimaryColor,
+                        Colors.blueAccent
+                      ])
+                    ,
+                    borderRadius: BorderRadius.all(Radius.circular(25)     )
                     ),
                     
+                    padding: EdgeInsets.symmetric(vertical: 30,),
                     child: Column(
                       children: [
                        Text('Total Balance',
                        textAlign: TextAlign.center,
                        style: TextStyle(
                         fontSize: 22,
-                        fontWeight:FontWeight.w700
+                        fontWeight:FontWeight.w700,
+                        color: Colors.white
                        ),       
                        ),
-                       
-
+                       Text('Rs 34000',
+                       textAlign: TextAlign.center,
+                       style: TextStyle(
+                        fontSize: 26,
+                        fontWeight:FontWeight.w700,
+                        color: Colors.white
+                       ),       
+                       ),
+                      Padding(padding: EdgeInsets.all(8.0),
+                      child:Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          cardIncome('1200'),
+                          cardExpense('500')
+                        ],
+                      ),
+                      ),
+                    
                       ],
-                    ),      
+                    ),   
+
                   ),
+                  
                 )
-
-
 
 
               ]));
@@ -113,4 +139,62 @@ class _HomePageState extends State<HomePage> {
           }),
     ));
   }
+  Widget cardIncome(String value){
+
+    return(
+      Row(children: [
+        Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
+          color: Colors.white),
+          child: Icon(Icons.arrow_downward,
+          color: Colors.green,
+          ),
+          margin: EdgeInsets.only(right: 10),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Income',
+            style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),
+    
+            ),
+             Text(value,  style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),
+    ),
+          ],
+        )
+      ],)
+    );
+  }
+Widget cardExpense(String value){
+
+    return(
+      Row(children: [
+        Container(
+          padding: EdgeInsets.all(15),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
+          color: Colors.white),
+          child: Icon(Icons.arrow_upward,
+          color: Color.fromARGB(255, 216, 11, 11),
+          ),
+          margin: EdgeInsets.only(right: 10),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Expense',
+            style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),
+    
+            ),
+             Text(value,  style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),
+    ),
+          ],
+        )
+      ],)
+    );
+  }
+
+
+
+  
 }
