@@ -27,6 +27,6 @@ class Dbhelper {
     } else {
       return Future.value(box.toMap());
     }
-   
+  
   }
 }
