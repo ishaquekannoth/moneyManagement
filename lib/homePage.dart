@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'static.dart' as customcolor;
@@ -13,6 +12,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   Dbhelper dbhelper = Dbhelper();
+  int totalBalance = 0;
+  int totalExpence = 0;
+  int totalIncome = 0;
+  getTotalBalance(Map data) {
+    totalBalance = 0;
+    totalExpence = 0;
+    totalIncome = 0;
+    data.forEach((key, value) {
+      if (value['type'] == 'Income') {
+        totalBalance += value['amount'] as int;
+        totalIncome += value['amount'] as int;
+      } else {
+        totalBalance -= value['amount'] as int;
+        totalExpence += value['amount'] as int;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
@@ -21,7 +38,10 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: customcolor.PrimaryColor,
         onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: ((context) => AddTransactions()))),
+            .push(MaterialPageRoute(builder: ((context) => AddTransactions())))
+            .whenComplete(() {
+          setState(() {});
+        }),
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
         child: Icon(
@@ -34,7 +54,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.error != null) {
               return (Center(
-                child: Text('unexpected Expected Err'),
+                child: Text('unExpected Err'),
               ));
             }
             if (snapshot.hasData) {
@@ -43,93 +63,115 @@ class _HomePageState extends State<HomePage> {
                   child: Text('No Data found'),
                 );
               }
-              return (ListView(
-                children: [
+              getTotalBalance(snapshot.data!);
+              return (ListView(children: [
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                            decoration: BoxDecoration(
-                           borderRadius: BorderRadius.circular(35)), 
-                            child: 
-                            CircleAvatar
-                            (maxRadius: 25,child: Image.asset("Assets/images/face.png",width: 64,),),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(35)),
+                          child: CircleAvatar(
+                            maxRadius: 22,
+                            child: Image.asset(
+                              "Assets/images/face.png",
+                              width: 64,
                             ),
-                                Text("Hei Man",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: customcolor.PrimaryColor
-                                ),
-                                
-                                ),
+                          ),
+                        ),
+                        Text(
+                          "Hello User",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: customcolor.PrimaryColor),
+                        ),
                         Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15)),
                             padding: EdgeInsets.all(12.0),
-                            child: Icon(
-                              Icons.settings,
-                              size: 32.0,
-                              color: Colors.green,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.settings,
+                                color: Colors.green,
+                                size: 32,
+                              ),
+                              onPressed: () =>
+                                  dbhelper.resetData().whenComplete(() {
+                                setState(() {});
+                              }),
                             )),
-                         
                       ]),
                 ),
-
                 Container(
-                  color: Colors.red,
-                  width: MediaQuery.of(context).size.width*0.9,
+                  //color: Colors.red,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   margin: EdgeInsets.all(20.0),
                   child: Container(
-                    
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: [
-                        customcolor.PrimaryColor,
-                        Colors.blueAccent
-                      ])
-                    ,
-                    borderRadius: BorderRadius.all(Radius.circular(25)     )
+                        gradient: LinearGradient(colors: [
+                          customcolor.PrimaryColor,
+                          Colors.blueAccent
+                        ]),
+                        borderRadius: BorderRadius.all(Radius.circular(25))),
+                    padding: EdgeInsets.symmetric(
+                      vertical: 30,
                     ),
-                    
-                    padding: EdgeInsets.symmetric(vertical: 30,),
                     child: Column(
                       children: [
-                       Text('Total Balance',
-                       textAlign: TextAlign.center,
-                       style: TextStyle(
-                        fontSize: 22,
-                        fontWeight:FontWeight.w700,
-                        color: Colors.white
-                       ),       
-                       ),
-                       Text('Rs 34000',
-                       textAlign: TextAlign.center,
-                       style: TextStyle(
-                        fontSize: 26,
-                        fontWeight:FontWeight.w700,
-                        color: Colors.white
-                       ),       
-                       ),
-                      Padding(padding: EdgeInsets.all(8.0),
-                      child:Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          cardIncome('1200'),
-                          cardExpense('500')
-                        ],
-                      ),
-                      ),
-                    
+                        Text(
+                          'Total Balance',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                        Text(
+                          '$totalBalance',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 26,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              cardIncome('$totalIncome'),
+                              cardExpense('$totalExpence')
+                            ],
+                          ),
+                        ),
                       ],
-                    ),   
-
+                    ),
                   ),
-                  
-                )
-
-
+                ),
+                Padding(
+                    padding: EdgeInsets.all(15),
+                    child: Text(
+                      "Recent Transactions",
+                      style:
+                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    )),
+                ListView.builder(
+                    shrinkWrap: true,
+                    itemCount:
+                        snapshot.data!.length < 4 ? snapshot.data!.length : 4,
+                    itemBuilder: (context, index) {
+                      Map data = snapshot.data![index];
+                      if (data['type'] == 'Expense') {
+                        return expenseTile(data['amount'.toString()],
+                            data['note'], data['date']);
+                      } else {
+                        return incomeTile(data['amount'.toString()],
+                            data['note'], data['date']);
+                      }
+                    })
               ]));
             } else {
               return (Center(
@@ -139,62 +181,130 @@ class _HomePageState extends State<HomePage> {
           }),
     ));
   }
-  Widget cardIncome(String value){
 
-    return(
-      Row(children: [
+  Widget cardIncome(String value) {
+    return (Row(
+      children: [
         Container(
           padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
-          color: Colors.white),
-          child: Icon(Icons.arrow_downward,
-          color: Colors.green,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30), color: Colors.white),
+          child: Icon(
+            Icons.arrow_downward,
+            color: Colors.green,
           ),
           margin: EdgeInsets.only(right: 10),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Income',
-            style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),
-    
+            Text(
+              'Income',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
-             Text(value,  style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),
-    ),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
           ],
         )
-      ],)
-    );
+      ],
+    ));
   }
-Widget cardExpense(String value){
 
-    return(
-      Row(children: [
+  Widget cardExpense(String value) {
+    return (Row(
+      children: [
         Container(
           padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(30),
-          color: Colors.white),
-          child: Icon(Icons.arrow_upward,
-          color: Color.fromARGB(255, 216, 11, 11),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30), color: Colors.white),
+          child: Icon(
+            Icons.arrow_upward,
+            color: Color.fromARGB(255, 216, 11, 11),
           ),
           margin: EdgeInsets.only(right: 10),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Expense',
-            style: TextStyle(fontSize: 14,color: Colors.white,fontWeight: FontWeight.bold),
-    
+            Text(
+              'Expense',
+              style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
             ),
-             Text(value,  style: TextStyle(fontSize: 20,color: Colors.white,fontWeight: FontWeight.bold),
-    ),
+            Text(
+              value,
+              style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+            ),
           ],
         )
-      ],)
-    );
+      ],
+    ));
   }
 
+  Widget expenseTile(int value, String note, DateTime dateTime) {
+    return (Container(
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_up_outlined,
+                size: 28,
+                color: Colors.red,
+              ),
+              Text("Expense"),
+              Text(value.toString()),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}')
+            ],
+          )
+        ],
+      ),
+    ));
+  }
 
-
-  
+  Widget incomeTile(int value, String note, DateTime dateTime) {
+    return (Container(
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_down_outlined,
+                size: 28,
+                color: Color.fromARGB(255, 5, 231, 5),
+              ),
+              Text("Income"),
+              Text(value.toString()),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}')
+            ],
+          )
+        ],
+      ),
+    ));
+  }
 }

@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive/hive.dart';
 
 class Dbhelper {
   late Box box;
-
+  late AsyncSnapshot data;
   Dbhelper() {
     openBox();
   }
@@ -11,14 +12,19 @@ class Dbhelper {
     box = Hive.box('money');
   }
 
-  Future addData(int amount, DateTime date, String note, String type) async {
+  Future addData(
+      {required int amount,
+      required DateTime date,
+      required String note,
+      required String type,
+      Future<int>? id}) async {
     var value = {
       'amount': amount,
       'date': date,
       'note': note,
       'type': type,
     };
-    box.add(value);
+    value['id'] = await box.add(value);
   }
 
   Future<Map> fetchData() {
@@ -27,6 +33,13 @@ class Dbhelper {
     } else {
       return Future.value(box.toMap());
     }
-  
   }
+
+  Future resetData() async {
+    box.clear();
+  }
+
+  // printKeys() {
+  //   print(box.values);
+  // }
 }

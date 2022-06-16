@@ -208,13 +208,32 @@ class _AddTransactionsState extends State<AddTransactions> {
               onPressed: () {
                 if (amount != null && note.isNotEmpty) {
                   Dbhelper dbhelper = Dbhelper();
-                  dbhelper.addData(amount!, selectedDate, note, type);
+                  dbhelper.addData(
+                      amount: amount!,
+                      date: selectedDate,
+                      note: note,
+                      type: type);
+                  Navigator.of(context).pop();
                 } else {
-                  print('All fields are required');
+                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(behavior:SnackBarBehavior.floating,duration:Duration(seconds: 1),
+                 margin: EdgeInsets.all(15),
+                 backgroundColor: Colors.red,
+                 content: Text('All fields are required',
+                 style: TextStyle(fontSize: 15),
+                 textAlign: TextAlign.center)));
+                
                 }
               },
-              child: Text('Add'),
-            ))
+                child: Text('Add Data',style: TextStyle(fontSize: 30),),
+                style: ButtonStyle(
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      side: BorderSide()
+    )
+  )
+)
+                ))
       ]),
     ));
   }
