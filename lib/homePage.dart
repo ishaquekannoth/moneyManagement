@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/viewAllTransactions.dart';
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Widget> widgets = [];
   Dbhelper dbhelper = Dbhelper();
   int totalBalance = 0;
   int totalExpence = 0;
@@ -106,12 +108,11 @@ class _HomePageState extends State<HomePage> {
                       ]),
                 ),
                 Container(
-                  //color: Colors.red,
                   width: MediaQuery.of(context).size.width * 0.9,
                   margin: EdgeInsets.all(20.0),
                   child: Container(
                     decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: [
+                        gradient: LinearGradient(colors: const [
                           customcolor.PrimaryColor,
                           Colors.blueAccent
                         ]),
@@ -171,7 +172,20 @@ class _HomePageState extends State<HomePage> {
                         return incomeTile(data['amount'.toString()],
                             data['note'], data['date']);
                       }
-                    })
+                    }),
+                IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: ((context) => ViewAllTransactions())));
+                    },
+                    icon: Container(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(Icons.track_changes),
+                      ],
+                    )))
               ]));
             } else {
               return (Center(
@@ -189,11 +203,11 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30), color: Colors.white),
+          margin: EdgeInsets.only(right: 10),
           child: Icon(
             Icons.arrow_downward,
             color: Colors.green,
           ),
-          margin: EdgeInsets.only(right: 10),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,11 +239,11 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(15),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30), color: Colors.white),
+          margin: EdgeInsets.only(right: 10),
           child: Icon(
             Icons.arrow_upward,
             color: Color.fromARGB(255, 216, 11, 11),
           ),
-          margin: EdgeInsets.only(right: 10),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,9 +285,21 @@ class _HomePageState extends State<HomePage> {
                 size: 28,
                 color: Colors.red,
               ),
-              Text("Expense"),
-              Text(value.toString()),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}')
+              Text("Expense",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 170, 20, 9),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
             ],
           )
         ],
@@ -298,9 +324,21 @@ class _HomePageState extends State<HomePage> {
                 size: 28,
                 color: Color.fromARGB(255, 5, 231, 5),
               ),
-              Text("Income"),
-              Text(value.toString()),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}')
+              Text("Income",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 4, 112, 8),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
             ],
           )
         ],

@@ -25,6 +25,7 @@ class Dbhelper {
       'type': type,
     };
     value['id'] = await box.add(value);
+    box.put(value['id'], value);
   }
 
   Future<Map> fetchData() {
