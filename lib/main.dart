@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:moneymanager/displayer.dart';
 import 'package:moneymanager/homePage.dart';
 import 'package:moneymanager/theme.dart';
 import 'package:hive/hive.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Money Manager',
       theme: myTheme,
-      home: const HomePage(),
+      home: const MainDisplay(),
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
-import 'package:moneymanager/viewAllTransactions.dart';
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -12,7 +11,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Widget> widgets = [];
   Dbhelper dbhelper = Dbhelper();
   int totalBalance = 0;
   int totalExpence = 0;
@@ -38,7 +36,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(toolbarHeight: 0.0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: customcolor.PrimaryColor,
+        backgroundColor: Color.fromARGB(255, 2, 58, 5),
         onPressed: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: ((context) => AddTransactions())))
             .whenComplete(() {
@@ -100,16 +98,16 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.green,
                                 size: 32,
                               ),
-                              onPressed: () =>
-                                  dbhelper.resetData().whenComplete(() {
-                                setState(() {});
-                              }),
+                              onPressed: () {
+                                  dbhelper.resetData();
+                                 setState(() {});
+                              },
                             )),
                       ]),
                 ),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.9,
-                  margin: EdgeInsets.all(20.0),
+                  margin: EdgeInsets.only(left: 10, right: 15),
                   child: Container(
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: const [
@@ -131,7 +129,7 @@ class _HomePageState extends State<HomePage> {
                               color: Colors.white),
                         ),
                         Text(
-                          '$totalBalance',
+                          '$totalBalance AED',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 26,
@@ -143,8 +141,8 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              cardIncome('$totalIncome'),
-                              cardExpense('$totalExpence')
+                              cardIncome('$totalIncome AED'),
+                              cardExpense('$totalExpence AED')
                             ],
                           ),
                         ),
@@ -153,9 +151,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 Padding(
-                    padding: EdgeInsets.all(15),
+                    padding: EdgeInsets.all(1),
                     child: Text(
                       "Recent Transactions",
+                      textAlign: TextAlign.center,
                       style:
                           TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                     )),
@@ -173,19 +172,6 @@ class _HomePageState extends State<HomePage> {
                             data['note'], data['date']);
                       }
                     }),
-                IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) => ViewAllTransactions())));
-                    },
-                    icon: Container(
-                      padding: EdgeInsets.only(right: 10),
-                      child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(Icons.track_changes),
-                      ],
-                    )))
               ]));
             } else {
               return (Center(

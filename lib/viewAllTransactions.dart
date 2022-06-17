@@ -19,7 +19,9 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => getRawMap(),
       ),
-      body: FutureBuilder<List>(
+      
+      body:
+       FutureBuilder<List>(
           future: getRawMap(),
           builder: (context, snapshot) {
             if (snapshot.error != null) {

@@ -210,7 +210,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                   Dbhelper dbhelper = Dbhelper();
                   dbhelper.addData(
                       amount: amount!,
-                      date: selectedDate,
+                     date: selectedDate,
                       note: note,
                       type: type);
                   Navigator.of(context).pop();

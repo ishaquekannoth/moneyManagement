@@ -20,7 +20,7 @@ class Dbhelper {
       Future<int>? id}) async {
     var value = {
       'amount': amount,
-      'date': date,
+      'date': DateTime(date.year, date.month, date.day),
       'note': note,
       'type': type,
     };
@@ -37,6 +37,7 @@ class Dbhelper {
   }
 
   Future resetData() async {
+    print(box.values);
     box.clear();
   }
 
