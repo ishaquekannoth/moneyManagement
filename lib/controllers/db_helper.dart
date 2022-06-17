@@ -41,7 +41,12 @@ class Dbhelper {
     box.clear();
   }
 
-  // printKeys() {
-  //   print(box.values);
-  // }
+  Future<void> fetchSingleItem(int id) async {
+    var result = await Future.value(box.get(id));
+    print(result);
+  }
+
+  printKeys() {
+    print(box.values);
+  }
 }
