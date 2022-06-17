@@ -196,7 +196,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                       width: 20,
                     ),
                     Text(
-                      "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" " + selectedDate.year.toString()}",
+                      "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
@@ -224,7 +224,6 @@ class _AddTransactionsState extends State<AddTransactions> {
                 
                 }
               },
-                child: Text('Add Data',style: TextStyle(fontSize: 30),),
                 style: ButtonStyle(
   shape: MaterialStateProperty.all<RoundedRectangleBorder>(
     RoundedRectangleBorder(
@@ -232,7 +231,8 @@ class _AddTransactionsState extends State<AddTransactions> {
       side: BorderSide()
     )
   )
-)
+),
+                child: Text('Add Data',style: TextStyle(fontSize: 30),)
                 ))
       ]),
     ));

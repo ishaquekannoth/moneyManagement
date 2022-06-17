@@ -19,9 +19,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => getRawMap(),
       ),
-      
-      body:
-       FutureBuilder<List>(
+      body: FutureBuilder<List>(
           future: getRawMap(),
           builder: (context, snapshot) {
             if (snapshot.error != null) {
@@ -35,13 +33,23 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 return Text('NO Value in the SortedMap');
               }
             }
-
             return (ListView.builder(
                 shrinkWrap: true,
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, item) {
                   List? MySortedMap = snapshot.data;
-                  return (Text(MySortedMap![item]['date'].toString()));
+                  if (MySortedMap![item]['type'] == 'Expense') {
+                    // return (Text(MySortedMap![item]['date'].toString()));
+                    return expenseTile(MySortedMap[item]['amount'],
+                        MySortedMap[item]['note'], MySortedMap[item]['date']);
+                  }
+                  else{
+                        return 
+                        incomeTile(MySortedMap[item]['amount'],
+                        MySortedMap[item]['note'], MySortedMap[item]['date']);
+
+                  }
+
                 }));
           }),
     ));
@@ -57,5 +65,83 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     print(myList);
     return myList;
     //return sortMapByValue;
+  }
+
+  Widget expenseTile(int value, String note, DateTime dateTime) {
+    return (Container(
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_up_outlined,
+                size: 28,
+                color: Colors.red,
+              ),
+              Text("Expense",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 170, 20, 9),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
+            ],
+          )
+        ],
+      ),
+    ));
+  }
+
+  Widget incomeTile(int value, String note, DateTime dateTime) {
+    return (Container(
+      padding: EdgeInsets.all(15),
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_down_outlined,
+                size: 28,
+                color: Color.fromARGB(255, 5, 231, 5),
+              ),
+              Text("Income",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 4, 112, 8),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
+            ],
+          )
+        ],
+      ),
+    ));
   }
 }
