@@ -237,4 +237,5 @@ class _AddTransactionsState extends State<AddTransactions> {
       ]),
     ));
   }
+
 }

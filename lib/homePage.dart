@@ -99,8 +99,8 @@ class _HomePageState extends State<HomePage> {
                                 size: 32,
                               ),
                               onPressed: () {
-                                  dbhelper.resetData();
-                                 setState(() {});
+                                dbhelper.resetData();
+                                setState(() {});
                               },
                             )),
                       ]),
@@ -164,6 +164,7 @@ class _HomePageState extends State<HomePage> {
                         snapshot.data!.length < 4 ? snapshot.data!.length : 4,
                     itemBuilder: (context, index) {
                       Map data = snapshot.data![index];
+                      
                       if (data['type'] == 'Expense') {
                         return expenseTile(data['amount'.toString()],
                             data['note'], data['date']);
@@ -330,5 +331,14 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     ));
+  }
+
+  Future<List> getRawMap() async {
+    Map unsorted = await dbhelper.fetchData();
+    var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
+      ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
+    List myList = [];
+    sortMapByValue.forEach((key, value) => myList.add(value));
+    return myList;
   }
 }
