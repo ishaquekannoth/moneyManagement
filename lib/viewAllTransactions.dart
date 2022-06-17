@@ -48,7 +48,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     //print(sortMapByValue);
     List sortedList = [];
     sortMapByValue.forEach((key, value) => sortedList.add(value));
-    print(sortedList);
     myList.clear();
     myList.addAll(sortedList);
     setState(() {});
