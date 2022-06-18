@@ -21,7 +21,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => helper.fetchSingleItem(0),
+          onPressed: () => helper.printKeys(),
         ),
         body: ListView.builder(
             itemCount: myList.length,

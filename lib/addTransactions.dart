@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -12,9 +13,11 @@ class AddTransactions extends StatefulWidget {
 
 class _AddTransactionsState extends State<AddTransactions> {
   int? amount;
-  String note = "Some Expense";
+  String note = "Some Notes";
   String type = "Income";
   DateTime selectedDate = DateTime.now();
+  String? temp;
+  String selectedCategory = '';
   List<String> months = [
     "Jan",
     "Feb",
@@ -28,6 +31,61 @@ class _AddTransactionsState extends State<AddTransactions> {
     "Oct",
     "Nov",
     "Dec",
+  ];
+
+  List<DropdownMenuItem<String>> incomeCategory = [
+    DropdownMenuItem(
+      value: 'BlackMoney',
+      child: Text(
+        'BlackMoney',
+        style: TextStyle(color: Colors.red),
+      ),
+    ),
+    DropdownMenuItem(
+      value: "Business Income",
+      child: Text('Business Income'),
+    ),
+    DropdownMenuItem(
+      value: "Capital Gains",
+      child: Text('Capital Gains'),
+    ),
+    DropdownMenuItem(
+      value: "Donations/Gifts Recieved",
+      child: Text('Donations/Gifts'),
+    ),
+    DropdownMenuItem(
+      value: "Winning Lotteries",
+      child: Text('Winning Lotteries'),
+    ),
+    DropdownMenuItem(
+      value: "Unspecified",
+      child: Text('Unspecified'),
+    ),
+  ];
+  List<DropdownMenuItem<String>> expenseCategory = [
+    DropdownMenuItem(
+      value: 'Business Expense',
+      child: Text(
+        'Business Expense',
+        style: TextStyle(color: Colors.red),
+      ),
+    ),
+    DropdownMenuItem(
+      value: "Capital Losses Paid",
+      child: Text('Capital Losses Paid'),
+    ),
+    DropdownMenuItem(
+      value: "Donations/Gifts paid",
+      child: Text('Donations/Gifts'),
+    ),
+    DropdownMenuItem(
+      value: "Lost bets",
+      child: Text('Losing Lotteries'),
+    ),
+    DropdownMenuItem(
+      value: "UnSpecified",
+      child: Text('UnSpecified'),
+    ),
   ];
 
   Future<void> _selectDate(BuildContext context) async {
@@ -148,7 +206,9 @@ class _AddTransactionsState extends State<AddTransactions> {
               onSelected: (value) {
                 if (value == true) {
                   setState(() {
+                    temp = null;
                     type = 'Income';
+                    selectedCategory = 'Unspecified';
                   });
                 }
               },
@@ -168,11 +228,28 @@ class _AddTransactionsState extends State<AddTransactions> {
                 if (value == true) {
                   setState(() {
                     type = 'Expense';
+                    temp = null;
+                    selectedCategory = 'Unspecified';
                   });
                 }
               },
             ),
           ],
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        // popDownIncome(category),
+        DropdownButton(
+          items: type == 'Income' ? incomeCategory : expenseCategory,
+          hint: (Text(temp == null ? 'No value Selected' : selectedCategory)),
+          onChanged: (String? value) {
+            print(value);
+            setState(() {
+              temp = value!;
+              selectedCategory = value;
+            });
+          },
         ),
         SizedBox(
           height: 20,
@@ -205,37 +282,37 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
             height: 50,
             child: ElevatedButton(
-              onPressed: () {
-                if (amount != null && note.isNotEmpty) {
-                  Dbhelper dbhelper = Dbhelper();
-                  dbhelper.addData(
-                      amount: amount!,
-                     date: selectedDate,
-                      note: note,
-                      type: type);
-                  Navigator.of(context).pop();
-                } else {
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(behavior:SnackBarBehavior.floating,duration:Duration(seconds: 1),
-                 margin: EdgeInsets.all(15),
-                 backgroundColor: Colors.red,
-                 content: Text('All fields are required',
-                 style: TextStyle(fontSize: 15),
-                 textAlign: TextAlign.center)));
-                
-                }
-              },
+                onPressed: () {
+                  if (amount != null && note.isNotEmpty) {
+                    Dbhelper dbhelper = Dbhelper();
+                    dbhelper.addData(
+                        amount: amount!,
+                        date: selectedDate,
+                        note: note,
+                        type: type,
+                        category: selectedCategory);
+                    Navigator.of(context).pop();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 1),
+                        margin: EdgeInsets.all(15),
+                        backgroundColor: Colors.red,
+                        content: Text('All fields are required',
+                            style: TextStyle(fontSize: 15),
+                            textAlign: TextAlign.center)));
+                  }
+                },
                 style: ButtonStyle(
-  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-    RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(30.0),
-      side: BorderSide()
-    )
-  )
-),
-                child: Text('Add Data',style: TextStyle(fontSize: 30),)
-                ))
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide()))),
+                child: Text(
+                  'Add Data',
+                  style: TextStyle(fontSize: 30),
+                )))
       ]),
     ));
   }
-
 }
