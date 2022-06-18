@@ -36,30 +36,39 @@ class _AddTransactionsState extends State<AddTransactions> {
   List<DropdownMenuItem<String>> incomeCategory = [
     DropdownMenuItem(
       value: 'BlackMoney',
-      child: Text(
-        'BlackMoney',
-        style: TextStyle(color: Colors.red),
+        child: Text('BlackMoney',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
       ),
     ),
     DropdownMenuItem(
       value: "Business Income",
-      child: Text('Business Income'),
+      child: Text('Business Income',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Capital Gains",
-      child: Text('Capital Gains'),
+      child: Text('Capital Gains',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Donations/Gifts Recieved",
-      child: Text('Donations/Gifts'),
+      child: Text('Donations/Gifts',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+    ),
+       DropdownMenuItem(
+      value: "Salary",
+      child: Text('Salary Income',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Winning Lotteries",
-      child: Text('Winning Lotteries'),
+      child: Text('Winning Lotteries',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
-      value: "Unspecified",
-      child: Text('Unspecified'),
+      value: "Miscallaneous Income",
+      child: Text('Miscallaneous Income',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
   ];
   List<DropdownMenuItem<String>> expenseCategory = [
@@ -67,24 +76,33 @@ class _AddTransactionsState extends State<AddTransactions> {
       value: 'Business Expense',
       child: Text(
         'Business Expense',
-        style: TextStyle(color: Colors.red),
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
       ),
     ),
     DropdownMenuItem(
       value: "Capital Losses Paid",
-      child: Text('Capital Losses Paid'),
+      child: Text('Capital Losses Paid',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Donations/Gifts paid",
-      child: Text('Donations/Gifts'),
+      child: Text('Donations/Gifts',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Lost bets",
-      child: Text('Losing Lotteries'),
+      child: Text('Losing Lotteries',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+    ),
+      DropdownMenuItem(
+      value: "Life Expenses",
+      child: Text('Normal Life Exp',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
     DropdownMenuItem(
-      value: "UnSpecified",
-      child: Text('UnSpecified'),
+      value: "Miscallaneous Expense",
+      child: Text('Miscallaneous Expense',
+        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
     ),
   ];
 
@@ -239,17 +257,23 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
           height: 15,
         ),
-        // popDownIncome(category),
-        DropdownButton(
-          items: type == 'Income' ? incomeCategory : expenseCategory,
-          hint: (Text(temp == null ? 'No value Selected' : selectedCategory)),
-          onChanged: (String? value) {
-            print(value);
-            setState(() {
-              temp = value!;
-              selectedCategory = value;
-            });
-          },
+       
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('$type:',style: TextStyle(fontSize: 25),textAlign: TextAlign.center,),
+            DropdownButton(
+              items: type == 'Income' ? incomeCategory : expenseCategory,
+              hint: (Text(temp == null ? 'No value Selected' : selectedCategory,style: TextStyle(fontSize: 20),)),
+              onChanged: (String? value) {
+                print(value);
+                setState(() {
+                  temp = value!;
+                  selectedCategory = value;
+                });
+              },
+            ),
+          ],
         ),
         SizedBox(
           height: 20,
