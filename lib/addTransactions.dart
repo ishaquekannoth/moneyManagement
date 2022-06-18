@@ -17,7 +17,7 @@ class _AddTransactionsState extends State<AddTransactions> {
   String type = "Income";
   DateTime selectedDate = DateTime.now();
   String? temp;
-  String selectedCategory = '';
+  String selectedCategory = 'Unspecified';
   List<String> months = [
     "Jan",
     "Feb",
@@ -255,25 +255,25 @@ class _AddTransactionsState extends State<AddTransactions> {
           ],
         ),
         SizedBox(
-          height: 15,
+          height: 25,
         ),
        
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('$type:',style: TextStyle(fontSize: 25),textAlign: TextAlign.center,),
-            DropdownButton(
-              items: type == 'Income' ? incomeCategory : expenseCategory,
-              hint: (Text(temp == null ? 'No value Selected' : selectedCategory,style: TextStyle(fontSize: 20),)),
-              onChanged: (String? value) {
-                print(value);
-                setState(() {
-                  temp = value!;
-                  selectedCategory = value;
-                });
-              },
-            ),
-          ],
+       Text('Choose a category of $type',style: TextStyle(fontSize: 20),),
+       
+        Container(
+          padding: EdgeInsets.only(top: 15),
+          child: DropdownButton(
+            items: type == 'Income' ? incomeCategory : expenseCategory,
+            hint: (Text(temp == null ? 'No value Selected' : selectedCategory,style: TextStyle(fontSize: 20),)),
+            onChanged: (String? value) {
+              print(value);
+              setState(() {
+                temp = value!;
+                selectedCategory = value;
+              });
+            },
+            isExpanded: true,
+          ),
         ),
         SizedBox(
           height: 20,
@@ -307,7 +307,7 @@ class _AddTransactionsState extends State<AddTransactions> {
             height: 50,
             child: ElevatedButton(
                 onPressed: () {
-                  if (amount != null && note.isNotEmpty) {
+                  if (amount != null && note.isNotEmpty&&selectedCategory!='Unspecified') {
                     Dbhelper dbhelper = Dbhelper();
                     dbhelper.addData(
                         amount: amount!,

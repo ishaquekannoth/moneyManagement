@@ -17,11 +17,11 @@ class Dbhelper {
       required DateTime date,
       required String note,
       required String type,
-      String? category,
+      required String category,
       Future<int>? id}) async {
     var value = {
       'amount': amount,
-      'date': DateTime(date.year, date.month, date.day),
+      'date': date,
       'note': note,
       'type': type,
       'category':category,
