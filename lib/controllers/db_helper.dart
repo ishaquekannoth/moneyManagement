@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-
+import 'package:moneymanager/controllers/category.dart';
 class Dbhelper {
-  late Box box;
-  late AsyncSnapshot data;
+  late Box moneyBox;
   Dbhelper() {
     openBox();
   }
 
   openBox() {
-    box = Hive.box('money');
+    moneyBox = Hive.box('money');
   }
 
   Future addData(
@@ -24,31 +25,32 @@ class Dbhelper {
       'date': date,
       'note': note,
       'type': type,
-      'category':category,
+      'category': category,
     };
-    value['id'] = await box.add(value);
-    box.put(value['id'], value);
+    value['id'] = await moneyBox.add(value);
+    moneyBox.put(value['id'], value);
   }
 
   Future<Map> fetchData() {
-    if (box.values.isEmpty) {
+    if (moneyBox.values.isEmpty) {
       return Future.value({});
     } else {
-      return Future.value(box.toMap());
+      return Future.value(moneyBox.toMap());
     }
   }
 
   Future resetData() async {
-    print(box.values);
-    box.clear();
+    print(moneyBox.values);
+    moneyBox.clear();
   }
 
   Future<void> fetchSingleItem(int id) async {
-    var result = await Future.value(box.get(id));
+    var result = await Future.value(moneyBox.get(id));
     print(result);
   }
 
   printKeys() {
-    print(box.values);
+    CategoryBox category = CategoryBox();
+    print(moneyBox.values);
   }
 }

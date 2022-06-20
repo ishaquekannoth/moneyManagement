@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:moneymanager/controllers/category.dart';
+import 'package:moneymanager/controllers/categoryClass.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 
 class ViewAllTransactions extends StatefulWidget {
@@ -11,6 +13,7 @@ class ViewAllTransactions extends StatefulWidget {
 
 class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   Dbhelper helper = Dbhelper();
+  CategoryBox category = CategoryBox();
   List myList = [];
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,15 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () => helper.printKeys(),
+          onPressed: () {
+            //helper.printKeys();
+            category.addCategory(category: CategoryClass(name: "Ram"));
+            // category.addCategory(category: 'House');
+            // category.printCategoryValues();
+            //  category.deleteCategoryItem(0);
+             //category.clearCategoryBox();
+            category.printCategoryValues();
+          },
         ),
         body: ListView.builder(
             itemCount: myList.length,
@@ -37,8 +48,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       myList[index]['note'], myList[index]['date']),
                 ));
               }
-            }
-            )));
+            })));
   }
 
   Future<void> getRawMap() async {

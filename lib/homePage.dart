@@ -76,12 +76,9 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(35)),
-                          child: CircleAvatar(
-                            maxRadius: 22,
-                            child: Image.asset(
-                              "Assets/images/face.png",
-                              width: 64,
-                            ),
+                          child: Image.asset(
+                            "Assets/images/face.jpeg",fit: BoxFit.contain,
+                            width: 32,
                           ),
                         ),
                         Text(

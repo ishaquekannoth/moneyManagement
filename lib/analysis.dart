@@ -8,7 +8,10 @@ class Analysis extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Welcome To analysis Page')),
+      appBar: AppBar(title: Text('Welcome To analysis Page'),centerTitle: true,
+    ),
+    body: Center(child: Text('OOPS...Nothing implimented yet')),
+    
     );
   }
 }
