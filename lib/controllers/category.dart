@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:moneymanager/controllers/categoryClass.dart';
+import 'package:moneymanager/controllers/categoryModelClass.dart';
 
 class CategoryBox {
   late Box categoryBox;
@@ -14,8 +14,13 @@ class CategoryBox {
     categoryBox = Hive.box('category');
   }
 
-  Future addCategory({required CategoryClass category, Future<int>? id}) async {
+  Future addCategory({required CategoryModelClass category, Future<int>? id}) async {
     Map<String, Object> val = {'name': category};
+   var con = DropdownMenuItem(
+      value: category.name,
+      child: Text(category.name,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+    );
     val['id'] = (await categoryBox.add(val));
     await categoryBox.put(val['id'], val);
   }
@@ -32,7 +37,11 @@ class CategoryBox {
     categoryBox.clear();
   }
 
-  deleteCategoryItem(int ind) {
-    categoryBox.deleteAt(ind);
+  deleteCategoryItem(int id) {
+    categoryBox.delete([id]);
+  }
+
+  Future<List<dynamic>> fetchAllCategories() {
+    return Future.value(categoryBox.values.toList());
   }
 }

@@ -10,7 +10,7 @@ class Analysis extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('Welcome To analysis Page'),centerTitle: true,
     ),
-    body: Center(child: Text('OOPS...Nothing implimented yet')),
+    body: Center(child: Text('OOPS...Nothing implimented here yet..',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),textAlign: TextAlign.center,)),
     
     );
   }

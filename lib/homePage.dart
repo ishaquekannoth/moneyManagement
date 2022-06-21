@@ -63,7 +63,7 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
                 return Center(
-                  child: Text('No Data found'),
+                  child: Text('OOps..No Data found..did you reset the data Recently?',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
                 );
               }
               getTotalBalance(snapshot.data!);
