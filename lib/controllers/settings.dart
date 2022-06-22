@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 
@@ -26,11 +24,13 @@ class SettingsMenu extends StatelessWidget {
                   print('About Us Clicked');
                 },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   // ignore: prefer_const_literals_to_create_immutables
                   children: [
-                    Text('About Us', style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold)),
-                    Icon(Icons.person)
+                    Icon(Icons.person),
+                    SizedBox(width: 65,),
+                    Text('About Us', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                    
                   ],
                 ),
               ),
@@ -44,10 +44,12 @@ class SettingsMenu extends StatelessWidget {
                   cat.clearCategoryBox();
                 },
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    
                     children: const [
-                      Text('Reset the App', style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold)),
-                      Icon(Icons.restart_alt_outlined)
+                      Icon(Icons.restart_alt_outlined),
+                       SizedBox(width: 65,),
+                      Text('Reset the App', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                      
                     ]),
               ),
                   SizedBox(
@@ -60,10 +62,11 @@ class SettingsMenu extends StatelessWidget {
                   // cat.clearCategoryBox();
                 },
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      Text('Share with friends', style: TextStyle(fontSize: 35,fontWeight: FontWeight.bold)),
-                      Icon(Icons.share )
+                      Icon(Icons.share ),
+                       SizedBox(width: 65,),
+                      Text('Share with friends', style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold)),
+                      
                     ]),
               )
             ],

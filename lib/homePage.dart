@@ -76,9 +76,13 @@ class _HomePageState extends State<HomePage> {
                         Container(
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(35)),
-                          child: Image.asset(
-                            "Assets/images/face.jpeg",fit: BoxFit.contain,
-                            width: 32,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(35),
+                            child: Image.asset(
+                              "Assets/images/face.jpeg",
+                              fit: BoxFit.contain,
+                              width: 50,height: 50,
+                            ),
                           ),
                         ),
                         Text(
@@ -99,7 +103,6 @@ class _HomePageState extends State<HomePage> {
                                 size: 32,
                               ),
                               onPressed: () {
-                                dbhelper.resetData();
                                 setState(() {});
                               },
                             )),
@@ -150,6 +153,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
+                SizedBox(height: 20,),
                 Padding(
                     padding: EdgeInsets.all(1),
                     child: Text(
