@@ -1,7 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
-import 'package:moneymanager/controllers/categoryModelClass.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 
 class ViewAllTransactions extends StatefulWidget {
@@ -26,7 +25,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //helper.printKeys();
-            category.addCategory(category: CategoryModelClass(name: "Ram"));
+            category.addCategory(category: "its a String");
             // category.addCategory(category: 'House');
             // category.printCategoryValues();
             //  category.deleteCategoryItem(0);
