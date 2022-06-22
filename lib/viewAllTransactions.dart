@@ -25,12 +25,14 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //helper.printKeys();
-            category.addCategory(category: "its a String");
+            //category.addCategory(category: "its a String",type: "income");
             // category.addCategory(category: 'House');
             // category.printCategoryValues();
             //  category.deleteCategoryItem(0);
-            // category.clearCategoryBox();
+            //  category.clearCategoryBox();
             category.printCategoryValues();
+            print('Ready');
+            print(category.fetchIncomeCategory());
           },
         ),
         body: ListView.builder(

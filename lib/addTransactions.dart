@@ -1,6 +1,9 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'static.dart' as customcolor;
 
@@ -17,6 +20,8 @@ class _AddTransactionsState extends State<AddTransactions> {
   String type = "Income";
   DateTime selectedDate = DateTime.now();
   String? temp;
+  CategoryBox categoryBox = CategoryBox();
+  String? category;
   String selectedCategory = 'Unspecified';
   List<String> months = [
     "Jan",
@@ -36,39 +41,40 @@ class _AddTransactionsState extends State<AddTransactions> {
   List<DropdownMenuItem<String>> incomeCategory = [
     DropdownMenuItem(
       value: 'BlackMoney',
-        child: Text('BlackMoney',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+      child: Text(
+        'BlackMoney',
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
     ),
     DropdownMenuItem(
       value: "Business Income",
       child: Text('Business Income',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Capital Gains",
       child: Text('Capital Gains',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Donations/Gifts Recieved",
       child: Text('Donations/Gifts',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
-       DropdownMenuItem(
+    DropdownMenuItem(
       value: "Salary",
       child: Text('Salary Income',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Winning Lotteries",
       child: Text('Winning Lotteries',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Miscallaneous Income",
       child: Text('Miscallaneous Income',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
   ];
   List<DropdownMenuItem<String>> expenseCategory = [
@@ -76,33 +82,33 @@ class _AddTransactionsState extends State<AddTransactions> {
       value: 'Business Expense',
       child: Text(
         'Business Expense',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
       ),
     ),
     DropdownMenuItem(
       value: "Capital Losses Paid",
       child: Text('Capital Losses Paid',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Donations/Gifts paid",
       child: Text('Donations/Gifts',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Lost bets",
       child: Text('Losing Lotteries',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
-      DropdownMenuItem(
+    DropdownMenuItem(
       value: "Life Expenses",
       child: Text('Normal Life Exp',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
     DropdownMenuItem(
       value: "Miscallaneous Expense",
       child: Text('Miscallaneous Expense',
-        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20)),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
     ),
   ];
 
@@ -257,14 +263,18 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
           height: 25,
         ),
-       
-       Text('Choose a category of $type',style: TextStyle(fontSize: 20),),
-       
+        Text(
+          'Choose a category of $type',
+          style: TextStyle(fontSize: 20),
+        ),
         Container(
           padding: EdgeInsets.only(top: 15),
           child: DropdownButton(
             items: type == 'Income' ? incomeCategory : expenseCategory,
-            hint: (Text(temp == null ? 'No value Selected' : selectedCategory,style: TextStyle(fontSize: 20),)),
+            hint: (Text(
+              temp == null ? 'No value Selected' : selectedCategory,
+              style: TextStyle(fontSize: 20),
+            )),
             onChanged: (String? value) {
               print(value);
               setState(() {
@@ -278,6 +288,36 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
           height: 20,
         ),
+        Text('Category Not Listed?', style: TextStyle(fontSize: 24.0)),
+        SizedBox(
+          height: 10,
+        ),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Expanded(
+            child: TextField(
+                decoration: InputDecoration(
+                    hintText: 'Enter the Category', border: InputBorder.none),
+                style: TextStyle(fontSize: 24.0),
+                onChanged: (cat) {
+                  if (cat != '') {
+                    category = cat.toString();
+                    setState(() {});
+                  }
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))
+                ],
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.sentences),
+          ),
+          ElevatedButton.icon(
+              onPressed: () {
+                addCategory(category!, type);
+                print('${category},${type}');
+              },
+              icon: (Icon(Icons.add)),
+              label: Text("Add"))
+        ]),
         SizedBox(
             height: 50,
             child: TextButton(
@@ -307,7 +347,9 @@ class _AddTransactionsState extends State<AddTransactions> {
             height: 50,
             child: ElevatedButton(
                 onPressed: () {
-                  if (amount != null && note.isNotEmpty&&selectedCategory!='Unspecified') {
+                  if (amount != null &&
+                      note.isNotEmpty &&
+                      selectedCategory != 'Unspecified') {
                     Dbhelper dbhelper = Dbhelper();
                     dbhelper.addData(
                         amount: amount!,
@@ -338,5 +380,9 @@ class _AddTransactionsState extends State<AddTransactions> {
                 )))
       ]),
     ));
+  }
+
+  addCategory(String newCategory, String type) {
+    categoryBox.addCategory(category: newCategory, type: type);
   }
 }

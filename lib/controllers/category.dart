@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+
 class CategoryBox {
   late Box categoryBox;
   CategoryBox() {
@@ -10,8 +11,9 @@ class CategoryBox {
     categoryBox = Hive.box('category');
   }
 
-  Future addCategory({required String category, Future<int>? id}) async {
-    Map<String, Object> val = {'name': category};
+  Future addCategory(
+      {required String category, required String type, Future<int>? id}) async {
+    Map<String, Object> val = {'name': category, 'type': type};
     val['id'] = (await categoryBox.add(val));
     await categoryBox.put(val['id'], val);
   }
@@ -35,5 +37,25 @@ class CategoryBox {
   Future<List<dynamic>> fetchAllCategories() {
     return Future.value(categoryBox.values.toList());
   }
-}
 
+  List<dynamic> fetchIncomeCategory() {
+    List tempList = [];
+    var item = categoryBox.toMap();
+    item.forEach((key, value) {
+      if (value['type'] == 'Income') {
+        tempList.add(value);
+      }
+    });
+    return tempList;
+  }
+    List<dynamic> fetchExpenseCategory() {
+    List tempList = [];
+    var item = categoryBox.toMap();
+    item.forEach((key, value) {
+      if (value['type'] == 'Expense') {
+        tempList.add(value);
+      }
+    });
+    return tempList;
+  }
+}
