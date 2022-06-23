@@ -19,9 +19,9 @@ class CategoryBox {
   }
 
   printCategoryValues() {
-    print('Category value.......................');
+    print('Category values printing from CategoryDB class');
     print(categoryBox.values);
-    print("Keys");
+    print("Keys From CatDB class");
     print(categoryBox.keys);
     // print(categoryBox.getAt(1));
   }
@@ -38,7 +38,7 @@ class CategoryBox {
     return Future.value(categoryBox.values.toList());
   }
 
-  List<dynamic> fetchIncomeCategory() {
+ Future<List<dynamic>> fetchIncomeCategory() {
     List tempList = [];
     var item = categoryBox.toMap();
     item.forEach((key, value) {
@@ -46,9 +46,9 @@ class CategoryBox {
         tempList.add(value);
       }
     });
-    return tempList;
+    return Future.value(tempList);
   }
-    List<dynamic> fetchExpenseCategory() {
+    Future<List<dynamic>> fetchExpenseCategory() {
     List tempList = [];
     var item = categoryBox.toMap();
     item.forEach((key, value) {
@@ -56,6 +56,6 @@ class CategoryBox {
         tempList.add(value);
       }
     });
-    return tempList;
+    return Future.value(tempList);
   }
 }

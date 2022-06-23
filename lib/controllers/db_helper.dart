@@ -1,6 +1,6 @@
-
 import 'package:hive/hive.dart';
 import 'package:moneymanager/controllers/category.dart';
+
 class Dbhelper {
   late Box moneyBox;
   Dbhelper() {
@@ -50,5 +50,8 @@ class Dbhelper {
   printKeys() {
     CategoryBox category = CategoryBox();
     print(moneyBox.values);
+  }
+  Future<void> removeSingleItem(int id) async {
+    await moneyBox.delete(id);
   }
 }

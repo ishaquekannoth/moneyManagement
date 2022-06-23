@@ -23,16 +23,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            //helper.printKeys();
-            //category.addCategory(category: "its a String",type: "income");
-            // category.addCategory(category: 'House');
-            // category.printCategoryValues();
-            //  category.deleteCategoryItem(0);
-            //  category.clearCategoryBox();
-            category.printCategoryValues();
-            print('Ready');
-            print(category.fetchIncomeCategory());
+          onPressed: () async{
+           await category.clearCategoryBox();
+           await category.printCategoryValues();
+            // print(await category.fetchAllCategories());
           },
         ),
         body: ListView.builder(

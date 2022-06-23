@@ -21,6 +21,8 @@ class _AddTransactionsState extends State<AddTransactions> {
   DateTime selectedDate = DateTime.now();
   String? temp;
   CategoryBox categoryBox = CategoryBox();
+  List<DropdownMenuItem<String>> incomeCat = [];
+  List<DropdownMenuItem<String>> expenseCat = [];
   String? category;
   String selectedCategory = 'Unspecified';
   List<String> months = [
@@ -36,80 +38,6 @@ class _AddTransactionsState extends State<AddTransactions> {
     "Oct",
     "Nov",
     "Dec",
-  ];
-
-  List<DropdownMenuItem<String>> incomeCategory = [
-    DropdownMenuItem(
-      value: 'BlackMoney',
-      child: Text(
-        'BlackMoney',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      ),
-    ),
-    DropdownMenuItem(
-      value: "Business Income",
-      child: Text('Business Income',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Capital Gains",
-      child: Text('Capital Gains',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Donations/Gifts Recieved",
-      child: Text('Donations/Gifts',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Salary",
-      child: Text('Salary Income',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Winning Lotteries",
-      child: Text('Winning Lotteries',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Miscallaneous Income",
-      child: Text('Miscallaneous Income',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-  ];
-  List<DropdownMenuItem<String>> expenseCategory = [
-    DropdownMenuItem(
-      value: 'Business Expense',
-      child: Text(
-        'Business Expense',
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      ),
-    ),
-    DropdownMenuItem(
-      value: "Capital Losses Paid",
-      child: Text('Capital Losses Paid',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Donations/Gifts paid",
-      child: Text('Donations/Gifts',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Lost bets",
-      child: Text('Losing Lotteries',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Life Expenses",
-      child: Text('Normal Life Exp',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
-    DropdownMenuItem(
-      value: "Miscallaneous Expense",
-      child: Text('Miscallaneous Expense',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-    ),
   ];
 
   Future<void> _selectDate(BuildContext context) async {
@@ -270,7 +198,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         Container(
           padding: EdgeInsets.only(top: 15),
           child: DropdownButton(
-            items: type == 'Income' ? incomeCategory : expenseCategory,
+            items: type == 'Income' ? incomeCat : expenseCat,
             hint: (Text(
               temp == null ? 'No value Selected' : selectedCategory,
               style: TextStyle(fontSize: 20),
@@ -296,7 +224,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           Expanded(
             child: TextField(
                 decoration: InputDecoration(
-                    hintText: 'Enter the Category', border: InputBorder.none),
+                    hintText: 'Category Name', border: InputBorder.none),
                 style: TextStyle(fontSize: 24.0),
                 onChanged: (cat) {
                   if (cat != '') {
@@ -311,9 +239,13 @@ class _AddTransactionsState extends State<AddTransactions> {
                 textCapitalization: TextCapitalization.sentences),
           ),
           ElevatedButton.icon(
-              onPressed: () {
-                addCategory(category!, type);
+              onPressed: () async {
+                print('About to print');
+                addCategoryToDB(category!, type);
                 print('${category},${type}');
+                await expenseCategoryAdder();
+                await incomeCategoryAdder();
+                setState(() {});
               },
               icon: (Icon(Icons.add)),
               label: Text("Add"))
@@ -382,7 +314,124 @@ class _AddTransactionsState extends State<AddTransactions> {
     ));
   }
 
-  addCategory(String newCategory, String type) {
+  addCategoryToDB(String newCategory, String type) {
     categoryBox.addCategory(category: newCategory, type: type);
+  }
+
+  incomeCategoryAdder() async {
+    incomeCat.clear();
+    List<DropdownMenuItem<String>> defaultIncomeCategory = [
+      DropdownMenuItem(
+        value: 'BlackMoney',
+        child: Text(
+          'BlackMoney',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+      DropdownMenuItem(
+        value: "Business Income",
+        child: Text('Business Income',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Capital Gains",
+        child: Text('Capital Gains',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Donations/Gifts Recieved",
+        child: Text('Donations/Gifts',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Salary",
+        child: Text('Salary Income',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Winning Lotteries",
+        child: Text('Winning Lotteries',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Miscallaneous Income",
+        child: Text('Miscallaneous Income',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+    ];
+    List<dynamic> income = await categoryBox.fetchIncomeCategory();
+    List<DropdownMenuItem<String>> dropDown = [];
+
+    for (int i = 0; i < income.length; i++) {
+      String val = income[i]['name'].toString();
+      DropdownMenuItem<String> item = DropdownMenuItem(
+          value: val,
+          child: Text(
+            val,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ));
+      dropDown.add(item);
+    }
+    setState(() {
+      incomeCat.addAll(defaultIncomeCategory);
+      incomeCat.addAll(dropDown);
+      print('Length of Income category ${incomeCat.length}');
+    });
+  }
+
+  expenseCategoryAdder() async {
+    expenseCat.clear();
+    List<DropdownMenuItem<String>> defaultExpenseCategory = [
+      DropdownMenuItem(
+        value: 'Business Expense',
+        child: Text(
+          'Business Expense',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+      ),
+      DropdownMenuItem(
+        value: "Capital Losses Paid",
+        child: Text('Capital Losses Paid',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Donations/Gifts paid",
+        child: Text('Donations/Gifts',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Lost bets",
+        child: Text('Losing Lotteries',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Life Expenses",
+        child: Text('Normal Life Exp',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+      DropdownMenuItem(
+        value: "Miscallaneous Expense",
+        child: Text('Miscallaneous Expense',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+      ),
+    ];
+    List<dynamic> expenses = await categoryBox.fetchExpenseCategory();
+    List<DropdownMenuItem<String>> dropDown = [];
+
+    for (int i = 0; i < expenses.length; i++) {
+      String val = expenses[i]['name'].toString();
+      DropdownMenuItem<String> item = DropdownMenuItem(
+          value: val,
+          child: Text(
+            val,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          ));
+      dropDown.add(item);
+    }
+    setState(() {
+      expenseCat.addAll(defaultExpenseCategory);
+      expenseCat.addAll(dropDown);
+      print('Length of expense category ${expenseCat.length}');
+    });
   }
 }
