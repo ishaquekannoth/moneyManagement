@@ -23,24 +23,32 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           centerTitle: true,
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () async{
-           //await category.clearCategoryBox();
-           await category.printCategoryValues();
+          onPressed: () async {
+            //await category.clearCategoryBox();
+            await category.printCategoryValues();
             // print(await category.fetchAllCategories());
           },
         ),
         body: ListView.builder(
+            shrinkWrap: true,
             itemCount: myList.length,
             itemBuilder: (context, index) {
               if (myList[index]['type'] == 'Expense') {
                 return (ListTile(
-                  title: expenseTile(myList[index]['amount'],
-                      myList[index]['note'], myList[index]['date']),
-                ));
+                    title: expenseTile(
+                        myList[index]['amount'],
+                        myList[index]['note'],
+                        myList[index]['date'],
+                        myList[index]['id'],
+                        helper)));
               } else {
                 return (ListTile(
-                  title: incomeTile(myList[index]['amount'],
-                      myList[index]['note'], myList[index]['date']),
+                  title: incomeTile(
+                      myList[index]['amount'],
+                      myList[index]['note'],
+                      myList[index]['date'],
+                      myList[index]['id'],
+                      helper),
                 ));
               }
             })));
@@ -59,80 +67,100 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   }
 }
 
-Widget expenseTile(int value, String note, DateTime dateTime) {
-  return (Container(
-    padding: EdgeInsets.all(15),
-    margin: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Color.fromARGB(255, 218, 226, 226)),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              Icons.arrow_circle_up_outlined,
-              size: 28,
-              color: Colors.red,
-            ),
-            Text("Expense",
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold)),
-            Text('$value AED',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 170, 20, 9),
-                    fontWeight: FontWeight.bold)),
-            Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold))
-          ],
-        )
-      ],
-    ),
-  ));
+Widget expenseTile(
+    int value, String note, DateTime dateTime, int id, Dbhelper dataBase) {
+  return GestureDetector(
+    onTap: () {
+      print('You clicked an Expense item ID is');
+      print(id);
+    },
+    onDoubleTap: (){
+     dataBase.removeSingleItem(id);
+    },
+    child: (Container(
+      // padding: EdgeInsets.all(15),
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_up_outlined,
+                size: 28,
+                color: Colors.red,
+              ),
+              Text("Expense",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 170, 20, 9),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
+            ],
+          )
+        ],
+      ),
+    )),
+  );
 }
 
-Widget incomeTile(int value, String note, DateTime dateTime) {
-  return (Container(
-    padding: EdgeInsets.all(15),
-    margin: EdgeInsets.all(10),
-    decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        color: Color.fromARGB(255, 218, 226, 226)),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Icon(
-              Icons.arrow_circle_down_outlined,
-              size: 28,
-              color: Color.fromARGB(255, 5, 231, 5),
-            ),
-            Text("Income",
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold)),
-            Text('$value AED',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Color.fromARGB(255, 4, 112, 8),
-                    fontWeight: FontWeight.bold)),
-            Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold))
-          ],
-        )
-      ],
-    ),
-  ));
+Widget incomeTile(
+    int value, String note, DateTime dateTime, int id, Dbhelper dataBase) {
+  return GestureDetector(
+    onTap: () {
+      print('You clicked an Income item.ID is');
+      print(id);
+    },
+    onDoubleTap: (){
+     dataBase.removeSingleItem(id);
+    },
+    child: (Container(
+      // padding: EdgeInsets.all(15),
+      // margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Color.fromARGB(255, 218, 226, 226)),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.arrow_circle_down_outlined,
+                size: 28,
+                color: Color.fromARGB(255, 5, 231, 5),
+              ),
+              Text("Income",
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold)),
+              Text('$value AED',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Color.fromARGB(255, 4, 112, 8),
+                      fontWeight: FontWeight.bold)),
+              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.bold))
+            ],
+          )
+        ],
+      ),
+    )),
+  );
 }

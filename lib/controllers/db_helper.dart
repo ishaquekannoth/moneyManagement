@@ -49,9 +49,19 @@ class Dbhelper {
 
   printKeys() {
     CategoryBox category = CategoryBox();
+    print('ALL keys AND VALUES in DB');
     print(moneyBox.values);
   }
+
   Future<void> removeSingleItem(int id) async {
-    await moneyBox.delete(id);
+    var desiredkey;
+    moneyBox.toMap().forEach((key, value) {
+      if(value['id']==id){
+        desiredkey=key;
+      }
+    });
+    print(desiredkey);
+    moneyBox.delete(desiredkey);
+    }
   }
-}
+

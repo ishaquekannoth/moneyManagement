@@ -63,7 +63,11 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
                 return Center(
-                  child: Text('OOps..No Data found..did you reset the data Recently?',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+                  child: Text(
+                    'OOps..No Data found..did you reset the data Recently?',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
                 );
               }
               getTotalBalance(snapshot.data!);
@@ -81,7 +85,8 @@ class _HomePageState extends State<HomePage> {
                             child: Image.asset(
                               "Assets/images/face.jpeg",
                               fit: BoxFit.contain,
-                              width: 50,height: 50,
+                              width: 50,
+                              height: 50,
                             ),
                           ),
                         ),
@@ -103,6 +108,7 @@ class _HomePageState extends State<HomePage> {
                                 size: 32,
                               ),
                               onPressed: () {
+                                dbhelper.printKeys();
                                 setState(() {});
                               },
                             )),
@@ -153,7 +159,9 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 Padding(
                     padding: EdgeInsets.all(1),
                     child: Text(
@@ -167,14 +175,18 @@ class _HomePageState extends State<HomePage> {
                     itemCount:
                         snapshot.data!.length < 4 ? snapshot.data!.length : 4,
                     itemBuilder: (context, index) {
-                      Map data = snapshot.data![index];
-
                       if (tempList[index]['type'] == 'Expense') {
-                        return expenseTile(tempList[index]['amount'],
-                            tempList[index]['note'], tempList[index]['date']);
+                        return expenseTile(
+                            tempList[index]['amount'],
+                            tempList[index]['note'],
+                            tempList[index]['date'],
+                            tempList[index]['id']);
                       } else {
-                        return incomeTile(tempList[index]['amount'],
-                            tempList[index]['note'], tempList[index]['date']);
+                        return incomeTile(
+                            tempList[index]['amount'],
+                            tempList[index]['note'],
+                            tempList[index]['date'],
+                            tempList[index]['id']);
                       }
                     }),
               ]));
@@ -259,82 +271,134 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime) {
-    return (Container(
-      padding: EdgeInsets.all(15),
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color.fromARGB(255, 218, 226, 226)),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.arrow_circle_up_outlined,
-                size: 28,
-                color: Colors.red,
-              ),
-              Text("Expense",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold)),
-              Text('$value AED',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 170, 20, 9),
-                      fontWeight: FontWeight.bold)),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold))
-            ],
-          )
-        ],
-      ),
-    ));
+  Widget expenseTile(int value, String note, DateTime dateTime, int id) {
+    Dbhelper help = Dbhelper();
+    return GestureDetector(
+      onTap: () {
+        print('You clicked an Expense item');
+      },
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        help.removeSingleItem(id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
+      },
+      child: (Container(
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Color.fromARGB(255, 218, 226, 226)),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.arrow_circle_up_outlined,
+                  size: 28,
+                  color: Colors.red,
+                ),
+                Text("Expense",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold)),
+                Text('$value AED',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 170, 20, 9),
+                        fontWeight: FontWeight.bold)),
+                Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold))
+              ],
+            )
+          ],
+        ),
+      )),
+    );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime) {
-    return (Container(
-      padding: EdgeInsets.all(15),
-      margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Color.fromARGB(255, 218, 226, 226)),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.arrow_circle_down_outlined,
-                size: 28,
-                color: Color.fromARGB(255, 5, 231, 5),
-              ),
-              Text("Income",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold)),
-              Text('$value AED',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 4, 112, 8),
-                      fontWeight: FontWeight.bold)),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold))
-            ],
-          )
-        ],
-      ),
-    ));
+  Widget incomeTile(int value, String note, DateTime dateTime, int id) {
+    Dbhelper help = Dbhelper();
+    return GestureDetector(
+      onTap: () {
+        print('You clicked an Income item');
+      },
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        help.removeSingleItem(id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
+      },
+      child: (Container(
+        padding: EdgeInsets.all(15),
+        margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: Color.fromARGB(255, 218, 226, 226)),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.arrow_circle_down_outlined,
+                  size: 28,
+                  color: Color.fromARGB(255, 5, 231, 5),
+                ),
+                Text("Income",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold)),
+                Text('$value AED',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 4, 112, 8),
+                        fontWeight: FontWeight.bold)),
+                Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold))
+              ],
+            )
+          ],
+        ),
+      )),
+    );
   }
 
   Future<Map> sortedMap() async {
@@ -346,8 +410,7 @@ class _HomePageState extends State<HomePage> {
     sortMapByValue.forEach((key, value) => myList.add(value));
     tempList.clear();
     tempList.addAll(myList);
-      setState(() {
-      });
+    setState(() {});
     return (sortMapByValue);
   }
 }
