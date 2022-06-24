@@ -24,7 +24,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async{
-           await category.clearCategoryBox();
+           //await category.clearCategoryBox();
            await category.printCategoryValues();
             // print(await category.fetchAllCategories());
           },
