@@ -42,12 +42,8 @@ class _EditScreenState extends State<EditScreen> {
     _dateTime.text = widget.dateTime.toString();
   }
 
-  // int? amount;
-  //late String note = widget.note;
   late String type = widget.type;
-  DateTime selectedDate = DateTime.now();
-
-  // String? temp;
+  late DateTime selectedDate = widget.dateTime;
   CategoryBox categoryBox = CategoryBox();
   List<DropdownMenuItem<String>> incomeCat = [];
   List<DropdownMenuItem<String>> expenseCat = [];
@@ -112,13 +108,6 @@ class _EditScreenState extends State<EditScreen> {
             Expanded(
               child: TextField(
                 controller: _amount,
-                // onChanged: (value) {
-                //   try {
-                //     _amount.text = int.parse(value).toString();
-                //   } catch (e) {
-                //     Text("only numbers permitted");
-                //   }
-                // },
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
                 ],
@@ -153,9 +142,6 @@ class _EditScreenState extends State<EditScreen> {
                 decoration: const InputDecoration(
                     hintText: 'Description', border: InputBorder.none),
                 style: const TextStyle(fontSize: 24.0),
-                // onChanged: (value) {
-                //   note = value;
-                // },
               ),
             ),
           ],
@@ -189,10 +175,8 @@ class _EditScreenState extends State<EditScreen> {
               onSelected: (value) {
                 if (value == true) {
                   setState(() {
-                    // temp = null;
                     type = 'Income';
                     scg = 'Unspecified';
-                    //selectedCategory = widget.category;
                   });
                 }
               },
@@ -213,8 +197,7 @@ class _EditScreenState extends State<EditScreen> {
                   setState(() {
                     type = 'Expense';
                     scg = 'Unspecified';
-                    // temp = null;
-                    //selectedCategory = 'Unspecified';
+                 
                   });
                 }
               },
@@ -231,16 +214,10 @@ class _EditScreenState extends State<EditScreen> {
         Container(
           padding: EdgeInsets.only(top: 15),
           child: DropdownButton(
-            //value: widget.category,
             menuMaxHeight: 200,
             items: type == 'Income' ? incomeCat : expenseCat,
-            hint: Text(scg)
-            //  (Text(
-            //   selectedCategory,
-            //   temp == null ? 'No value Selected' : selectedCategory,
-            //   style: TextStyle(fontSize: 20),
-            // ))
-            ,
+            hint: Text(scg),
+
             onChanged: (String? value) {
               print(value);
               setState(() {
@@ -343,7 +320,7 @@ class _EditScreenState extends State<EditScreen> {
                       width: 20,
                     ),
                     Text(
-                      "${widget.dateTime.day}${" ${months[widget.dateTime.month - 1]}"}${" ${widget.dateTime.year}"}",
+                       "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),

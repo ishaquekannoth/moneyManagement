@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/editScreen.dart';
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -180,13 +181,17 @@ class _HomePageState extends State<HomePage> {
                             tempList[index]['amount'],
                             tempList[index]['note'],
                             tempList[index]['date'],
-                            tempList[index]['id']);
+                            tempList[index]['id'],
+                            tempList[index]['type'],
+                            tempList[index]['category']);
                       } else {
                         return incomeTile(
                             tempList[index]['amount'],
                             tempList[index]['note'],
                             tempList[index]['date'],
-                            tempList[index]['id']);
+                            tempList[index]['id'],
+                            tempList[index]['type'],
+                            tempList[index]['category']);
                       }
                     }),
               ]));
@@ -271,11 +276,11 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id) {
+  Widget expenseTile(int value, String note, DateTime dateTime, int id,String type,String category) {
     Dbhelper help = Dbhelper();
     return GestureDetector(
       onTap: () {
-        print('You clicked an Expense item');
+         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
       },
       onLongPress: () {
         showDialog(
@@ -336,11 +341,11 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id) {
+  Widget incomeTile(int value, String note, DateTime dateTime, int id,String type,String category) {
     Dbhelper help = Dbhelper();
     return GestureDetector(
       onTap: () {
-        print('You clicked an Income item');
+       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
       },
       onLongPress: () {
         showDialog(
