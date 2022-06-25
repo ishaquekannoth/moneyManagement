@@ -29,7 +29,7 @@ class Dbhelper {
     moneyBox.put(value['id'], value);
   }
 
-  Future<Map> fetchData() {
+  Future<Map> fetchAllData() {
     if (moneyBox.values.isEmpty) {
       return Future.value({});
     } else {
@@ -47,21 +47,46 @@ class Dbhelper {
     print(result);
   }
 
-  printKeys() {
-    CategoryBox category = CategoryBox();
-    print('ALL keys AND VALUES in DB');
-    print(moneyBox.values);
-  }
-
   Future<void> removeSingleItem(int id) async {
     var desiredkey;
     moneyBox.toMap().forEach((key, value) {
-      if(value['id']==id){
-        desiredkey=key;
+      if (value['id'] == id) {
+        desiredkey = key;
       }
     });
     print(desiredkey);
     moneyBox.delete(desiredkey);
-    }
   }
 
+  Future<void> editSingleItem(
+      {required int amount,
+      required DateTime date,
+      required String note,
+      required String type,
+      required String category,
+      required int id}) async {
+    var newValue = {
+      'amount': amount,
+      'date': date,
+      'note': note,
+      'type': type,
+      'category': category,
+      'id':id
+    };
+    var desiredkey;
+    moneyBox.toMap().forEach((key, value) {
+      if (value['id'] == id) {
+        desiredkey = key;
+      }
+    });
+    print(desiredkey);
+    moneyBox.put(desiredkey, newValue);
+  }
+
+  printKeys() {
+    CategoryBox category = CategoryBox();
+    print('ALL keys AND VALUES in DB');
+    print(moneyBox.keys);
+    print(moneyBox.values);
+  }
+}

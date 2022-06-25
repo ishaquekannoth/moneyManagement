@@ -402,7 +402,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<Map> sortedMap() async {
-    Map unsorted = await dbhelper.fetchData();
+    Map unsorted = await dbhelper.fetchAllData();
     LinkedHashMap sortMapByValue = LinkedHashMap.fromEntries(
         unsorted.entries.toList()
           ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));

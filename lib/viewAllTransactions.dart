@@ -2,6 +2,7 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/editScreen.dart';
 
 class ViewAllTransactions extends StatefulWidget {
   const ViewAllTransactions({Key? key}) : super(key: key);
@@ -40,7 +41,9 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         myList[index]['note'],
                         myList[index]['date'],
                         myList[index]['id'],
-                        helper)));
+                        myList[index]['category'],
+                        myList[index]['type'],
+                        helper,context)));
               } else {
                 return (ListTile(
                   title: incomeTile(
@@ -48,14 +51,16 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       myList[index]['note'],
                       myList[index]['date'],
                       myList[index]['id'],
-                      helper),
+                      myList[index]['category'],
+                      myList[index]['type'],
+                      helper,context),
                 ));
               }
             })));
   }
 
   Future<void> getRawMap() async {
-    Map unsorted = await helper.fetchData();
+    Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
       ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
     //print(sortMapByValue);
@@ -68,14 +73,33 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
 }
 
 Widget expenseTile(
-    int value, String note, DateTime dateTime, int id, Dbhelper dataBase) {
+    int value, String note, DateTime dateTime, int id,String category,String type,Dbhelper dataBase,BuildContext context) {
   return GestureDetector(
     onTap: () {
       print('You clicked an Expense item ID is');
       print(id);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
     },
-    onDoubleTap: (){
-     dataBase.removeSingleItem(id);
+    onLongPress: (){
+    //  dataBase.removeSingleItem(id);
+    showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataBase.removeSingleItem(id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
     },
     child: (Container(
       // padding: EdgeInsets.all(15),
@@ -117,14 +141,32 @@ Widget expenseTile(
 }
 
 Widget incomeTile(
-    int value, String note, DateTime dateTime, int id, Dbhelper dataBase) {
+    int value, String note, DateTime dateTime, int id,String category,String type, Dbhelper dataBase,BuildContext context) {
   return GestureDetector(
     onTap: () {
       print('You clicked an Income item.ID is');
       print(id);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,category: category,type: type,))));
     },
-    onDoubleTap: (){
-     dataBase.removeSingleItem(id);
+    onLongPress: (){
+     showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataBase.removeSingleItem(id);
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
     },
     child: (Container(
       // padding: EdgeInsets.all(15),

@@ -56,7 +56,7 @@ class _TestState extends State<Test> {
   }
 
   Future<List> getRawMap() async {
-    Map unsorted = await helper.fetchData();
+    Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
       ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
     //print(sortMapByValue);

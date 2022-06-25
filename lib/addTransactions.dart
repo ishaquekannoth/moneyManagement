@@ -225,9 +225,9 @@ class _AddTransactionsState extends State<AddTransactions> {
           height: 20,
         ),
         Text('Category Not Listed?',
-            style: TextStyle(fontSize: 18.0, color: Colors.red)),
+            style: TextStyle(fontSize: 18.0, color: Colors.red,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
         SizedBox(
-          height: 10,
+          height: 15,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
@@ -284,6 +284,9 @@ class _AddTransactionsState extends State<AddTransactions> {
               icon: (Icon(Icons.add)),
               label: Text("Add an $type Category"))
         ]),
+
+      SizedBox(height: 20,),
+
         SizedBox(
             height: 50,
             child: TextButton(
@@ -309,6 +312,11 @@ class _AddTransactionsState extends State<AddTransactions> {
                     ),
                   ],
                 ))),
+
+          SizedBox(height: 45,),
+
+
+
         SizedBox(
             height: 50,
             child: ElevatedButton(
@@ -424,8 +432,8 @@ class _AddTransactionsState extends State<AddTransactions> {
         ),
       ),
       DropdownMenuItem(
-        value: "Capital Losses Paid",
-        child: Text('Capital Losses Paid',
+        value: "Capital Losses Incured",
+        child: Text('Capital Losses Incured',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
@@ -446,6 +454,11 @@ class _AddTransactionsState extends State<AddTransactions> {
       DropdownMenuItem(
         value: "Miscallaneous Expense",
         child: Text('Miscallaneous Expense',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      ),
+        DropdownMenuItem(
+        value: "Xtras",
+        child: Text('Xtras',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
     ];
