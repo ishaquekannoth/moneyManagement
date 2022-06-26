@@ -19,13 +19,18 @@ class _MainDisplayState extends State<MainDisplay> {
   Widget build(BuildContext context) {
     return (Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+       selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        backgroundColor: Colors.white,
+        selectedFontSize:15,
+        iconSize: 35,
+        selectedItemColor: Colors.red,
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home,size: 25,), label: 'Home',),
           BottomNavigationBarItem(
-              icon: Icon(Icons.note_add_sharp), label: 'History',),
-          BottomNavigationBarItem(icon: Icon(Icons.pages), label: 'Reports'),
+              icon: Icon(Icons.history), label: 'History',),
+          BottomNavigationBarItem(icon: Icon(Icons.pie_chart_rounded   ), label: 'Reports'),
           BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
         ],
         onTap: (ind) {

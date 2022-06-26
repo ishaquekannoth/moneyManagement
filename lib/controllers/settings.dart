@@ -52,7 +52,7 @@ class SettingsMenu extends StatelessWidget {
                   onTap: () async {
                     db.resetData();
                     cat.clearCategoryBox();
-                    Navigator.of(context).pop();
+                    //Navigator.of(context).pop();
                   }),
             ),
             Divider(

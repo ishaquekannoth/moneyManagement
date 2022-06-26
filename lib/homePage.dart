@@ -33,6 +33,19 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+ Future<Map> sortedMap() async {
+    Map unsorted = await dbhelper.fetchAllData();
+    LinkedHashMap sortMapByValue = LinkedHashMap.fromEntries(
+        unsorted.entries.toList()
+          ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
+    List myList = [];
+    sortMapByValue.forEach((key, value) => myList.add(value));
+    tempList.clear();
+    tempList.addAll(myList);
+    setState(() {});
+    return (sortMapByValue);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -324,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         color: Colors.black87,
                         fontWeight: FontWeight.bold)),
-                Text('$value AED',
+                Text('-$value AED',
                     style: TextStyle(
                         fontSize: 18,
                         color: Color.fromARGB(255, 170, 20, 9),
@@ -362,6 +375,7 @@ class _HomePageState extends State<HomePage> {
                 title: Text('Confirm Delete?'),
                 actions: [
                   ElevatedButton(
+                      
                       onPressed: () => Navigator.of(context).pop(),
                       child: Text("Cancel")),
                   ElevatedButton(
@@ -395,7 +409,7 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         color: Colors.black87,
                         fontWeight: FontWeight.bold)),
-                Text('$value AED',
+                Text('+$value AED',
                     style: TextStyle(
                         fontSize: 18,
                         color: Color.fromARGB(255, 4, 112, 8),
@@ -416,18 +430,5 @@ class _HomePageState extends State<HomePage> {
         ),
       )),
     );
-  }
-
-  Future<Map> sortedMap() async {
-    Map unsorted = await dbhelper.fetchAllData();
-    LinkedHashMap sortMapByValue = LinkedHashMap.fromEntries(
-        unsorted.entries.toList()
-          ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
-    List myList = [];
-    sortMapByValue.forEach((key, value) => myList.add(value));
-    tempList.clear();
-    tempList.addAll(myList);
-    setState(() {});
-    return (sortMapByValue);
   }
 }

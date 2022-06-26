@@ -18,24 +18,53 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     getRawMap();
     super.initState();
   }
+
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
   List myList = [];
   List incomeList = [];
   List expenseList = [];
+
+  Future<void> getRawMap() async {
+    Map unsorted = await helper.fetchAllData();
+    var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
+      ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
+    //print(sortMapByValue);
+    List sortedList = [];
+    sortMapByValue.forEach((key, value) => sortedList.add(value));
+    myList.clear();
+    myList.addAll(sortedList);
+    incomeList.clear();
+    expenseList.clear();
+    myList.forEach(
+      (element) {
+        if (element['type'] == 'Expense') {
+          expenseList.add(element);
+        } else {
+          incomeList.add(element);
+        }
+      },
+    );
+    print('Length of IncomeList and ExpenseList');
+    print(incomeList.length);
+    print(incomeList.length);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
-    getRawMap();
     return DefaultTabController(
       length: 3,
       child: (Scaffold(
           appBar: AppBar(
             backgroundColor: Color.fromARGB(225, 255, 255, 255),
-            title: Text('All Transactions',style: TextStyle(color: Colors.black),),
+            title: Text(
+              'All Transactions',
+              style: TextStyle(color: Colors.black),
+            ),
             centerTitle: true,
-            bottom: TabBar(
-              labelColor: Color.fromARGB(255, 0, 0, 0),
-              tabs: const [
+            bottom:
+                TabBar(labelColor: Color.fromARGB(255, 0, 0, 0), tabs: const [
               Tab(text: 'All List'),
               Tab(
                 text: 'Expenses',
@@ -48,6 +77,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               await category.printCategoryValues();
+
               // print(await category.fetchAllCategories());
             },
           ),
@@ -116,184 +146,164 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     );
   }
 
-  Future<void> getRawMap() async {
-    Map unsorted = await helper.fetchAllData();
-    var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
-      ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
-    //print(sortMapByValue);
-    List sortedList = [];
-    sortMapByValue.forEach((key, value) => sortedList.add(value));
-    myList.clear();
-    myList.addAll(sortedList);
-    incomeList.clear();
-    expenseList.clear();
-    myList.forEach(
-      (element) {
-        if (element['type'] == 'Expense') {
-          expenseList.add(element);
-        } else {
-          incomeList.add(element);
-        }
-      },
-    );
-    print('Length of IncomeList and ExpenseList');
-    setState(() {});
-  }
-}
-
-Widget expenseTile(int value, String note, DateTime dateTime, int id,
-    String category, String type, Dbhelper dataBase, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      print('You clicked an Expense item ID is');
-      print(id);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => (EditScreen(
-              value: value,
-              note: note,
-              dateTime: dateTime,
-              id: id,
-              type: type,
-              category: category))));
-    },
-    onLongPress: () {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return (AlertDialog(
-              title: Text('Confirm Delete?'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text("Cancel")),
-                ElevatedButton(
-                    onPressed: () {
-                      dataBase.removeSingleItem(id);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK"))
-              ],
-            ));
-          });
-    },
-    child: (Container(
-      // padding: EdgeInsets.all(15),
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Colors.white),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.arrow_circle_up_outlined,
-                size: 28,
-                color: Colors.red,
-              ),
-              Text("Expense",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold)),
-              Text('$value AED',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 170, 20, 9),
-                      fontWeight: FontWeight.bold)),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold))
-            ],
-          ),
-          Text(category,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black87,
-              ))
-        ],
-      ),
-    )),
-  );
-}
-
-Widget incomeTile(int value, String note, DateTime dateTime, int id,
-    String category, String type, Dbhelper dataBase, BuildContext context) {
-  return GestureDetector(
-    onTap: () {
-      print('You clicked an Income item.ID is');
-      print(id);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => (EditScreen(
+  Widget expenseTile(int value, String note, DateTime dateTime, int id,
+      String category, String type, Dbhelper dataBase, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print('You clicked an Expense item ID is');
+        print(id);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => (EditScreen(
                 value: value,
                 note: note,
                 dateTime: dateTime,
                 id: id,
-                category: category,
                 type: type,
-              ))));
-    },
-    onLongPress: () {
-      showDialog(
-          context: context,
-          builder: (context) {
-            return (AlertDialog(
-              title: Text('Confirm Delete?'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text("Cancel")),
-                ElevatedButton(
-                    onPressed: () {
-                      dataBase.removeSingleItem(id);
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("OK"))
+                category: category))));
+      },
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataBase
+                            .removeSingleItem(id)
+                            .whenComplete(() => getRawMap());
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
+      },
+      child: (Container(
+        // padding: EdgeInsets.all(15),
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15), color: Colors.white),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.arrow_circle_up_outlined,
+                  size: 28,
+                  color: Colors.red,
+                ),
+                Text("Expense",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold)),
+                Text('-$value AED',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 170, 20, 9),
+                        fontWeight: FontWeight.bold)),
+                Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold))
               ],
-            ));
-          });
-    },
-    child: (Container(
-      // padding: EdgeInsets.all(15),
-      // margin: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15), color: Colors.white),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.arrow_circle_down_outlined,
-                size: 28,
-                color: Color.fromARGB(255, 5, 231, 5),
-              ),
-              Text("Income",
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold)),
-              Text('$value AED',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Color.fromARGB(255, 4, 112, 8),
-                      fontWeight: FontWeight.bold)),
-              Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black87,
-                      fontWeight: FontWeight.bold))
-            ],
-          ),
-          Text(category,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.black87,
-              )),
-        ],
-      ),
-    )),
-  );
+            ),
+            Text(category,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black87,
+                ))
+          ],
+        ),
+      )),
+    );
+  }
+
+  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+      String category, String type, Dbhelper dataBase, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        print('You clicked an Income item.ID is');
+        print(id);
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => (EditScreen(
+                  value: value,
+                  note: note,
+                  dateTime: dateTime,
+                  id: id,
+                  category: category,
+                  type: type,
+                ))));
+      },
+      onLongPress: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return (AlertDialog(
+                title: Text('Confirm Delete?'),
+                actions: [
+                  ElevatedButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: Text("Cancel")),
+                  ElevatedButton(
+                      onPressed: () {
+                        dataBase
+                            .removeSingleItem(id)
+                            .whenComplete(() => getRawMap());
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("OK"))
+                ],
+              ));
+            });
+      },
+      child: (Container(
+        // padding: EdgeInsets.all(15),
+        // margin: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15), color: Colors.white),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Icon(
+                  Icons.arrow_circle_down_outlined,
+                  size: 28,
+                  color: Color.fromARGB(255, 5, 231, 5),
+                ),
+                Text("Income",
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold)),
+                Text('+$value AED',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Color.fromARGB(255, 4, 112, 8),
+                        fontWeight: FontWeight.bold)),
+                Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black87,
+                        fontWeight: FontWeight.bold))
+              ],
+            ),
+            Text(category,
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.black87,
+                )),
+          ],
+        ),
+      )),
+    );
+  }
 }

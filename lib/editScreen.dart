@@ -95,7 +95,7 @@ class _EditScreenState extends State<EditScreen> {
             Text(
               'Update An Existing Item',
               textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
             ),
           ],
         ),

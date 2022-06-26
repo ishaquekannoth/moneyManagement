@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 class CategoryBox {
@@ -19,11 +18,10 @@ class CategoryBox {
   }
 
   printCategoryValues() {
-    print('Category values printing from CategoryDB class');
+    print('User Added Category values printing from CategoryDB class');
     print(categoryBox.values);
-    print("Keys From CatDB class");
+    print("Generated Keys From CatDB class For user Added Category");
     print(categoryBox.keys);
-    // print(categoryBox.getAt(1));
   }
 
   clearCategoryBox() {
