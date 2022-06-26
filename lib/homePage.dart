@@ -104,8 +104,8 @@ class _HomePageState extends State<HomePage> {
                             padding: EdgeInsets.all(12.0),
                             child: IconButton(
                               icon: Icon(
-                                Icons.settings,
-                                color: Colors.green,
+                                Icons.print_outlined,
+                                color: Colors.red,
                                 size: 32,
                               ),
                               onPressed: () {

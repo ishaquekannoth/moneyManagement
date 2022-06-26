@@ -28,11 +28,12 @@ class _AddTransactionsState extends State<AddTransactions> {
   String type = "Income";
   DateTime selectedDate = DateTime.now();
   String? temp;
+  String? category;
+  String selectedCategory = 'Unspecified';
   CategoryBox categoryBox = CategoryBox();
   List<DropdownMenuItem<String>> incomeCat = [];
   List<DropdownMenuItem<String>> expenseCat = [];
-  String? category;
-  String selectedCategory = 'Unspecified';
+
   List<String> months = [
     "Jan",
     "Feb",
@@ -64,12 +65,27 @@ class _AddTransactionsState extends State<AddTransactions> {
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
-      appBar: AppBar(toolbarHeight: 0.0),
+      appBar: AppBar(
+        toolbarHeight: 0.0,
+      ),
       body: ListView(padding: EdgeInsets.all(12.0), children: [
-        Text(
-          'Add Transactions',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w700),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
+
+          SizedBox(width: 15,),
+
+            Text(
+              'Add a new Transaction',
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+            ),
+          ],
         ),
         SizedBox(
           height: 20,
@@ -226,23 +242,22 @@ class _AddTransactionsState extends State<AddTransactions> {
           height: 20,
         ),
         Container(
-         
-          child: Text('Category Not Listed?',
-              style: TextStyle(fontSize: 18.0, color: Colors.red,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+          child: Text(
+            'Category Not Listed?',
+            style: TextStyle(
+                fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
         ),
         SizedBox(
           height: 15,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
-            minimumSize: Size(25, 35),
-            
-
-            
-            
-            ),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.lightBlue,
+                minimumSize: Size(25, 35),
+              ),
               onPressed: () async {
                 showDialog(
                     context: context,
@@ -268,38 +283,39 @@ class _AddTransactionsState extends State<AddTransactions> {
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.sentences),
                           TextButton(
-                            onPressed: () async {
-                              print('About to print');
-                              addCategoryToDB(category!, type);
-                              await expenseCategoryAdder();
-                              await incomeCategoryAdder();
-                              print('${category},${type}');
-                              setState(() {
-                                category = null;
-                              });
-                              Navigator.of(context).pop();
-                            },
-                            child:
-                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                 children: [
-                                Text('Add Category'),
-                                IconButton(onPressed: ()=>Navigator.of(context).pop(), icon:(Icon(Icons.close_outlined)))
-                              ],
-                            )
-                          ),
+                              onPressed: () async {
+                                print('About to print');
+                                addCategoryToDB(category!, type);
+                                await expenseCategoryAdder();
+                                await incomeCategoryAdder();
+                                print('${category},${type}');
+                                setState(() {
+                                  category = null;
+                                });
+                                Navigator.of(context).pop();
+                              },
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('Add Category'),
+                                  IconButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(),
+                                      icon: (Icon(Icons.close_outlined)))
+                                ],
+                              )),
                         ],
                       ));
                     });
                 setState(() {});
               },
               icon: (Icon(Icons.add)),
-              label: Text("Add an $type Category")
-              )
+              label: Text("Add an $type Category"))
         ]),
-
-      SizedBox(height: 20,),
-
+        SizedBox(
+          height: 20,
+        ),
         SizedBox(
             height: 50,
             child: TextButton(
@@ -320,17 +336,19 @@ class _AddTransactionsState extends State<AddTransactions> {
                     ),
                     Text(
                       "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.lightGreen),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.lightGreen),
                     ),
                   ],
                 ))),
-
-          SizedBox(height: 45,),
+        SizedBox(
+          height: 45,
+        ),
         SizedBox(
             height: 50,
             child: ElevatedButton(
-              
                 onPressed: () {
                   if (amount != null &&
                       note.isNotEmpty &&
@@ -359,7 +377,6 @@ class _AddTransactionsState extends State<AddTransactions> {
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide()))),
-
                 child: Text(
                   'Add Data',
                   style: TextStyle(fontSize: 18),
@@ -468,7 +485,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         child: Text('Miscallaneous Expense',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
-        DropdownMenuItem(
+      DropdownMenuItem(
         value: "Xtras",
         child: Text('Xtras',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),

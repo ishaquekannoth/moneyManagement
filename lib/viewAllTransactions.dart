@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -12,51 +13,107 @@ class ViewAllTransactions extends StatefulWidget {
 }
 
 class _ViewAllTransactionsState extends State<ViewAllTransactions> {
+  @override
+  void initState() {
+    getRawMap();
+    super.initState();
+  }
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
   List myList = [];
+  List incomeList = [];
+  List expenseList = [];
   @override
   Widget build(BuildContext context) {
     getRawMap();
-    return (Scaffold(
-        appBar: AppBar(
-          title: Text('All Transactions'),
-          centerTitle: true,
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            //await category.clearCategoryBox();
-            await category.printCategoryValues();
-            // print(await category.fetchAllCategories());
-          },
-        ),
-        body: ListView.builder(
-            shrinkWrap: true,
-            itemCount: myList.length,
-            itemBuilder: (context, index) {
-              if (myList[index]['type'] == 'Expense') {
-                return (ListTile(
-                    title: expenseTile(
-                        myList[index]['amount'],
-                        myList[index]['note'],
-                        myList[index]['date'],
-                        myList[index]['id'],
-                        myList[index]['category'],
-                        myList[index]['type'],
-                        helper,context)));
-              } else {
-                return (ListTile(
-                  title: incomeTile(
-                      myList[index]['amount'],
-                      myList[index]['note'],
-                      myList[index]['date'],
-                      myList[index]['id'],
-                      myList[index]['category'],
-                      myList[index]['type'],
-                      helper,context),
-                ));
-              }
-            })));
+    return DefaultTabController(
+      length: 3,
+      child: (Scaffold(
+          appBar: AppBar(
+            backgroundColor: Color.fromARGB(225, 255, 255, 255),
+            title: Text('All Transactions',style: TextStyle(color: Colors.black),),
+            centerTitle: true,
+            bottom: TabBar(
+              labelColor: Color.fromARGB(255, 0, 0, 0),
+              tabs: const [
+              Tab(text: 'All List'),
+              Tab(
+                text: 'Expenses',
+              ),
+              Tab(
+                text: 'Incomes',
+              ),
+            ]),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () async {
+              await category.printCategoryValues();
+              // print(await category.fetchAllCategories());
+            },
+          ),
+          body: TabBarView(
+            children: [
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: myList.length,
+                  itemBuilder: (context, index) {
+                    if (myList[index]['type'] == 'Expense') {
+                      return (ListTile(
+                          title: expenseTile(
+                              myList[index]['amount'],
+                              myList[index]['note'],
+                              myList[index]['date'],
+                              myList[index]['id'],
+                              myList[index]['category'],
+                              myList[index]['type'],
+                              helper,
+                              context)));
+                    } else {
+                      return (ListTile(
+                        title: incomeTile(
+                            myList[index]['amount'],
+                            myList[index]['note'],
+                            myList[index]['date'],
+                            myList[index]['id'],
+                            myList[index]['category'],
+                            myList[index]['type'],
+                            helper,
+                            context),
+                      ));
+                    }
+                  }),
+              ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: expenseList.length,
+                  itemBuilder: (context, index) {
+                    return (ListTile(
+                        title: expenseTile(
+                            expenseList[index]['amount'],
+                            expenseList[index]['note'],
+                            expenseList[index]['date'],
+                            expenseList[index]['id'],
+                            expenseList[index]['category'],
+                            expenseList[index]['type'],
+                            helper,
+                            context)));
+                  }),
+              ListView.builder(
+                  itemCount: incomeList.length,
+                  itemBuilder: (context, index) {
+                    return (ListTile(
+                        title: incomeTile(
+                            incomeList[index]['amount'],
+                            incomeList[index]['note'],
+                            incomeList[index]['date'],
+                            incomeList[index]['id'],
+                            incomeList[index]['category'],
+                            incomeList[index]['type'],
+                            helper,
+                            context)));
+                  }),
+            ],
+          ))),
+    );
   }
 
   Future<void> getRawMap() async {
@@ -68,45 +125,62 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     sortMapByValue.forEach((key, value) => sortedList.add(value));
     myList.clear();
     myList.addAll(sortedList);
+    incomeList.clear();
+    expenseList.clear();
+    myList.forEach(
+      (element) {
+        if (element['type'] == 'Expense') {
+          expenseList.add(element);
+        } else {
+          incomeList.add(element);
+        }
+      },
+    );
+    print('Length of IncomeList and ExpenseList');
     setState(() {});
   }
 }
 
-Widget expenseTile(
-    int value, String note, DateTime dateTime, int id,String category,String type,Dbhelper dataBase,BuildContext context) {
+Widget expenseTile(int value, String note, DateTime dateTime, int id,
+    String category, String type, Dbhelper dataBase, BuildContext context) {
   return GestureDetector(
     onTap: () {
       print('You clicked an Expense item ID is');
       print(id);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => (EditScreen(
+              value: value,
+              note: note,
+              dateTime: dateTime,
+              id: id,
+              type: type,
+              category: category))));
     },
-    onLongPress: (){
-    //  dataBase.removeSingleItem(id);
-    showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        dataBase.removeSingleItem(id);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
-                ],
-              ));
-            });
+    onLongPress: () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return (AlertDialog(
+              title: Text('Confirm Delete?'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("Cancel")),
+                ElevatedButton(
+                    onPressed: () {
+                      dataBase.removeSingleItem(id);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"))
+              ],
+            ));
+          });
     },
     child: (Container(
       // padding: EdgeInsets.all(15),
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white),
+          borderRadius: BorderRadius.circular(15), color: Colors.white),
       child: Column(
         children: [
           Row(
@@ -133,47 +207,59 @@ Widget expenseTile(
                       color: Colors.black87,
                       fontWeight: FontWeight.bold))
             ],
-          )
+          ),
+          Text(category,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black87,
+              ))
         ],
       ),
     )),
   );
 }
 
-Widget incomeTile(
-    int value, String note, DateTime dateTime, int id,String category,String type, Dbhelper dataBase,BuildContext context) {
+Widget incomeTile(int value, String note, DateTime dateTime, int id,
+    String category, String type, Dbhelper dataBase, BuildContext context) {
   return GestureDetector(
     onTap: () {
       print('You clicked an Income item.ID is');
       print(id);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,category: category,type: type,))));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => (EditScreen(
+                value: value,
+                note: note,
+                dateTime: dateTime,
+                id: id,
+                category: category,
+                type: type,
+              ))));
     },
-    onLongPress: (){
-     showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        dataBase.removeSingleItem(id);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
-                ],
-              ));
-            });
+    onLongPress: () {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return (AlertDialog(
+              title: Text('Confirm Delete?'),
+              actions: [
+                ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text("Cancel")),
+                ElevatedButton(
+                    onPressed: () {
+                      dataBase.removeSingleItem(id);
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("OK"))
+              ],
+            ));
+          });
     },
     child: (Container(
       // padding: EdgeInsets.all(15),
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color:Colors.white),
+          borderRadius: BorderRadius.circular(15), color: Colors.white),
       child: Column(
         children: [
           Row(
@@ -200,7 +286,12 @@ Widget incomeTile(
                       color: Colors.black87,
                       fontWeight: FontWeight.bold))
             ],
-          )
+          ),
+          Text(category,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black87,
+              )),
         ],
       ),
     )),

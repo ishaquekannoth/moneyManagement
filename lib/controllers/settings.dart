@@ -18,11 +18,6 @@ class SettingsMenu extends StatelessWidget {
         toolbarHeight: 80,
         elevation: 0,
         backgroundColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.red,
-        ),
         title: RichText(
           text: TextSpan(
             text: 'S',
@@ -50,13 +45,14 @@ class SettingsMenu extends StatelessWidget {
             GestureDetector(
               child: ListTile(
                   leading: Icon(
-                    Icons.alarm,
+                    Icons.delete_forever_rounded,
                     color: Colors.red,
                   ),
                   title: Text('Reset Everything'),
                   onTap: () async {
                     db.resetData();
                     cat.clearCategoryBox();
+                    Navigator.of(context).pop();
                   }),
             ),
             Divider(

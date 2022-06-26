@@ -81,10 +81,23 @@ class _EditScreenState extends State<EditScreen> {
     return (Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
       body: ListView(padding: EdgeInsets.all(12.0), children: [
-        Text(
-          'Update a Transaction',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w700),
+        Row(
+         children: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              icon: Icon(Icons.arrow_back),
+            ),
+
+          SizedBox(width: 15,),
+
+            Text(
+              'Update An Existing Item',
+              textAlign: TextAlign.justify,
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+            ),
+          ],
         ),
         SizedBox(
           height: 20,
@@ -93,7 +106,7 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Color.fromARGB(255, 196, 19, 6),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -124,7 +137,7 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.description,
@@ -151,7 +164,7 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Color.fromARGB(255, 226, 6, 116),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.moving_sharp,
@@ -168,7 +181,7 @@ class _EditScreenState extends State<EditScreen> {
                     fontSize: 20,
                     color: type == 'Income' ? Colors.white : Colors.black),
               ),
-              selectedColor: customcolor.PrimaryColor,
+              selectedColor: Colors.red,
               selected: type == 'Income' ? true : false,
               onSelected: (value) {
                 if (value == true) {
@@ -194,8 +207,7 @@ class _EditScreenState extends State<EditScreen> {
                 if (value == true) {
                   setState(() {
                     type = 'Expense';
-                    scg = 'Cateogory Not Selected';
-                 
+                    scg = 'Cateogory Not Selected';         
                   });
                 }
               },
@@ -239,6 +251,10 @@ class _EditScreenState extends State<EditScreen> {
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
+             style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlue,
+            minimumSize: Size(25, 35),
+            ),
               onPressed: () async {
                 showDialog(
                     context: context,
@@ -271,7 +287,6 @@ class _EditScreenState extends State<EditScreen> {
                                 await incomeCategoryAdder();
                                 print('${category},${type}');
                                 setState(() {
-                                  //category = null;
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -318,7 +333,7 @@ class _EditScreenState extends State<EditScreen> {
                     Text(
                        "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.lightGreen),
                     ),
                   ],
                 ))),
@@ -331,7 +346,7 @@ class _EditScreenState extends State<EditScreen> {
                 onPressed: () {
                   if (_amount.text != null && _note.text.isNotEmpty
                       &&
-                      scg != 'UCateogory Not Selected'
+                      scg != 'Cateogory Not Selected'
                       ) {
                     Dbhelper dbhelper = Dbhelper();
                     dbhelper.editSingleItem(
