@@ -29,7 +29,6 @@ class _EditScreenState extends State<EditScreen> {
   final _amount = TextEditingController();
   final _note = TextEditingController();
   final _dateTime = TextEditingController();
-  final _category = TextEditingController();
 
   @override
   void initState() {
@@ -79,7 +78,6 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String temp = widget.category;
     return (Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
       body: ListView(padding: EdgeInsets.all(12.0), children: [
@@ -176,7 +174,7 @@ class _EditScreenState extends State<EditScreen> {
                 if (value == true) {
                   setState(() {
                     type = 'Income';
-                    scg = 'Unspecified';
+                    scg = 'Cateogory Not Selected';
                   });
                 }
               },
@@ -196,7 +194,7 @@ class _EditScreenState extends State<EditScreen> {
                 if (value == true) {
                   setState(() {
                     type = 'Expense';
-                    scg = 'Unspecified';
+                    scg = 'Cateogory Not Selected';
                  
                   });
                 }
@@ -222,8 +220,6 @@ class _EditScreenState extends State<EditScreen> {
               print(value);
               setState(() {
                 scg = value!;
-                temp = value;
-                selectedCategory = value;
               });
             },
             isExpanded: true,
@@ -275,7 +271,7 @@ class _EditScreenState extends State<EditScreen> {
                                 await incomeCategoryAdder();
                                 print('${category},${type}');
                                 setState(() {
-                                  category = null;
+                                  //category = null;
                                 });
                                 Navigator.of(context).pop();
                               },
@@ -335,7 +331,7 @@ class _EditScreenState extends State<EditScreen> {
                 onPressed: () {
                   if (_amount.text != null && _note.text.isNotEmpty
                       &&
-                      scg != 'Unspecified'
+                      scg != 'UCateogory Not Selected'
                       ) {
                     Dbhelper dbhelper = Dbhelper();
                     dbhelper.editSingleItem(

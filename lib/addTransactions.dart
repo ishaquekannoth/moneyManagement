@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -77,7 +78,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Color.fromARGB(255, 196, 19, 6),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -114,7 +115,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.description,
@@ -143,7 +144,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: customcolor.PrimaryColor,
+                    color: Color.fromARGB(255, 226, 6, 116),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.moving_sharp,
@@ -160,7 +161,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                     fontSize: 20,
                     color: type == 'Income' ? Colors.white : Colors.black),
               ),
-              selectedColor: customcolor.PrimaryColor,
+              selectedColor: Colors.green,
               selected: type == 'Income' ? true : false,
               onSelected: (value) {
                 if (value == true) {
@@ -181,7 +182,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                     fontSize: 20,
                     color: type == 'Expense' ? Colors.white : Colors.black,
                   )),
-              selectedColor: customcolor.PrimaryColor,
+              selectedColor: Colors.red,
               selected: type == 'Expense' ? true : false,
               onSelected: (value) {
                 if (value == true) {
@@ -224,13 +225,24 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
           height: 20,
         ),
-        Text('Category Not Listed?',
-            style: TextStyle(fontSize: 18.0, color: Colors.red,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+        Container(
+         
+          child: Text('Category Not Listed?',
+              style: TextStyle(fontSize: 18.0, color: Colors.red,fontWeight: FontWeight.bold),textAlign: TextAlign.center,),
+        ),
         SizedBox(
           height: 15,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightBlue,
+            minimumSize: Size(25, 35),
+            
+
+            
+            
+            ),
               onPressed: () async {
                 showDialog(
                     context: context,
@@ -282,7 +294,8 @@ class _AddTransactionsState extends State<AddTransactions> {
                 setState(() {});
               },
               icon: (Icon(Icons.add)),
-              label: Text("Add an $type Category"))
+              label: Text("Add an $type Category")
+              )
         ]),
 
       SizedBox(height: 20,),
@@ -308,18 +321,16 @@ class _AddTransactionsState extends State<AddTransactions> {
                     Text(
                       "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.lightGreen),
                     ),
                   ],
                 ))),
 
           SizedBox(height: 45,),
-
-
-
         SizedBox(
             height: 50,
             child: ElevatedButton(
+              
                 onPressed: () {
                   if (amount != null &&
                       note.isNotEmpty &&
@@ -348,6 +359,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                         RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                             side: BorderSide()))),
+
                 child: Text(
                   'Add Data',
                   style: TextStyle(fontSize: 18),

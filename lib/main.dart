@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Money Manager',
-      theme: myTheme,
+       theme: myTheme,
       home: const MainDisplay(),
     );
   }

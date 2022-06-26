@@ -106,7 +106,7 @@ Widget expenseTile(
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Color.fromARGB(255, 218, 226, 226)),
+          color: Colors.white),
       child: Column(
         children: [
           Row(
@@ -173,7 +173,7 @@ Widget incomeTile(
       // margin: EdgeInsets.all(10),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          color: Color.fromARGB(255, 218, 226, 226)),
+          color:Colors.white),
       child: Column(
         children: [
           Row(

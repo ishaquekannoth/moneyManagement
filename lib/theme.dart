@@ -68,7 +68,7 @@
     );
 
     ThemeData myTheme = ThemeData(
-      fontFamily: "customFont",
+      // fontFamily: "customFont",
       primaryColor: const Color(0xff15049b),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(

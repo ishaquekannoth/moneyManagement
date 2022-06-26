@@ -5,7 +5,7 @@
   // import '<path>' as Static;
   // Static.PrimaryColor -> gives Primary Color
 
-  const Color PrimaryColor = Color(0xff15049b);
+  const Color PrimaryColor = Color.fromARGB(255, 20, 247, 88);
 
   const MaterialColor PrimaryMaterialColor = MaterialColor(
     4279567515,

@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                           style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
-                              color: customcolor.PrimaryColor),
+                              color: Colors.blueAccent),
                         ),
                         Container(
                             decoration: BoxDecoration(
@@ -169,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                       "Recent Transactions",
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     )),
                 ListView.builder(
                     shrinkWrap: true,
@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage> {
                             tempList[index]['category']);
                       } else {
                         return incomeTile(
-                            tempList[index]['amount'],
+                           tempList[index]['amount'],
                             tempList[index]['note'],
                             tempList[index]['date'],
                             tempList[index]['id'],
@@ -221,7 +221,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Income',
+              'Total Income',
               style: TextStyle(
                   fontSize: 14,
                   color: Colors.white,
@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Expense',
+              'Total Expense',
               style: TextStyle(
                   fontSize: 14,
                   color: Colors.white,
@@ -303,15 +303,16 @@ class _HomePageState extends State<HomePage> {
             });
       },
       child: (Container(
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 218, 226, 226)),
+            color: Color.fromARGB(255, 240, 234, 234)),
         child: Column(
+         crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Icon(
                   Icons.arrow_circle_up_outlined,
@@ -328,13 +329,19 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         color: Color.fromARGB(255, 170, 20, 9),
                         fontWeight: FontWeight.bold)),
-                Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+               Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black87,
                         fontWeight: FontWeight.bold))
               ],
-            )
+            ),
+            Text(category,
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                        )),
+
           ],
         ),
       )),
@@ -368,15 +375,15 @@ class _HomePageState extends State<HomePage> {
             });
       },
       child: (Container(
-        padding: EdgeInsets.all(15),
-        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(5),
+        margin: EdgeInsets.all(5),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 218, 226, 226)),
+            color: Color.fromARGB(255, 240, 234, 234)),
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Icon(
                   Icons.arrow_circle_down_outlined,
@@ -393,13 +400,18 @@ class _HomePageState extends State<HomePage> {
                         fontSize: 18,
                         color: Color.fromARGB(255, 4, 112, 8),
                         fontWeight: FontWeight.bold)),
-                Text('${dateTime.day}/${dateTime.month}/${dateTime.year}',
+                Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
                     style: TextStyle(
                         fontSize: 18,
                         color: Colors.black87,
-                        fontWeight: FontWeight.bold))
+                        fontWeight: FontWeight.bold)),
               ],
-            )
+            ),
+             Text(category,
+                    style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                        )),
           ],
         ),
       )),
