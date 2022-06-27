@@ -15,7 +15,8 @@ class Analysis extends StatefulWidget {
 class _AnalysisState extends State<Analysis> {
   @override
   void initState() {
-    getRawMap();
+    getRawMap().then((value) => selectAPeriod(
+        DateTime.now().subtract(Duration(days: 30)), DateTime.now()));
     super.initState();
   }
 
@@ -27,12 +28,12 @@ class _AnalysisState extends State<Analysis> {
   List selectiveSortedAll = [];
   List selectiveSortedIncomes = [];
   List selectiveSortedExpenses = [];
+  bool isSelected = true;
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
       ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
-    //print(sortMapByValue);
     List sortedList = [];
     sortMapByValue.forEach((key, value) => sortedList.add(value));
     myList.clear();
@@ -103,7 +104,7 @@ class _AnalysisState extends State<Analysis> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 4,
+      length: 3,
       child: (Scaffold(
           appBar: AppBar(
             actions: [
@@ -111,17 +112,18 @@ class _AnalysisState extends State<Analysis> {
                   onPressed: () => Navigator.of(context).pop(),
                   icon: Icon(Icons.android_rounded))
             ],
-            backgroundColor: Color.fromARGB(224, 212, 15, 15),
+            backgroundColor: Color.fromARGB(223, 255, 255, 255),
             title: Text(
               'Sort The Data',
               style: TextStyle(color: Colors.black),
             ),
             centerTitle: true,
+            
             bottom:
+
                 TabBar(labelColor: Color.fromARGB(255, 0, 0, 0), tabs: const [
-              Tab(text: 'All List'),
               Tab(
-                text: 'SortByDates',
+                text: 'ALL',
               ),
               Tab(
                 text: 'Incomes',
@@ -136,72 +138,92 @@ class _AnalysisState extends State<Analysis> {
               isExtended: true,
               backgroundColor: Colors.red,
               onPressed: () async {
-                await selectAPeriod(await _selectDate(context),await _selectDate(context));
+                await selectAPeriod(
+                    await _selectDate(context), await _selectDate(context));
               },
-              label:Text('Select Dates',softWrap: true,),
-             
+              label: Text(
+                'Select Dates',
+                softWrap: true,
+              ),
             ),
           ),
           body: TabBarView(
             children: [
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: myList.length,
-                  itemBuilder: (context, index) {
-                    if (myList[index]['type'] == 'Expense') {
-                      return (ListTile(
-                          title: expenseTile(
-                              myList[index]['amount'],
-                              myList[index]['note'],
-                              myList[index]['date'],
-                              myList[index]['id'],
-                              myList[index]['category'],
-                              myList[index]['type'],
-                              helper,
-                              context)));
-                    } else {
-                      return (ListTile(
-                        title: incomeTile(
-                            myList[index]['amount'],
-                            myList[index]['note'],
-                            myList[index]['date'],
-                            myList[index]['id'],
-                            myList[index]['category'],
-                            myList[index]['type'],
-                            helper,
-                            context),
-                      ));
-                    }
-                  }),
-              ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: selectiveSortedAll.length,
-                  itemBuilder: (context, index) {
-                    if (selectiveSortedAll[index]['type'] == 'Expense') {
-                      return (ListTile(
-                          title: expenseTile(
-                              selectiveSortedAll[index]['amount'],
-                              selectiveSortedAll[index]['note'],
-                              selectiveSortedAll[index]['date'],
-                              selectiveSortedAll[index]['id'],
-                              selectiveSortedAll[index]['category'],
-                              selectiveSortedAll[index]['type'],
-                              helper,
-                              context)));
-                    } else {
-                      return (ListTile(
-                        title: incomeTile(
-                            selectiveSortedAll[index]['amount'],
-                            selectiveSortedAll[index]['note'],
-                            selectiveSortedAll[index]['date'],
-                            selectiveSortedAll[index]['id'],
-                            selectiveSortedAll[index]['category'],
-                            selectiveSortedAll[index]['type'],
-                            helper,
-                            context),
-                      ));
-                    }
-                  }),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ChoiceChip(
+                          label: Text('Last 30 Days',
+                              style: TextStyle(
+                                fontSize: 20,
+                              )),
+                          selectedColor: Colors.green,
+                          selected: isSelected,
+                          onSelected: (value) async{
+                            if (value == true) {
+                              isSelected = true;
+                                await selectAPeriod(
+                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text('Last Week',
+                              style: TextStyle(
+                                fontSize: 20,
+                              )),
+                          selectedColor: Colors.green,
+                          selected: !isSelected,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelected = false;
+                              await selectAPeriod(
+                                  DateTime.now().subtract(Duration(days: 7)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: selectiveSortedAll.length,
+                        itemBuilder: (context, index) {
+                          if (selectiveSortedAll[index]['type'] == 'Expense') {
+                            return (ListTile(
+                                title: expenseTile(
+                                    selectiveSortedAll[index]['amount'],
+                                    selectiveSortedAll[index]['note'],
+                                    selectiveSortedAll[index]['date'],
+                                    selectiveSortedAll[index]['id'],
+                                    selectiveSortedAll[index]['category'],
+                                    selectiveSortedAll[index]['type'],
+                                    helper,
+                                    context)));
+                          } else {
+                            return (ListTile(
+                              title: incomeTile(
+                                  selectiveSortedAll[index]['amount'],
+                                  selectiveSortedAll[index]['note'],
+                                  selectiveSortedAll[index]['date'],
+                                  selectiveSortedAll[index]['id'],
+                                  selectiveSortedAll[index]['category'],
+                                  selectiveSortedAll[index]['type'],
+                                  helper,
+                                  context),
+                            ));
+                          }
+                        }),
+                  ],
+                ),
+              ),
               ListView.builder(
                   itemCount: selectiveSortedIncomes.length,
                   itemBuilder: (context, index) {
@@ -396,4 +418,3 @@ class _AnalysisState extends State<Analysis> {
     );
   }
 }
-
