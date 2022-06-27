@@ -76,9 +76,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              await category.printCategoryValues();
-
-              // print(await category.fetchAllCategories());
+              await category.printCategoryValues();    
+          // print(await category.fetchAllCategories());
             },
           ),
           body: TabBarView(

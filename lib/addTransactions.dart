@@ -227,7 +227,6 @@ class _AddTransactionsState extends State<AddTransactions> {
               style: TextStyle(fontSize: 20),
             )),
             onChanged: (String? value) {
-              print(value);
               setState(() {
                 temp = value!;
                 selectedCategory = value;
