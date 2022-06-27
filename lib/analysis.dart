@@ -108,7 +108,7 @@ class _AnalysisState extends State<Analysis> {
       child: SafeArea(
         child: (Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.deepPurpleAccent,
+              backgroundColor: Colors.white,
               title: Text(
                 'Analysis Page',
                 style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
@@ -135,9 +135,11 @@ class _AnalysisState extends State<Analysis> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ChoiceChip(
+                        elevation: 5,
+                        pressElevation: 10,
                         label: Text('Last 30 Days',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20,color:isSelected? Colors.white:Colors.black,
                             )),
                         selectedColor: Colors.green,
                         selected: isSelected,
@@ -147,14 +149,17 @@ class _AnalysisState extends State<Analysis> {
                             await selectAPeriod(
                                 DateTime.now().subtract(Duration(days: 30)),
                                 DateTime.now());
+
                             setState(() {});
                           }
                         },
                       ),
                       ChoiceChip(
+                       elevation: 5,
+                        pressElevation: 10,
                         label: Text('Last Week',
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 20,color:!isSelected? Colors.white:Colors.black
                             )),
                         selectedColor: Colors.green,
                         selected: !isSelected,
@@ -164,6 +169,7 @@ class _AnalysisState extends State<Analysis> {
                             await selectAPeriod(
                                 DateTime.now().subtract(Duration(days: 7)),
                                 DateTime.now());
+
                             setState(() {});
                           }
                         },
@@ -208,7 +214,8 @@ class _AnalysisState extends State<Analysis> {
                                             selectiveSortedAll[index]['note'],
                                             selectiveSortedAll[index]['date'],
                                             selectiveSortedAll[index]['id'],
-                                            selectiveSortedAll[index]['category'],
+                                            selectiveSortedAll[index]
+                                                ['category'],
                                             selectiveSortedAll[index]['type'],
                                             helper,
                                             context)));
@@ -268,162 +275,186 @@ class _AnalysisState extends State<Analysis> {
 
   Widget expenseTile(int value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print('You clicked an Expense item ID is');
-        print(id);
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => (EditScreen(
-                value: value,
-                note: note,
-                dateTime: dateTime,
-                id: id,
-                type: type,
-                category: category))));
-      },
-      onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        dataBase
-                            .removeSingleItem(id)
-                            .whenComplete(() => getRawMap());
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
-                ],
-              ));
+    return Card(
+      child: GestureDetector(
+        onTap: () {
+          print('You clicked an Expense item ID is');
+          print(id);
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => (EditScreen(
+                      value: value,
+                      note: note,
+                      dateTime: dateTime,
+                      id: id,
+                      type: type,
+                      category: category))))
+              .whenComplete(() => getRawMap())
+              .whenComplete(() {
+            selectAPeriod(
+                DateTime.now().subtract(Duration(days: 30)), DateTime.now());
+            setState(() {
+              isSelected = true;
             });
-      },
-      child: (Container(
-        // padding: EdgeInsets.all(15),
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Colors.white),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  Icons.arrow_circle_up_outlined,
-                  size: 28,
-                  color: Colors.red,
-                ),
-                Text("Expense",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold)),
-                Text('-$value AED',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 170, 20, 9),
-                        fontWeight: FontWeight.bold)),
-                Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold))
-              ],
-            ),
-            Text(category,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black87,
-                ))
-          ],
-        ),
-      )),
+          });
+          super.initState();
+        },
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return (AlertDialog(
+                  title: Text('Confirm Delete?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: () {
+                          dataBase
+                              .removeSingleItem(id)
+                              .whenComplete(() => getRawMap());
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
+              });
+        },
+        child: (Container(
+          // padding: EdgeInsets.all(15),
+          // margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15), color: Colors.white),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.arrow_circle_up_outlined,
+                    size: 28,
+                    color: Colors.red,
+                  ),
+                  Text("Expense",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold)),
+                  Text('-$value AED',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 170, 20, 9),
+                          fontWeight: FontWeight.bold)),
+                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold))
+                ],
+              ),
+              Text(category,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ))
+            ],
+          ),
+        )),
+      ),
     );
   }
 
   Widget incomeTile(int value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print('You clicked an Income item.ID is');
-        print(id);
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => (EditScreen(
-                  value: value,
-                  note: note,
-                  dateTime: dateTime,
-                  id: id,
-                  category: category,
-                  type: type,
-                ))));
-      },
-      onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        dataBase
-                            .removeSingleItem(id)
-                            .whenComplete(() => getRawMap());
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
-                ],
-              ));
+    return Card(
+      child: GestureDetector(
+        onTap: () async {
+          print('You clicked an Income item.ID is');
+          print(id);
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                  builder: (context) => (EditScreen(
+                        value: value,
+                        note: note,
+                        dateTime: dateTime,
+                        id: id,
+                        category: category,
+                        type: type,
+                      ))))
+              .whenComplete(() => getRawMap())
+              .whenComplete(() {
+            selectAPeriod(
+                DateTime.now().subtract(Duration(days: 30)), DateTime.now());
+            setState(() {
+              isSelected = true;
             });
-      },
-      child: (Container(
-        // padding: EdgeInsets.all(15),
-        // margin: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15), color: Colors.white),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Icon(
-                  Icons.arrow_circle_down_outlined,
-                  size: 28,
-                  color: Color.fromARGB(255, 5, 231, 5),
-                ),
-                Text("Income",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold)),
-                Text('+$value AED',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 4, 112, 8),
-                        fontWeight: FontWeight.bold)),
-                Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold))
-              ],
-            ),
-            Text(category,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black87,
-                )),
-          ],
-        ),
-      )),
+          });
+          super.initState();
+        },
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return (AlertDialog(
+                  title: Text('Confirm Delete?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: () {
+                          dataBase
+                              .removeSingleItem(id)
+                              .whenComplete(() => getRawMap());
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
+              });
+        },
+        child: (Container(
+          // padding: EdgeInsets.all(15),
+          // margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15), color: Colors.white),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Icon(
+                    Icons.arrow_circle_down_outlined,
+                    size: 28,
+                    color: Color.fromARGB(255, 5, 231, 5),
+                  ),
+                  Text("Income",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold)),
+                  Text('+$value AED',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 4, 112, 8),
+                          fontWeight: FontWeight.bold)),
+                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold))
+                ],
+              ),
+              Text(category,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  )),
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

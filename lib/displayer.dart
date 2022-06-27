@@ -19,6 +19,9 @@ class _MainDisplayState extends State<MainDisplay> {
   Widget build(BuildContext context) {
     return (Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+        mouseCursor: MouseCursor.uncontrolled,
+        elevation: 35,
+        unselectedFontSize: 15,
        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         backgroundColor: Colors.white,
         selectedFontSize:15,

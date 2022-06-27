@@ -52,19 +52,16 @@ class _HomePageState extends State<HomePage> {
     return (Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 2, 58, 5),
+      floatingActionButton: FloatingActionButton.extended(
+        elevation: 15,
+        backgroundColor: Colors.red,
         onPressed: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: ((context) => AddTransactions())))
             .whenComplete(() {
           setState(() {});
-        }),
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-        child: Icon(
-          Icons.add,
-          size: 32.0,
-        ),
+        }),   
+            label: Text("Add A New TXN"),
+ 
       ),
       body: FutureBuilder<Map>(
           future: sortedMap(),
@@ -291,144 +288,148 @@ class _HomePageState extends State<HomePage> {
 
   Widget expenseTile(int value, String note, DateTime dateTime, int id,String type,String category) {
     Dbhelper help = Dbhelper();
-    return GestureDetector(
-      onTap: () {
-         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
-      },
-      onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        help.removeSingleItem(id);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
+    return Card(
+      child: GestureDetector(
+        onTap: () {
+           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
+        },
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return (AlertDialog(
+                  title: Text('Confirm Delete?'),
+                  actions: [
+                    ElevatedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: () {
+                          help.removeSingleItem(id);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
+              });
+        },
+        child: (Container(
+          padding: EdgeInsets.all(5),
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white),
+          child: Column(
+           crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    Icons.arrow_circle_up_outlined,
+                    size: 28,
+                    color: Colors.red,
+                  ),
+                  Text("Expense",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold)),
+                  Text('-$value AED',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 170, 20, 9),
+                          fontWeight: FontWeight.bold)),
+                 Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold))
                 ],
-              ));
-            });
-      },
-      child: (Container(
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 240, 234, 234)),
-        child: Column(
-         crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  Icons.arrow_circle_up_outlined,
-                  size: 28,
-                  color: Colors.red,
-                ),
-                Text("Expense",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold)),
-                Text('-$value AED',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 170, 20, 9),
-                        fontWeight: FontWeight.bold)),
-               Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold))
-              ],
-            ),
-            Text(category,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black87,
-                        )),
-
-          ],
-        ),
-      )),
+              ),
+              Text(category,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black87,
+                          )),
+    
+            ],
+          ),
+        )),
+      ),
     );
   }
 
   Widget incomeTile(int value, String note, DateTime dateTime, int id,String type,String category) {
     Dbhelper help = Dbhelper();
-    return GestureDetector(
-      onTap: () {
-       Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
-      },
-      onLongPress: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return (AlertDialog(
-                title: Text('Confirm Delete?'),
-                actions: [
-                  ElevatedButton(
-                      
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text("Cancel")),
-                  ElevatedButton(
-                      onPressed: () {
-                        help.removeSingleItem(id);
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("OK"))
+    return Card(
+      child: GestureDetector(
+        onTap: () {
+         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
+        },
+        onLongPress: () {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return (AlertDialog(
+                  title: Text('Confirm Delete?'),
+                  actions: [
+                    ElevatedButton(
+                        
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text("Cancel")),
+                    ElevatedButton(
+                        onPressed: () {
+                          help.removeSingleItem(id);
+                          Navigator.of(context).pop();
+                        },
+                        child: Text("OK"))
+                  ],
+                ));
+              });
+        },
+        child: (Container(
+          padding: EdgeInsets.all(5),
+          margin: EdgeInsets.all(5),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              color: Colors.white),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Icon(
+                    Icons.arrow_circle_down_outlined,
+                    size: 28,
+                    color: Color.fromARGB(255, 5, 231, 5),
+                  ),
+                  Text("Income",
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold)),
+                  Text('+$value AED',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Color.fromARGB(255, 4, 112, 8),
+                          fontWeight: FontWeight.bold)),
+                  Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black87,
+                          fontWeight: FontWeight.bold)),
                 ],
-              ));
-            });
-      },
-      child: (Container(
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: Color.fromARGB(255, 240, 234, 234)),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Icon(
-                  Icons.arrow_circle_down_outlined,
-                  size: 28,
-                  color: Color.fromARGB(255, 5, 231, 5),
-                ),
-                Text("Income",
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold)),
-                Text('+$value AED',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Color.fromARGB(255, 4, 112, 8),
-                        fontWeight: FontWeight.bold)),
-                Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black87,
-                        fontWeight: FontWeight.bold)),
-              ],
-            ),
-             Text(category,
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black87,
-                        )),
-          ],
-        ),
-      )),
+              ),
+               Text(category,
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black87,
+                          )),
+            ],
+          ),
+        )),
+      ),
     );
   }
 }

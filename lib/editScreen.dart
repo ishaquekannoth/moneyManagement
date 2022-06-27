@@ -181,7 +181,7 @@ class _EditScreenState extends State<EditScreen> {
                     fontSize: 20,
                     color: type == 'Income' ? Colors.white : Colors.black),
               ),
-              selectedColor: Colors.red,
+              selectedColor: Colors.green,
               selected: type == 'Income' ? true : false,
               onSelected: (value) {
                 if (value == true) {
@@ -201,7 +201,7 @@ class _EditScreenState extends State<EditScreen> {
                     fontSize: 20,
                     color: type == 'Expense' ? Colors.white : Colors.black,
                   )),
-              selectedColor: customcolor.PrimaryColor,
+              selectedColor: Colors.red,
               selected: type == 'Expense' ? true : false,
               onSelected: (value) {
                 if (value == true) {
