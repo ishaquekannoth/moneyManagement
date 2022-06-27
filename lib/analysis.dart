@@ -105,36 +105,17 @@ class _AnalysisState extends State<Analysis> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: (Scaffold(
-          appBar: AppBar(
-            actions: [
-              IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.android_rounded))
-            ],
-            backgroundColor: Color.fromARGB(223, 255, 255, 255),
-            title: Text(
-              'Sort The Data',
-              style: TextStyle(color: Colors.black),
+      child: SafeArea(
+        child: (Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.deepPurpleAccent,
+              title: Text(
+                'Analysis Page',
+                style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
+              ),
+              centerTitle: true,
             ),
-            centerTitle: true,
-            
-            bottom:
-
-                TabBar(labelColor: Color.fromARGB(255, 0, 0, 0), tabs: const [
-              Tab(
-                text: 'ALL',
-              ),
-              Tab(
-                text: 'Incomes',
-              ),
-              Tab(
-                text: 'Expenses',
-              ),
-            ]),
-          ),
-          floatingActionButton: Container(
-            child: FloatingActionButton.extended(
+            floatingActionButton: FloatingActionButton.extended(
               isExtended: true,
               backgroundColor: Colors.red,
               onPressed: () async {
@@ -146,114 +127,142 @@ class _AnalysisState extends State<Analysis> {
                 softWrap: true,
               ),
             ),
-          ),
-          body: TabBarView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ChoiceChip(
-                          label: Text('Last 30 Days',
-                              style: TextStyle(
-                                fontSize: 20,
-                              )),
-                          selectedColor: Colors.green,
-                          selected: isSelected,
-                          onSelected: (value) async{
-                            if (value == true) {
-                              isSelected = true;
-                                await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
-                                  DateTime.now());
-                              setState(() {});
-                            }
-                          },
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ChoiceChip(
+                        label: Text('Last 30 Days',
+                            style: TextStyle(
+                              fontSize: 20,
+                            )),
+                        selectedColor: Colors.green,
+                        selected: isSelected,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelected = true;
+                            await selectAPeriod(
+                                DateTime.now().subtract(Duration(days: 30)),
+                                DateTime.now());
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text('Last Week',
+                            style: TextStyle(
+                              fontSize: 20,
+                            )),
+                        selectedColor: Colors.green,
+                        selected: !isSelected,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelected = false;
+                            await selectAPeriod(
+                                DateTime.now().subtract(Duration(days: 7)),
+                                DateTime.now());
+                            setState(() {});
+                          }
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Container(
+                    child: TabBar(
+                        labelColor: Color.fromARGB(255, 0, 0, 0),
+                        tabs: const [
+                          Tab(
+                            text: 'ALL',
+                          ),
+                          Tab(
+                            text: 'Incomes',
+                          ),
+                          Tab(
+                            text: 'Expenses',
+                          ),
+                        ]),
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: selectiveSortedAll.length,
+                                itemBuilder: (context, index) {
+                                  if (selectiveSortedAll[index]['type'] ==
+                                      'Expense') {
+                                    return (ListTile(
+                                        title: expenseTile(
+                                            selectiveSortedAll[index]['amount'],
+                                            selectiveSortedAll[index]['note'],
+                                            selectiveSortedAll[index]['date'],
+                                            selectiveSortedAll[index]['id'],
+                                            selectiveSortedAll[index]['category'],
+                                            selectiveSortedAll[index]['type'],
+                                            helper,
+                                            context)));
+                                  } else {
+                                    return (ListTile(
+                                      title: incomeTile(
+                                          selectiveSortedAll[index]['amount'],
+                                          selectiveSortedAll[index]['note'],
+                                          selectiveSortedAll[index]['date'],
+                                          selectiveSortedAll[index]['id'],
+                                          selectiveSortedAll[index]['category'],
+                                          selectiveSortedAll[index]['type'],
+                                          helper,
+                                          context),
+                                    ));
+                                  }
+                                }),
+                          ],
                         ),
-                        ChoiceChip(
-                          label: Text('Last Week',
-                              style: TextStyle(
-                                fontSize: 20,
-                              )),
-                          selectedColor: Colors.green,
-                          selected: !isSelected,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelected = false;
-                              await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 7)),
-                                  DateTime.now());
-                              setState(() {});
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: selectiveSortedAll.length,
-                        itemBuilder: (context, index) {
-                          if (selectiveSortedAll[index]['type'] == 'Expense') {
+                      ),
+                      ListView.builder(
+                          itemCount: selectiveSortedIncomes.length,
+                          itemBuilder: (context, index) {
                             return (ListTile(
-                                title: expenseTile(
-                                    selectiveSortedAll[index]['amount'],
-                                    selectiveSortedAll[index]['note'],
-                                    selectiveSortedAll[index]['date'],
-                                    selectiveSortedAll[index]['id'],
-                                    selectiveSortedAll[index]['category'],
-                                    selectiveSortedAll[index]['type'],
+                                title: incomeTile(
+                                    selectiveSortedIncomes[index]['amount'],
+                                    selectiveSortedIncomes[index]['note'],
+                                    selectiveSortedIncomes[index]['date'],
+                                    selectiveSortedIncomes[index]['id'],
+                                    selectiveSortedIncomes[index]['category'],
+                                    selectiveSortedIncomes[index]['type'],
                                     helper,
                                     context)));
-                          } else {
+                          }),
+                      ListView.builder(
+                          itemCount: selectiveSortedExpenses.length,
+                          itemBuilder: (context, index) {
                             return (ListTile(
-                              title: incomeTile(
-                                  selectiveSortedAll[index]['amount'],
-                                  selectiveSortedAll[index]['note'],
-                                  selectiveSortedAll[index]['date'],
-                                  selectiveSortedAll[index]['id'],
-                                  selectiveSortedAll[index]['category'],
-                                  selectiveSortedAll[index]['type'],
-                                  helper,
-                                  context),
-                            ));
-                          }
-                        }),
-                  ],
+                                title: expenseTile(
+                                    selectiveSortedExpenses[index]['amount'],
+                                    selectiveSortedExpenses[index]['note'],
+                                    selectiveSortedExpenses[index]['date'],
+                                    selectiveSortedExpenses[index]['id'],
+                                    selectiveSortedExpenses[index]['category'],
+                                    selectiveSortedExpenses[index]['type'],
+                                    helper,
+                                    context)));
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-              ListView.builder(
-                  itemCount: selectiveSortedIncomes.length,
-                  itemBuilder: (context, index) {
-                    return (ListTile(
-                        title: incomeTile(
-                            selectiveSortedIncomes[index]['amount'],
-                            selectiveSortedIncomes[index]['note'],
-                            selectiveSortedIncomes[index]['date'],
-                            selectiveSortedIncomes[index]['id'],
-                            selectiveSortedIncomes[index]['category'],
-                            selectiveSortedIncomes[index]['type'],
-                            helper,
-                            context)));
-                  }),
-              ListView.builder(
-                  itemCount: selectiveSortedExpenses.length,
-                  itemBuilder: (context, index) {
-                    return (ListTile(
-                        title: expenseTile(
-                            selectiveSortedExpenses[index]['amount'],
-                            selectiveSortedExpenses[index]['note'],
-                            selectiveSortedExpenses[index]['date'],
-                            selectiveSortedExpenses[index]['id'],
-                            selectiveSortedExpenses[index]['category'],
-                            selectiveSortedExpenses[index]['type'],
-                            helper,
-                            context)));
-                  }),
-            ],
-          ))),
+              ],
+            ))),
+      ),
     );
   }
 
