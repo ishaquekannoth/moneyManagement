@@ -28,7 +28,9 @@ class _AnalysisState extends State<Analysis> {
   List selectiveSortedAll = [];
   List selectiveSortedIncomes = [];
   List selectiveSortedExpenses = [];
-  bool isSelected = true;
+  bool isSelectedMonthly = true;
+  bool isSelectedDated = false;
+  bool isSelectedWeekly = false;
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
@@ -115,18 +117,21 @@ class _AnalysisState extends State<Analysis> {
               ),
               centerTitle: true,
             ),
-            floatingActionButton: FloatingActionButton.extended(
-              isExtended: true,
-              backgroundColor: Colors.red,
-              onPressed: () async {
-                await selectAPeriod(
-                    await _selectDate(context), await _selectDate(context));
-              },
-              label: Text(
-                'Select Dates',
-                softWrap: true,
-              ),
-            ),
+            // floatingActionButton: FloatingActionButton.extended(
+            //   isExtended: true,
+            //   backgroundColor: Colors.red,
+            //   onPressed: () async {
+            //     await selectAPeriod(
+            //         await _selectDate(context), await _selectDate(context));
+            //     isSelectedDated = true;
+            //     isSelectedWeekly = false;
+            //     isSelectedMonthly = false;
+            //   },
+            //   label: Text(
+            //     'Select Dates',
+            //     softWrap: true,
+            //   ),
+            // ),
             body: Column(
               children: [
                 Padding(
@@ -139,13 +144,18 @@ class _AnalysisState extends State<Analysis> {
                         pressElevation: 10,
                         label: Text('Last 30 Days',
                             style: TextStyle(
-                              fontSize: 20,color:isSelected? Colors.white:Colors.black,
+                              fontSize: 20,
+                              color: isSelectedMonthly
+                                  ? Colors.white
+                                  : Colors.black,
                             )),
                         selectedColor: Colors.green,
-                        selected: isSelected,
+                        selected: isSelectedMonthly,
                         onSelected: (value) async {
                           if (value == true) {
-                            isSelected = true;
+                            isSelectedMonthly = true;
+                            isSelectedWeekly = false;
+                            isSelectedDated = false;
                             await selectAPeriod(
                                 DateTime.now().subtract(Duration(days: 30)),
                                 DateTime.now());
@@ -155,17 +165,43 @@ class _AnalysisState extends State<Analysis> {
                         },
                       ),
                       ChoiceChip(
-                       elevation: 5,
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('B/W Dates',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: isSelectedDated
+                                    ? Colors.white
+                                    : Colors.black)),
+                        selectedColor: Colors.green,
+                        selected: isSelectedDated,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            await selectAPeriod(await _selectDate(context),
+                                await _selectDate(context));
+                            isSelectedDated = true;
+                            isSelectedWeekly = false;
+                            isSelectedMonthly = false;
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        elevation: 5,
                         pressElevation: 10,
                         label: Text('Last Week',
                             style: TextStyle(
-                              fontSize: 20,color:!isSelected? Colors.white:Colors.black
-                            )),
+                                fontSize: 20,
+                                color: isSelectedWeekly
+                                    ? Colors.white
+                                    : Colors.black)),
                         selectedColor: Colors.green,
-                        selected: !isSelected,
+                        selected: isSelectedWeekly,
                         onSelected: (value) async {
                           if (value == true) {
-                            isSelected = false;
+                            isSelectedMonthly = false;
+                            isSelectedWeekly = true;
+                            isSelectedDated = false;
                             await selectAPeriod(
                                 DateTime.now().subtract(Duration(days: 7)),
                                 DateTime.now());
@@ -293,9 +329,7 @@ class _AnalysisState extends State<Analysis> {
               .whenComplete(() {
             selectAPeriod(
                 DateTime.now().subtract(Duration(days: 30)), DateTime.now());
-            setState(() {
-              isSelected = true;
-            });
+            setState(() {});
           });
           super.initState();
         },
@@ -346,7 +380,8 @@ class _AnalysisState extends State<Analysis> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
-                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
@@ -387,7 +422,9 @@ class _AnalysisState extends State<Analysis> {
             selectAPeriod(
                 DateTime.now().subtract(Duration(days: 30)), DateTime.now());
             setState(() {
-              isSelected = true;
+              isSelectedMonthly = true;
+              isSelectedWeekly = false;
+              isSelectedDated = false;
             });
           });
           super.initState();
@@ -439,7 +476,8 @@ class _AnalysisState extends State<Analysis> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
-                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,

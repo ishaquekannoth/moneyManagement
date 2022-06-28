@@ -232,7 +232,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   Widget incomeTile(int value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
-      child: GestureDetector(
+     child: GestureDetector(
         onTap: () {
           print('You clicked an Income item.ID is');
           print(id);

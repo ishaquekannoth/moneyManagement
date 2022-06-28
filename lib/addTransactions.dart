@@ -92,7 +92,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 196, 19, 6),
+                    color: type=='Income'?Colors.green:Colors.red,
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -242,7 +242,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           child: Text(
             'Category Not Listed?',
             style: TextStyle(
-                fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.bold),
+                fontSize: 18.0, color: type=='Income'?Colors.green:Colors.red, fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
         ),
@@ -252,7 +252,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: Colors.lightBlue,
+                primary: type=='Income'?Colors.green:Colors.red,
                 minimumSize: Size(25, 35),
               ),
               onPressed: () async {
@@ -326,7 +326,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                     Icon(
                       Icons.calendar_month,
                       size: 30.0,
-                      color: Colors.blueAccent,
+                      color: type=='Income'?Colors.green:Colors.red,
                     ),
                     SizedBox(
                       width: 20,
@@ -336,7 +336,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: Colors.lightGreen),
+                          color: type=='Income'?Colors.green:Colors.red),
                     ),
                   ],
                 ))),
@@ -345,7 +345,10 @@ class _AddTransactionsState extends State<AddTransactions> {
         ),
         SizedBox(
             height: 50,
-            child: ElevatedButton(
+            child: FloatingActionButton.extended(
+              label:Text("Add Data"),
+              extendedTextStyle:TextStyle(fontSize: 20),
+              backgroundColor:(type=='Income'?Colors.green:Colors.red),
                 onPressed: () {
                   if (amount != null &&
                       note.isNotEmpty &&
@@ -369,15 +372,8 @@ class _AddTransactionsState extends State<AddTransactions> {
                             textAlign: TextAlign.center)));
                   }
                 },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide()))),
-                child: Text(
-                  'Add Data',
-                  style: TextStyle(fontSize: 18),
-                )))
+                
+                ))
       ]),
     ));
   }

@@ -106,7 +106,7 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 196, 19, 6),
+                    color: type=='Income'?Color.fromARGB(255, 3, 114, 7):Color.fromARGB(255, 182, 15, 3),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -252,7 +252,7 @@ class _EditScreenState extends State<EditScreen> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
              style: ElevatedButton.styleFrom(
-              primary: Colors.lightBlue,
+              primary: type=='Income'?Colors.green:Colors.red,
             minimumSize: Size(25, 35),
             ),
               onPressed: () async {
@@ -307,7 +307,7 @@ class _EditScreenState extends State<EditScreen> {
                 setState(() {});
               },
               icon: (Icon(Icons.add)),
-              label: Text("Add an $type Category"))
+              label: Text("Add an $type Category",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),)
         ]),
         SizedBox(
           height: 20,
@@ -325,7 +325,7 @@ class _EditScreenState extends State<EditScreen> {
                     Icon(
                       Icons.calendar_month,
                       size: 30.0,
-                      color: Colors.blueAccent,
+                      color: type=='Income'?Colors.green:Colors.red,
                     ),
                     SizedBox(
                       width: 20,
@@ -333,50 +333,43 @@ class _EditScreenState extends State<EditScreen> {
                     Text(
                        "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: Colors.lightGreen),
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: type=='Income'?Colors.green:Colors.red),
                     ),
                   ],
                 ))),
         SizedBox(
           height: 45,
         ),
-        SizedBox(
-            height: 50,
-            child: ElevatedButton(
-                onPressed: () {
-                  if (_amount.text != null && _note.text.isNotEmpty
-                      &&
-                      scg != 'Cateogory Not Selected'
-                      ) {
-                    Dbhelper dbhelper = Dbhelper();
-                    dbhelper.editSingleItem(
-                        amount: int.parse(_amount.text),
-                        date: selectedDate,
-                        note: _note.text,
-                        type: type,
-                        category: scg,
-                        id: widget.id);
-                    Navigator.of(context).pop();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(seconds: 1),
-                        margin: EdgeInsets.all(15),
-                        backgroundColor: Colors.red,
-                        content: Text('All fields are required',
-                            style: TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center)));
-                  }
-                },
-                style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide()))),
-                child: Text(
-                  'Confirm Update',
-                  style: TextStyle(fontSize: 18),
-                )))
+        FloatingActionButton.extended(
+          label: Text('Confirm Update',style: TextStyle(fontSize: 20),),
+          backgroundColor: type=='Income'?Colors.green:Colors.red,
+          extendedTextStyle: TextStyle(letterSpacing: 2,color: Colors.white),
+          onPressed:() {
+              if (_amount.text != null && _note.text.isNotEmpty
+                  &&
+                  scg != 'Cateogory Not Selected'
+                  ) {
+                Dbhelper dbhelper = Dbhelper();
+                dbhelper.editSingleItem(
+                    amount: int.parse(_amount.text),
+                    date: selectedDate,
+                    note: _note.text,
+                    type: type,
+                    category: scg,
+                    id: widget.id);
+                Navigator.of(context).pop();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    behavior: SnackBarBehavior.floating,
+                    duration: Duration(seconds: 1),
+                    margin: EdgeInsets.all(15),
+                    backgroundColor: Colors.red,
+                    content: Text('All fields are required',
+                        style: TextStyle(fontSize: 15),
+                        textAlign: TextAlign.center)));
+              }
+            },
+            ),
       ]),
     ));
   }
