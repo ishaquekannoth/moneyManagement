@@ -1,9 +1,9 @@
 import 'dart:core';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
+import 'package:moneymanager/search.dart';
 
 class Analysis extends StatefulWidget {
   const Analysis({Key? key}) : super(key: key);
@@ -70,6 +70,11 @@ class _AnalysisState extends State<Analysis> {
   }
 
   selectAPeriod(DateTime start, DateTime end) async {
+    if (start.isAfter(end)) {
+      DateTime temp = end;
+      end = start;
+      start = temp;
+    }
     List monthly = [];
     myList.forEach((element) {
       print(DateTimeRange(start: start, end: end));
@@ -117,21 +122,6 @@ class _AnalysisState extends State<Analysis> {
               ),
               centerTitle: true,
             ),
-            // floatingActionButton: FloatingActionButton.extended(
-            //   isExtended: true,
-            //   backgroundColor: Colors.red,
-            //   onPressed: () async {
-            //     await selectAPeriod(
-            //         await _selectDate(context), await _selectDate(context));
-            //     isSelectedDated = true;
-            //     isSelectedWeekly = false;
-            //     isSelectedMonthly = false;
-            //   },
-            //   label: Text(
-            //     'Select Dates',
-            //     softWrap: true,
-            //   ),
-            // ),
             body: Column(
               children: [
                 Padding(
@@ -303,6 +293,11 @@ class _AnalysisState extends State<Analysis> {
                     ],
                   ),
                 ),
+                FloatingActionButton.extended(
+                    onPressed: () {
+                      showSearch(context: context, delegate: SearchScreen());
+                    },
+                    label: Text("Search"))
               ],
             ))),
       ),

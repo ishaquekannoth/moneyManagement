@@ -60,7 +60,7 @@ class _HomePageState extends State<HomePage> {
             .whenComplete(() {
           setState(() {});
         }),   
-            label: Text("Add A New TXN"),
+            label: Text("ADD"),
  
       ),
       body: FutureBuilder<Map>(
