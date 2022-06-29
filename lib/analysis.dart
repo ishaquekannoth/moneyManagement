@@ -296,6 +296,8 @@ class _AnalysisState extends State<Analysis> {
                 FloatingActionButton.extended(
                     onPressed: () {
                       showSearch(context: context, delegate: SearchScreen());
+                      setState(() {  
+                      });
                     },
                     label: Text("Search"))
               ],

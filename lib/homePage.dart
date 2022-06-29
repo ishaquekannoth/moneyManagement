@@ -320,10 +320,10 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15),
               color: Colors.white),
           child: Column(
-           crossAxisAlignment: CrossAxisAlignment.center,
+           //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
                     Icons.arrow_circle_up_outlined,
@@ -395,9 +395,10 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(15),
               color: Colors.white),
           child: Column(
+
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
                     Icons.arrow_circle_down_outlined,

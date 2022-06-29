@@ -67,10 +67,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 TabBar(labelColor: Color.fromARGB(255, 0, 0, 0), tabs: const [
               Tab(text: 'All List'),
               Tab(
-                text: 'Expenses',
+                text: 'Incomes',
               ),
               Tab(
-                text: 'Incomes',
+                text: 'Expenses',
               ),
             ]),
           ),
@@ -111,6 +111,20 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       ));
                     }
                   }),
+                  ListView.builder(
+                  itemCount: incomeList.length,
+                  itemBuilder: (context, index) {
+                    return (ListTile(
+                        title: incomeTile(
+                            incomeList[index]['amount'],
+                            incomeList[index]['note'],
+                            incomeList[index]['date'],
+                            incomeList[index]['id'],
+                            incomeList[index]['category'],
+                            incomeList[index]['type'],
+                            helper,
+                            context)));
+                  }),
               ListView.builder(
                   shrinkWrap: true,
                   itemCount: expenseList.length,
@@ -123,20 +137,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                             expenseList[index]['id'],
                             expenseList[index]['category'],
                             expenseList[index]['type'],
-                            helper,
-                            context)));
-                  }),
-              ListView.builder(
-                  itemCount: incomeList.length,
-                  itemBuilder: (context, index) {
-                    return (ListTile(
-                        title: incomeTile(
-                            incomeList[index]['amount'],
-                            incomeList[index]['note'],
-                            incomeList[index]['date'],
-                            incomeList[index]['id'],
-                            incomeList[index]['category'],
-                            incomeList[index]['type'],
                             helper,
                             context)));
                   }),
