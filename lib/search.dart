@@ -49,7 +49,7 @@ class SearchScreen extends SearchDelegate<String> {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    IconButton(onPressed: () {}, icon: (Icon(Icons.arrow_back)));
+    return IconButton(onPressed: () {}, icon: (Icon(Icons.arrow_back)));
   }
 
   @override
@@ -128,8 +128,7 @@ class SearchScreen extends SearchDelegate<String> {
     return Card(
       child: GestureDetector(
         onTap: () {
-          print('You clicked an Expense item ID is');
-          print(id);
+     
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -223,8 +222,6 @@ class SearchScreen extends SearchDelegate<String> {
     return Card(
       child: GestureDetector(
         onTap: () {
-          print('You clicked an Income item.ID is');
-          print(id);
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(

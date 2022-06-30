@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:moneymanager/analysis.dart';
 import 'package:moneymanager/controllers/settings.dart';
 import 'package:moneymanager/homePage.dart';
-import 'package:moneymanager/test.dart';
 import 'package:moneymanager/viewAllTransactions.dart';
 
 class MainDisplay extends StatefulWidget {

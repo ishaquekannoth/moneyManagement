@@ -1,10 +1,9 @@
-// ignore_for_file: unnecessary_brace_in_string_interps
+
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
-import 'static.dart' as customcolor;
 
 class AddTransactions extends StatefulWidget {
   const AddTransactions({Key? key}) : super(key: key);
@@ -238,13 +237,11 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
           height: 20,
         ),
-        Container(
-          child: Text(
-            'Category Not Listed?',
-            style: TextStyle(
-                fontSize: 18.0, color: type=='Income'?Colors.green:Colors.red, fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
-          ),
+        Text(
+          'Category Not Listed?',
+          style: TextStyle(
+              fontSize: 18.0, color: type=='Income'?Colors.green:Colors.red, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
         ),
         SizedBox(
           height: 15,
@@ -281,11 +278,9 @@ class _AddTransactionsState extends State<AddTransactions> {
                               textCapitalization: TextCapitalization.sentences),
                           TextButton(
                               onPressed: () async {
-                                print('About to print');
                                 addCategoryToDB(category!, type);
                                 await expenseCategoryAdder();
                                 await incomeCategoryAdder();
-                                print('${category},${type}');
                                 setState(() {
                                   category = null;
                                 });
@@ -439,7 +434,6 @@ class _AddTransactionsState extends State<AddTransactions> {
     setState(() {
       incomeCat.addAll(defaultIncomeCategory);
       incomeCat.addAll(dropDown);
-      print('Length of Income category ${incomeCat.length}');
     });
   }
 
@@ -500,7 +494,6 @@ class _AddTransactionsState extends State<AddTransactions> {
     setState(() {
       expenseCat.addAll(defaultExpenseCategory);
       expenseCat.addAll(dropDown);
-      print('Length of expense category ${expenseCat.length}');
     });
   }
 }

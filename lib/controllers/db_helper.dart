@@ -38,13 +38,11 @@ class Dbhelper {
   }
 
   Future resetData() async {
-    print(moneyBox.values);
     moneyBox.clear();
   }
 
   Future<void> fetchSingleItem(int id) async {
     var result = await Future.value(moneyBox.get(id));
-    print(result);
   }
 
   Future<void> removeSingleItem(int id) async {
@@ -54,7 +52,6 @@ class Dbhelper {
         desiredkey = key;
       }
     });
-    print(desiredkey);
     moneyBox.delete(desiredkey);
   }
 
@@ -79,13 +76,11 @@ class Dbhelper {
         desiredkey = key;
       }
     });
-    print(desiredkey);
     moneyBox.put(desiredkey, newValue);
   }
 
   printKeys() {
     CategoryBox category = CategoryBox();
-    print('ALL keys AND VALUES in DB');
     print(moneyBox.keys);
     print(moneyBox.values);
   }

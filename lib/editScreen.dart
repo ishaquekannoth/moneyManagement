@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
-import 'static.dart' as customcolor;
 
 class EditScreen extends StatefulWidget {
   final int value;
@@ -229,7 +228,6 @@ class _EditScreenState extends State<EditScreen> {
             hint: Text(scg),
 
             onChanged: (String? value) {
-              print(value);
               setState(() {
                 scg = value!;
               });
@@ -281,11 +279,11 @@ class _EditScreenState extends State<EditScreen> {
                               textCapitalization: TextCapitalization.sentences),
                           TextButton(
                               onPressed: () async {
-                                print('About to print');
+                             
                                 addCategoryToDB(category!, type);
                                 await expenseCategoryAdder();
                                 await incomeCategoryAdder();
-                                print('${category},${type}');
+                              
                                 setState(() {
                                 });
                                 Navigator.of(context).pop();
@@ -435,7 +433,6 @@ class _EditScreenState extends State<EditScreen> {
     setState(() {
       incomeCat.addAll(defaultIncomeCategory);
       incomeCat.addAll(dropDown);
-      print('Length of Income category ${incomeCat.length}');
     });
   }
 
@@ -496,7 +493,6 @@ class _EditScreenState extends State<EditScreen> {
     setState(() {
       expenseCat.addAll(defaultExpenseCategory);
       expenseCat.addAll(dropDown);
-      print('Length of expense category ${expenseCat.length}');
     });
   }
 }

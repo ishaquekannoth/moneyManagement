@@ -1,12 +1,20 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/splash.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class SettingsMenu extends StatelessWidget {
+class SettingsMenu extends StatefulWidget {
   SettingsMenu({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsMenu> createState() => _SettingsMenuState();
+}
+
+class _SettingsMenuState extends State<SettingsMenu> {
   Dbhelper db = Dbhelper();
+
   CategoryBox cat = CategoryBox();
 
   @override
@@ -52,7 +60,14 @@ class SettingsMenu extends StatelessWidget {
                   onTap: () async {
                     db.resetData();
                     cat.clearCategoryBox();
-                    //Navigator.of(context).pop();
+                    SharedPreferences pref =
+                        await SharedPreferences.getInstance();
+                   await pref.clear();
+                    
+          
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => SplashScreen()),
+                        (route) => false);
                   }),
             ),
             Divider(

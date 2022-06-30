@@ -18,9 +18,7 @@ class CategoryBox {
   }
 
   printCategoryValues() {
-    print('User Added Category values printing from CategoryDB class');
     print(categoryBox.values);
-    print("Generated Keys From CatDB class For user Added Category");
     print(categoryBox.keys);
   }
 

@@ -42,15 +42,13 @@ class _AnalysisState extends State<Analysis> {
     myList.addAll(sortedList);
     incomeList.clear();
     expenseList.clear();
-    myList.forEach(
-      (element) {
+    for (var element in myList) {
         if (element['type'] == 'Expense') {
           expenseList.add(element);
         } else {
           incomeList.add(element);
         }
-      },
-    );
+      }
     setState(() {});
   }
 
@@ -73,22 +71,22 @@ class _AnalysisState extends State<Analysis> {
       start = temp;
     }
     List monthly = [];
-    myList.forEach((element) {
+    for (var element in myList) {
       if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
           (element['date'].isBefore(end.add(Duration(days: 1))))) {
         monthly.add(element);
       }
-    });
+    }
     selectiveSortedAll.clear();
     selectiveSortedAll.addAll(monthly);
     monthly.clear();
 
-    incomeList.forEach((element) {
+    for (var element in incomeList) {
       if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
           (element['date'].isBefore(end.add(Duration(days: 1))))) {
         monthly.add(element);
       }
-    });
+    }
     selectiveSortedIncomes.clear();
     selectiveSortedIncomes.addAll(monthly);
     monthly.clear();

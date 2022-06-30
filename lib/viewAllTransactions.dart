@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -36,18 +35,15 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     myList.addAll(sortedList);
     incomeList.clear();
     expenseList.clear();
-    myList.forEach(
-      (element) {
+    for (var element in myList) {
         if (element['type'] == 'Expense') {
           expenseList.add(element);
         } else {
           incomeList.add(element);
         }
-      },
-    );
-    print('Length of IncomeList and ExpenseList');
-    print(incomeList.length);
-    print(incomeList.length);
+      }
+
+
     setState(() {});
   }
 
@@ -150,8 +146,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     return Card(
       child: GestureDetector(
         onTap: () {
-          print('You clicked an Expense item ID is');
-          print(id);
+      
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -234,8 +229,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     return Card(
      child: GestureDetector(
         onTap: () {
-          print('You clicked an Income item.ID is');
-          print(id);
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(

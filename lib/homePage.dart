@@ -1,9 +1,9 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late SharedPreferences pref;
   List tempList = [];
   Dbhelper dbhelper = Dbhelper();
   int totalBalance = 0;
@@ -33,7 +34,8 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
- Future<Map> sortedMap() async {
+
+  Future<Map> sortedMap() async {
     Map unsorted = await dbhelper.fetchAllData();
     LinkedHashMap sortMapByValue = LinkedHashMap.fromEntries(
         unsorted.entries.toList()
@@ -42,10 +44,10 @@ class _HomePageState extends State<HomePage> {
     sortMapByValue.forEach((key, value) => myList.add(value));
     tempList.clear();
     tempList.addAll(myList);
+    pref = await SharedPreferences.getInstance();
     setState(() {});
     return (sortMapByValue);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +61,8 @@ class _HomePageState extends State<HomePage> {
             .push(MaterialPageRoute(builder: ((context) => AddTransactions())))
             .whenComplete(() {
           setState(() {});
-        }),   
-            label: Text("ADD"),
- 
+        }),
+        label: Text("ADD"),
       ),
       body: FutureBuilder<Map>(
           future: sortedMap(),
@@ -74,10 +75,51 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.hasData) {
               if (snapshot.data!.isEmpty) {
                 return Center(
-                  child: Text(
-                    'OOps..No Data found..did you reset the data Recently?',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+                  child: Column(
+                    children: [
+                      Image.asset('Assets/images/empty.gif'),
+                      SizedBox(
+                        height: 45,
+                      ),
+                      Container(
+                        width: 350.0,
+                        height: 150.0,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.0),
+                          //color: Colors.blue.shade200
+                        
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                'Hei ${pref.getString('UserName')} ,Nothing in here..',
+                                style: TextStyle(
+                                  fontWeight:FontWeight.w300,
+                                  fontFamily: 'Arial',
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  height: 1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                               Text(
+                               'Click the add button to get started',
+                                style: TextStyle(
+                                  fontWeight:FontWeight.w300,
+                                  fontFamily: 'Arial',
+                                  fontSize: 25,
+                                  color: Colors.black,
+                                  height: 1,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
@@ -102,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                         Text(
-                          "Hello User",
+                          ('Hello ${pref.getString('UserName').toString()}'),
                           style: TextStyle(
                               fontSize: 25,
                               fontWeight: FontWeight.bold,
@@ -131,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                   child: Container(
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: const [
-                          customcolor.PrimaryColor,
+                          customcolor.primaryColor,
                           Colors.blueAccent
                         ]),
                         borderRadius: BorderRadius.all(Radius.circular(25))),
@@ -196,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                             tempList[index]['category']);
                       } else {
                         return incomeTile(
-                           tempList[index]['amount'],
+                            tempList[index]['amount'],
                             tempList[index]['note'],
                             tempList[index]['date'],
                             tempList[index]['id'],
@@ -286,12 +328,20 @@ class _HomePageState extends State<HomePage> {
     ));
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id,String type,String category) {
+  Widget expenseTile(int value, String note, DateTime dateTime, int id,
+      String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(
       child: GestureDetector(
         onTap: () {
-           Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => (EditScreen(
+                  value: value,
+                  note: note,
+                  dateTime: dateTime,
+                  id: id,
+                  type: type,
+                  category: category))));
         },
         onLongPress: () {
           showDialog(
@@ -317,13 +367,12 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(5),
           margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white),
+              borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
-           //crossAxisAlignment: CrossAxisAlignment.center,
+            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
-                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Icon(
                     Icons.arrow_circle_up_outlined,
@@ -340,7 +389,8 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
-                 Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
@@ -348,11 +398,10 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Text(category,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                          )),
-    
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  )),
             ],
           ),
         )),
@@ -360,12 +409,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id,String type,String category) {
+  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+      String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(
       child: GestureDetector(
         onTap: () {
-         Navigator.of(context).push(MaterialPageRoute(builder: (context)=>(EditScreen(value: value,note: note,dateTime: dateTime,id: id,type: type,category: category))));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => (EditScreen(
+                  value: value,
+                  note: note,
+                  dateTime: dateTime,
+                  id: id,
+                  type: type,
+                  category: category))));
         },
         onLongPress: () {
           showDialog(
@@ -375,7 +432,6 @@ class _HomePageState extends State<HomePage> {
                   title: Text('Confirm Delete?'),
                   actions: [
                     ElevatedButton(
-                        
                         onPressed: () => Navigator.of(context).pop(),
                         child: Text("Cancel")),
                     ElevatedButton(
@@ -392,10 +448,8 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.all(5),
           margin: EdgeInsets.all(5),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: Colors.white),
+              borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
-
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -415,18 +469,19 @@ class _HomePageState extends State<HomePage> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
-                  Text('${dateTime.day}/${dateTime.month}/${(dateTime.year)%100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold)),
                 ],
               ),
-               Text(category,
-                      style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.black87,
-                          )),
+              Text(category,
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  )),
             ],
           ),
         )),
