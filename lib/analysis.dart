@@ -51,9 +51,6 @@ class _AnalysisState extends State<Analysis> {
         }
       },
     );
-    print('Length of IncomeList and ExpenseList');
-    print(incomeList.length);
-    print(incomeList.length);
     setState(() {});
   }
 
@@ -77,7 +74,6 @@ class _AnalysisState extends State<Analysis> {
     }
     List monthly = [];
     myList.forEach((element) {
-      print(DateTimeRange(start: start, end: end));
       if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
           (element['date'].isBefore(end.add(Duration(days: 1))))) {
         monthly.add(element);
@@ -113,201 +109,190 @@ class _AnalysisState extends State<Analysis> {
     return DefaultTabController(
       length: 3,
       child: SafeArea(
-        child: Expanded(
-          child: (Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.white,
-                title: Text(
-                  'Analysis Page',
-                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
-                ),
-                centerTitle: true,
+        child: (Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.white,
+              title: Text(
+                'Analysis Page',
+                style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
               ),
-              body: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ChoiceChip(
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last 30 Days',
-                              style: TextStyle(
+              centerTitle: true,
+            ),
+            body: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ChoiceChip(
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last 30 Days',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: isSelectedMonthly
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
+                        selectedColor: Colors.green,
+                        selected: isSelectedMonthly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = true;
+                            isSelectedWeekly = false;
+                            isSelectedDated = false;
+                            await selectAPeriod(
+                                DateTime.now().subtract(Duration(days: 30)),
+                                DateTime.now());
+                      
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('B/W Dates',
+                            style: TextStyle(
                                 fontSize: 20,
-                                color: isSelectedMonthly
+                                color: isSelectedDated
                                     ? Colors.white
-                                    : Colors.black,
-                              )),
-                          selectedColor: Colors.green,
-                          selected: isSelectedMonthly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = true;
-                              isSelectedWeekly = false;
-                              isSelectedDated = false;
-                              await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
-                                  DateTime.now());
-        
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('B/W Dates',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: isSelectedDated
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.green,
-                          selected: isSelectedDated,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              await selectAPeriod(await _selectDate(context),
-                                  await _selectDate(context));
-                              isSelectedDated = true;
-                              isSelectedWeekly = false;
-                              isSelectedMonthly = false;
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last Week',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: isSelectedWeekly
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.green,
-                          selected: isSelectedWeekly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = false;
-                              isSelectedWeekly = true;
-                              isSelectedDated = false;
-                              await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 7)),
-                                  DateTime.now());
-        
-                              setState(() {});
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                                    : Colors.black)),
+                        selectedColor: Colors.green,
+                        selected: isSelectedDated,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            await selectAPeriod(await _selectDate(context),
+                                await _selectDate(context));
+                            isSelectedDated = true;
+                            isSelectedWeekly = false;
+                            isSelectedMonthly = false;
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last Week',
+                            style: TextStyle(
+                                fontSize: 20,
+                                color: isSelectedWeekly
+                                    ? Colors.white
+                                    : Colors.black)),
+                        selectedColor: Colors.green,
+                        selected: isSelectedWeekly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = false;
+                            isSelectedWeekly = true;
+                            isSelectedDated = false;
+                            await selectAPeriod(
+                                DateTime.now().subtract(Duration(days: 7)),
+                                DateTime.now());
+                      
+                            setState(() {});
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                      child: TabBar(
-                          labelColor: Color.fromARGB(255, 0, 0, 0),
-                          tabs: const [
-                            Tab(
-                              text: 'ALL',
-                            ),
-                            Tab(
-                              text: 'Incomes',
-                            ),
-                            Tab(
-                              text: 'Expenses',
-                            ),
-                          ]),
-                    ),
-                  ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: selectiveSortedAll.length,
-                                  itemBuilder: (context, index) {
-                                    if (selectiveSortedAll[index]['type'] ==
-                                        'Expense') {
-                                      return (ListTile(
-                                          title: expenseTile(
-                                              selectiveSortedAll[index]['amount'],
-                                              selectiveSortedAll[index]['note'],
-                                              selectiveSortedAll[index]['date'],
-                                              selectiveSortedAll[index]['id'],
-                                              selectiveSortedAll[index]
-                                                  ['category'],
-                                              selectiveSortedAll[index]['type'],
-                                              helper,
-                                              context)));
-                                    } else {
-                                      return (ListTile(
-                                        title: incomeTile(
-                                            selectiveSortedAll[index]['amount'],
-                                            selectiveSortedAll[index]['note'],
-                                            selectiveSortedAll[index]['date'],
-                                            selectiveSortedAll[index]['id'],
-                                            selectiveSortedAll[index]['category'],
-                                            selectiveSortedAll[index]['type'],
-                                            helper,
-                                            context),
-                                      ));
-                                    }
-                                  }),
-                            ],
-                          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TabBar(
+                      labelColor: Color.fromARGB(255, 0, 0, 0),
+                      tabs: const [
+                        Tab(
+                          text: 'ALL',
                         ),
-                        ListView.builder(
-                            itemCount: selectiveSortedIncomes.length,
-                            itemBuilder: (context, index) {
-                              return (ListTile(
-                                  title: incomeTile(
-                                      selectiveSortedIncomes[index]['amount'],
-                                      selectiveSortedIncomes[index]['note'],
-                                      selectiveSortedIncomes[index]['date'],
-                                      selectiveSortedIncomes[index]['id'],
-                                      selectiveSortedIncomes[index]['category'],
-                                      selectiveSortedIncomes[index]['type'],
-                                      helper,
-                                      context)));
-                            }),
-                        ListView.builder(
-                            itemCount: selectiveSortedExpenses.length,
-                            itemBuilder: (context, index) {
+                        Tab(
+                          text: 'Incomes',
+                        ),
+                        Tab(
+                          text: 'Expenses',
+                        ),
+                      ]),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: selectiveSortedAll.length,
+                          itemBuilder: (context, index) {
+                            if (selectiveSortedAll[index]['type'] ==
+                                'Expense') {
                               return (ListTile(
                                   title: expenseTile(
-                                      selectiveSortedExpenses[index]['amount'],
-                                      selectiveSortedExpenses[index]['note'],
-                                      selectiveSortedExpenses[index]['date'],
-                                      selectiveSortedExpenses[index]['id'],
-                                      selectiveSortedExpenses[index]['category'],
-                                      selectiveSortedExpenses[index]['type'],
+                                      selectiveSortedAll[index]['amount'],
+                                      selectiveSortedAll[index]['note'],
+                                      selectiveSortedAll[index]['date'],
+                                      selectiveSortedAll[index]['id'],
+                                      selectiveSortedAll[index]
+                                          ['category'],
+                                      selectiveSortedAll[index]['type'],
                                       helper,
                                       context)));
-                            }),
-                      ],
-                    ),
+                            } else {
+                              return (ListTile(
+                                title: incomeTile(
+                                    selectiveSortedAll[index]['amount'],
+                                    selectiveSortedAll[index]['note'],
+                                    selectiveSortedAll[index]['date'],
+                                    selectiveSortedAll[index]['id'],
+                                    selectiveSortedAll[index]['category'],
+                                    selectiveSortedAll[index]['type'],
+                                    helper,
+                                    context),
+                              ));
+                            }
+                          }),
+                      ListView.builder(
+                          itemCount: selectiveSortedIncomes.length,
+                          itemBuilder: (context, index) {
+                            return (ListTile(
+                                title: incomeTile(
+                                    selectiveSortedIncomes[index]['amount'],
+                                    selectiveSortedIncomes[index]['note'],
+                                    selectiveSortedIncomes[index]['date'],
+                                    selectiveSortedIncomes[index]['id'],
+                                    selectiveSortedIncomes[index]['category'],
+                                    selectiveSortedIncomes[index]['type'],
+                                    helper,
+                                    context)));
+                          }),
+                      ListView.builder(
+                          itemCount: selectiveSortedExpenses.length,
+                          itemBuilder: (context, index) {
+                            return (ListTile(
+                                title: expenseTile(
+                                    selectiveSortedExpenses[index]['amount'],
+                                    selectiveSortedExpenses[index]['note'],
+                                    selectiveSortedExpenses[index]['date'],
+                                    selectiveSortedExpenses[index]['id'],
+                                    selectiveSortedExpenses[index]['category'],
+                                    selectiveSortedExpenses[index]['type'],
+                                    helper,
+                                    context)));
+                          }),
+                    ],
                   ),
-                  FloatingActionButton.extended(
-                      onPressed: () async {
-                      await  showSearch(context: context, delegate: SearchScreen()).whenComplete(() => getRawMap()
-                      .whenComplete(() => selectAPeriod( DateTime.now().subtract(Duration(days: 30)), DateTime.now())));
-                      setState(() {
-                      });
-                   
-                      },
-                      label: Text("Search"))
-                ],
-              ))),
-        ),
-      ),
-    );
+                ),
+                FloatingActionButton.extended(
+                  backgroundColor: Colors.lightBlue,
+                    onPressed: () async {
+                    await  showSearch(context: context, delegate: SearchScreen()).whenComplete(() => getRawMap()
+                    .whenComplete(() => selectAPeriod( DateTime.now().subtract(Duration(days: 30)), DateTime.now())));
+                    setState(() {
+                    });
+                 
+                    },
+                    label: Icon(Icons.search))
+              ],
+            ))),
+    ));
   }
 
   Widget expenseTile(int value, String note, DateTime dateTime, int id,
@@ -315,8 +300,6 @@ class _AnalysisState extends State<Analysis> {
     return Card(
       child: GestureDetector(
         onTap: () {
-          print('You clicked an Expense item ID is');
-          print(id);
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -375,7 +358,7 @@ class _AnalysisState extends State<Analysis> {
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
+                          )),
                   Text('-$value AED',
                       style: TextStyle(
                           fontSize: 18,
@@ -384,9 +367,9 @@ class _AnalysisState extends State<Analysis> {
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold))
+                          ))
                 ],
               ),
               Text(category,
@@ -406,8 +389,6 @@ class _AnalysisState extends State<Analysis> {
     return Card(
       child: GestureDetector(
         onTap: () async {
-          print('You clicked an Income item.ID is');
-          print(id);
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -471,7 +452,7 @@ class _AnalysisState extends State<Analysis> {
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
+                          )),
                   Text('+$value AED',
                       style: TextStyle(
                           fontSize: 18,
@@ -480,9 +461,9 @@ class _AnalysisState extends State<Analysis> {
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 15,
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold))
+                          ))
                 ],
               ),
               Text(category,

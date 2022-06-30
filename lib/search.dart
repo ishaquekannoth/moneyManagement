@@ -5,7 +5,17 @@ import 'package:moneymanager/editScreen.dart';
 
 class SearchScreen extends SearchDelegate<String> {
   @override
-  String get searchFieldLabel => 'Category,Amount,Or Note';
+  String get searchFieldLabel => 'Category/Amount/Note/Date to search';
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    var superThemeData = super.appBarTheme(context);
+    return superThemeData.copyWith(
+      textTheme: superThemeData.textTheme.copyWith(
+        headline6:TextStyle(fontSize: 14),
+      ),
+    );
+  }
 
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
@@ -25,11 +35,13 @@ class SearchScreen extends SearchDelegate<String> {
     getRawMap();
   }
 
+
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButton(
           onPressed: () {
+            query = '';
           },
           icon: (Icon(Icons.clear)))
     ];
@@ -37,19 +49,24 @@ class SearchScreen extends SearchDelegate<String> {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    IconButton(
-        onPressed: () {
-        },
-        icon: (Icon(Icons.arrow_back)));
+    IconButton(onPressed: () {}, icon: (Icon(Icons.arrow_back)));
   }
 
   @override
   Widget buildResults(BuildContext context) {
-  final List suggestion = myList.where((element) {
-      return (element['category'].toString().toLowerCase().contains(query.toLowerCase())||
-          element['amount'].toString().toLowerCase().contains(query.toLowerCase())|| 
-           element['note'].toString().toLowerCase().contains(query.toLowerCase())
-          );
+    final List suggestion = myList.where((element) {
+      return (element['category']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()) ||
+          element['amount']
+              .toString()
+              .toLowerCase()
+              .startsWith(query.toLowerCase()) ||
+          element['note']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()));
     }).toList();
 
     return ListView.builder(
@@ -71,10 +88,23 @@ class SearchScreen extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final List suggestion = myList.where((element) {
-      return (element['category'].toString().toLowerCase().contains(query.toLowerCase())||
-          element['amount'].toString().toLowerCase().contains(query.toLowerCase())|| 
-           element['note'].toString().toLowerCase().contains(query.toLowerCase())
-          );
+      return (element['category']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase()) ||
+          element['amount']
+              .toString()
+              .toLowerCase()
+              .startsWith(query.toLowerCase()) ||
+          element['note']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase())||
+            element['date']
+              .toString()
+              .toLowerCase()
+              .contains(query.toLowerCase())  
+              );
     }).toList();
 
     return ListView.builder(
