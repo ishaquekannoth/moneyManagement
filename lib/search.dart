@@ -10,7 +10,7 @@ class SearchScreen extends SearchDelegate<String> {
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
   List myList = [];
-  late String result;
+
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
@@ -30,7 +30,6 @@ class SearchScreen extends SearchDelegate<String> {
     return [
       IconButton(
           onPressed: () {
-            query = '';
           },
           icon: (Icon(Icons.clear)))
     ];
@@ -40,17 +39,17 @@ class SearchScreen extends SearchDelegate<String> {
   Widget? buildLeading(BuildContext context) {
     IconButton(
         onPressed: () {
-          close(context, result);
         },
         icon: (Icon(Icons.arrow_back)));
   }
 
   @override
   Widget buildResults(BuildContext context) {
-    final List suggestion = myList.where((element) {
-      return (element['category'].toString().toLowerCase().contains(query.toLowerCase()) ||
-          element['amount'].toString().toLowerCase().contains(query.toLowerCase()) ||
-          element['note'].toString().toLowerCase().contains(query.toLowerCase()));
+  final List suggestion = myList.where((element) {
+      return (element['category'].toString().toLowerCase().contains(query.toLowerCase())||
+          element['amount'].toString().toLowerCase().contains(query.toLowerCase())|| 
+           element['note'].toString().toLowerCase().contains(query.toLowerCase())
+          );
     }).toList();
 
     return ListView.builder(
@@ -72,9 +71,10 @@ class SearchScreen extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final List suggestion = myList.where((element) {
-      return (element['category'].toString().contains(query.toLowerCase()) ||
-          element['amount'].toString().contains(query.toLowerCase()) ||
-          element['note'].toString().contains(query.toLowerCase()));
+      return (element['category'].toString().toLowerCase().contains(query.toLowerCase())||
+          element['amount'].toString().toLowerCase().contains(query.toLowerCase())|| 
+           element['note'].toString().toLowerCase().contains(query.toLowerCase())
+          );
     }).toList();
 
     return ListView.builder(
