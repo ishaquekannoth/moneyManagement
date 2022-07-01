@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment:MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
-                                'Hei ${pref.getString('UserName')} ,Nothing in here..',
+                                'Hei ${pref.getString('UserName')} ,Nothing in here yet..',
                                 style: TextStyle(
                                   fontWeight:FontWeight.w300,
                                   fontFamily: 'Arial',

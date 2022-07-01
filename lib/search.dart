@@ -12,7 +12,7 @@ class SearchScreen extends SearchDelegate<String> {
     var superThemeData = super.appBarTheme(context);
     return superThemeData.copyWith(
       textTheme: superThemeData.textTheme.copyWith(
-        headline6:TextStyle(fontSize: 14),
+        headline6: TextStyle(fontSize: 14),
       ),
     );
   }
@@ -35,7 +35,6 @@ class SearchScreen extends SearchDelegate<String> {
     getRawMap();
   }
 
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -49,7 +48,11 @@ class SearchScreen extends SearchDelegate<String> {
 
   @override
   Widget? buildLeading(BuildContext context) {
-    return IconButton(onPressed: () {}, icon: (Icon(Icons.arrow_back)));
+    return IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: (Icon(Icons.arrow_back)));
   }
 
   @override
@@ -99,14 +102,12 @@ class SearchScreen extends SearchDelegate<String> {
           element['note']
               .toString()
               .toLowerCase()
-              .contains(query.toLowerCase())||
-            element['date']
+              .contains(query.toLowerCase()) ||
+          element['date']
               .toString()
               .toLowerCase()
-              .contains(query.toLowerCase())  
-              );
+              .contains(query.toLowerCase()));
     }).toList();
-
 
     return ListView.builder(
       itemBuilder: (context, index) {
@@ -125,11 +126,10 @@ class SearchScreen extends SearchDelegate<String> {
   }
 
   Widget expenseTile(double value, String note, DateTime dateTime, int id,
-      String category, String type, Dbhelper dataBase, BuildContext context){
+      String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
         onTap: () {
-     
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -146,16 +146,18 @@ class SearchScreen extends SearchDelegate<String> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?',style: TextStyle(color: Colors.black,fontSize: 18)),
+                  title: Text('Confirm Delete?',
+                      style: TextStyle(color: Colors.black, fontSize: 18)),
                   actions: [
                     ElevatedButton(
-                        onPressed: ()=> Navigator.of(context).pop(),
+                        onPressed: () => Navigator.of(context).pop(),
                         child: Text("Cancel")),
                     ElevatedButton(
-                        onPressed: () async{
+                        onPressed: () async {
                           dataBase
                               .removeSingleItem(id)
-                              .whenComplete(() =>  getRawMap());
+                              .whenComplete(() => getRawMap());
+                              
                           Navigator.of(context).pop();
                         },
                         child: Text("OK"))
@@ -218,7 +220,7 @@ class SearchScreen extends SearchDelegate<String> {
     );
   }
 
-  Widget incomeTile(double  value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
@@ -240,7 +242,10 @@ class SearchScreen extends SearchDelegate<String> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?',style: TextStyle(color: Colors.black),),
+                  title: Text(
+                    'Confirm Delete?',
+                    style: TextStyle(color: Colors.black),
+                  ),
                   actions: [
                     ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
