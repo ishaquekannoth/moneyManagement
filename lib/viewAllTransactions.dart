@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
+import 'package:moneymanager/search.dart';
 
 class ViewAllTransactions extends StatefulWidget {
   const ViewAllTransactions({Key? key}) : super(key: key);
@@ -35,14 +36,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     incomeList.clear();
     expenseList.clear();
     for (var element in myList) {
-        if (element['type'] == 'Expense') {
-          expenseList.add(element);
-        } else {
-          incomeList.add(element);
-        }
+      if (element['type'] == 'Expense') {
+        expenseList.add(element);
+      } else {
+        incomeList.add(element);
       }
-
-
+    }
     setState(() {});
   }
 
@@ -72,6 +71,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               await category.printCategoryValues();
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => BrutalSearch())).whenComplete(() => getRawMap());
+                  setState(() {
+                  });
             },
           ),
           body: TabBarView(
@@ -105,7 +108,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       ));
                     }
                   }),
-                  ListView.builder(
+              ListView.builder(
                   itemCount: incomeList.length,
                   itemBuilder: (context, index) {
                     return (ListTile(
@@ -144,7 +147,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     return Card(
       child: GestureDetector(
         onTap: () {
-      
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -203,7 +205,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
-                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
@@ -225,7 +228,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   Widget incomeTile(double value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
-     child: GestureDetector(
+      child: GestureDetector(
         onTap: () {
           Navigator.of(context)
               .push(MaterialPageRoute(
@@ -286,7 +289,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           fontSize: 18,
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
-                  Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                  Text(
+                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
