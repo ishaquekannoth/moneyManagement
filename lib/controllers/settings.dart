@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -57,17 +56,36 @@ class _SettingsMenuState extends State<SettingsMenu> {
                     color: Colors.red,
                   ),
                   title: Text('Reset Everything'),
-                  onTap: () async {
-                    db.resetData();
-                    cat.clearCategoryBox();
-                    SharedPreferences pref =
-                        await SharedPreferences.getInstance();
-                   await pref.clear();
-                    
-          
-                    Navigator.of(context).pushAndRemoveUntil(
+                  onTap: (){
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return (AlertDialog(
+                            title: Text('Are you sure to Reset the App?'),
+                            actions: [ ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.cancel ),
+                                  label: Text('Cancel')),
+                                  
+                              ElevatedButton.icon(
+                                  onPressed: () async {
+                                    db.resetData();
+                                    cat.clearCategoryBox();
+                                    SharedPreferences pref =
+                                        await SharedPreferences.getInstance();
+                                    await pref.clear();
+                                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(builder: (context) => SplashScreen()),
                         (route) => false);
+                                  },
+                                  icon: Icon(Icons.delete_forever_outlined),
+                                  label: Text('Confirm')),
+                             
+                            ],
+                          ));
+                        });
                   }),
             ),
             Divider(

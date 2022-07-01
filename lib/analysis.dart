@@ -293,7 +293,7 @@ class _AnalysisState extends State<Analysis> {
     ));
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id,
+  Widget expenseTile(double  value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
@@ -382,7 +382,7 @@ class _AnalysisState extends State<Analysis> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double  value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
@@ -20,7 +18,7 @@ class _AddTransactionsState extends State<AddTransactions> {
     expenseCategoryAdder();
   }
 
-  int? amount;
+  double? amount;
   String note = "Some Notes";
   String type = "Income";
   DateTime selectedDate = DateTime.now();
@@ -74,9 +72,9 @@ class _AddTransactionsState extends State<AddTransactions> {
               },
               icon: Icon(Icons.arrow_back),
             ),
-
-          SizedBox(width: 15,),
-
+            SizedBox(
+              width: 15,
+            ),
             Text(
               'Add a new Transaction',
               textAlign: TextAlign.justify,
@@ -91,7 +89,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: type=='Income'?Colors.green:Colors.red,
+                    color: type == 'Income' ? Colors.green : Colors.red,
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -105,13 +103,15 @@ class _AddTransactionsState extends State<AddTransactions> {
               child: TextField(
                 onChanged: (value) {
                   try {
-                    amount = int.parse(value);
+                   
+                      amount = double.parse(value);
+                    
                   } catch (e) {
                     Text("only numbers permitted");
                   }
                 },
                 inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
                 ],
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
@@ -240,7 +240,9 @@ class _AddTransactionsState extends State<AddTransactions> {
         Text(
           'Category Not Listed?',
           style: TextStyle(
-              fontSize: 18.0, color: type=='Income'?Colors.green:Colors.red, fontWeight: FontWeight.bold),
+              fontSize: 18.0,
+              color: type == 'Income' ? Colors.green : Colors.red,
+              fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
         SizedBox(
@@ -249,7 +251,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
-                primary: type=='Income'?Colors.green:Colors.red,
+                primary: type == 'Income' ? Colors.green : Colors.red,
                 minimumSize: Size(25, 35),
               ),
               onPressed: () async {
@@ -321,7 +323,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                     Icon(
                       Icons.calendar_month,
                       size: 30.0,
-                      color: type=='Income'?Colors.green:Colors.red,
+                      color: type == 'Income' ? Colors.green : Colors.red,
                     ),
                     SizedBox(
                       width: 20,
@@ -331,7 +333,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
-                          color: type=='Income'?Colors.green:Colors.red),
+                          color: type == 'Income' ? Colors.green : Colors.red),
                     ),
                   ],
                 ))),
@@ -341,34 +343,33 @@ class _AddTransactionsState extends State<AddTransactions> {
         SizedBox(
             height: 50,
             child: FloatingActionButton.extended(
-              label:Text("Add Data"),
-              extendedTextStyle:TextStyle(fontSize: 20),
-              backgroundColor:(type=='Income'?Colors.green:Colors.red),
-                onPressed: () {
-                  if (amount != null &&
-                      note.isNotEmpty &&
-                      selectedCategory != 'Unspecified') {
-                    Dbhelper dbhelper = Dbhelper();
-                    dbhelper.addData(
-                        amount: amount!,
-                        date: selectedDate,
-                        note: note,
-                        type: type,
-                        category: selectedCategory);
-                    Navigator.of(context).pop();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        behavior: SnackBarBehavior.floating,
-                        duration: Duration(seconds: 1),
-                        margin: EdgeInsets.all(15),
-                        backgroundColor: Colors.red,
-                        content: Text('All fields are required',
-                            style: TextStyle(fontSize: 15),
-                            textAlign: TextAlign.center)));
-                  }
-                },
-                
-                ))
+              label: Text("Add Data"),
+              extendedTextStyle: TextStyle(fontSize: 20),
+              backgroundColor: (type == 'Income' ? Colors.green : Colors.red),
+              onPressed: () {
+                if (amount != null && amount!>0.0&&
+                    note.isNotEmpty &&
+                    selectedCategory != 'Unspecified') {
+                  Dbhelper dbhelper = Dbhelper();
+                  dbhelper.addData(
+                      amount: amount!,
+                      date: selectedDate,
+                      note: note,
+                      type: type,
+                      category: selectedCategory);
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      duration: Duration(seconds: 1),
+                      margin: EdgeInsets.all(15),
+                      backgroundColor: Colors.red,
+                      content: Text('All fields are required',
+                          style: TextStyle(fontSize: 15),
+                          textAlign: TextAlign.center)));
+                }
+              },
+            ))
       ]),
     ));
   }

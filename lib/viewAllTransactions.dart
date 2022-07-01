@@ -28,7 +28,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
       ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
-    //print(sortMapByValue);
     List sortedList = [];
     sortMapByValue.forEach((key, value) => sortedList.add(value));
     myList.clear();
@@ -73,7 +72,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               await category.printCategoryValues();
-              // print(await category.fetchAllCategories());
             },
           ),
           body: TabBarView(
@@ -141,7 +139,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     );
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id,
+  Widget expenseTile(double value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
@@ -224,7 +222,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
      child: GestureDetector(

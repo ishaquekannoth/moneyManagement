@@ -12,7 +12,7 @@ class Dbhelper {
   }
 
   Future addData(
-      {required int amount,
+      {required double  amount,
       required DateTime date,
       required String note,
       required String type,
@@ -56,7 +56,7 @@ class Dbhelper {
   }
 
   Future<void> editSingleItem(
-      {required int amount,
+      {required double amount,
       required DateTime date,
       required String note,
       required String type,

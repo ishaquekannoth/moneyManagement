@@ -4,7 +4,7 @@ import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 
 class EditScreen extends StatefulWidget {
-  final int value;
+  final double value;
   final String note;
   final DateTime dateTime;
   final int id;
@@ -344,12 +344,12 @@ class _EditScreenState extends State<EditScreen> {
           extendedTextStyle: TextStyle(letterSpacing: 2,color: Colors.white),
           onPressed:() {
               if (_amount.text != null && _note.text.isNotEmpty
-                  &&
+                  &&double.parse(_amount.text)>0.0&&
                   scg != 'Cateogory Not Selected'
                   ) {
                 Dbhelper dbhelper = Dbhelper();
                 dbhelper.editSingleItem(
-                    amount: int.parse(_amount.text),
+                    amount: double.parse(_amount.text),
                     date: selectedDate,
                     note: _note.text,
                     type: type,

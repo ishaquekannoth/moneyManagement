@@ -17,20 +17,20 @@ class _HomePageState extends State<HomePage> {
   late SharedPreferences pref;
   List tempList = [];
   Dbhelper dbhelper = Dbhelper();
-  int totalBalance = 0;
-  int totalExpence = 0;
-  int totalIncome = 0;
+  double  totalBalance = 0;
+  double  totalExpence = 0;
+  double  totalIncome = 0;
   getTotalBalance(Map data) {
     totalBalance = 0;
     totalExpence = 0;
     totalIncome = 0;
     data.forEach((key, value) {
       if (value['type'] == 'Income') {
-        totalBalance += value['amount'] as int;
-        totalIncome += value['amount'] as int;
+        totalBalance += value['amount'] as double ;
+        totalIncome += value['amount'] as double ;
       } else {
-        totalBalance -= value['amount'] as int;
-        totalExpence += value['amount'] as int;
+        totalBalance -= value['amount'] as double ;
+        totalExpence += value['amount'] as double ;
       }
     });
   }
@@ -168,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                       ]),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
+                  width: MediaQuery.of(context).size.width ,
                   margin: EdgeInsets.only(left: 10, right: 15),
                   child: Container(
                     decoration: BoxDecoration(
@@ -181,39 +181,56 @@ class _HomePageState extends State<HomePage> {
                       vertical: 30,
                     ),
                     child: Column(
+
                       children: [
                         Text(
-                          'Total Balance',
+                          'You have got',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.w700,
-                              color: Colors.white),
+                              color: Colors.black),
                         ),
-                        Text(
-                          '$totalBalance AED',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 26,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              cardIncome('$totalIncome AED'),
-                              cardExpense('$totalExpence AED')
-                            ],
-                          ),
+
+                        SizedBox(height: 10,),
+                        
+                        Container(
+                  width: 250.0,
+                  height: 42.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24.0),
+                    color: Color.fromARGB(255, 9, 4, 58)
+                    
+                    
+                  ),
+                  child: Center(
+                    child: Text(
+                      '$totalBalance AED',
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 22,
+                        color: Colors.white,
+                        height: 1,
+                        fontWeight: FontWeight.w700
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                        SizedBox(height: 20,),
+                        Row(
+                          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                          children: [
+                            cardIncome('$totalIncome AED'),
+                            cardExpense('$totalExpence AED')
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: 20,
+                  height:4
                 ),
                 Padding(
                     padding: EdgeInsets.all(1),
@@ -221,7 +238,7 @@ class _HomePageState extends State<HomePage> {
                       "Recent Transactions",
                       textAlign: TextAlign.center,
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 20,),
                     )),
                 ListView.builder(
                     shrinkWrap: true,
@@ -258,34 +275,55 @@ class _HomePageState extends State<HomePage> {
 
   Widget cardIncome(String value) {
     return (Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30), color: Colors.white),
-          margin: EdgeInsets.only(right: 10),
-          child: Icon(
-            Icons.arrow_downward,
-            color: Colors.green,
-          ),
-        ),
+        // Container(
+        //   padding: EdgeInsets.all(15),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(30), color: Colors.white),
+        //   margin: EdgeInsets.only(right: 10),
+        //   child: Icon(
+        //     Icons.arrow_downward,
+        //     color: Colors.blue,
+        //   ),
+        // ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Total Income',
+              '          Total Income',
               style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold),
-            ),
-            Text(
-              value,
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
+            ), SizedBox(height: 5,),
+            // Text(
+            //   value,
+            //   style: TextStyle(
+            //       fontSize: 20,
+            //       color: Colors.white,
+            //       fontWeight: FontWeight.bold),
+            // ),
+             Container(
+                  width: 175.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.amberAccent
+                  ),
+                  child: Center(
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18,
+                        color: Colors.black,
+                        height: 1,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
           ],
         )
       ],
@@ -295,40 +333,54 @@ class _HomePageState extends State<HomePage> {
   Widget cardExpense(String value) {
     return (Row(
       children: [
-        Container(
-          padding: EdgeInsets.all(15),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30), color: Colors.white),
-          margin: EdgeInsets.only(right: 10),
-          child: Icon(
-            Icons.arrow_upward,
-            color: Color.fromARGB(255, 216, 11, 11),
-          ),
-        ),
+        // Container(
+        //   padding: EdgeInsets.all(15),
+        //   decoration: BoxDecoration(
+        //       borderRadius: BorderRadius.circular(30), color: Colors.white),
+        //   margin: EdgeInsets.only(right: 10),
+        //   child: Icon(
+        //     Icons.arrow_upward,
+        //     color: Color.fromARGB(255, 216, 11, 11),
+        //   ),
+        // ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Total Expense',
+              '          Total Expense',
               style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
-            Text(
-              value,
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-            ),
+            SizedBox(height: 5,),
+              Container(
+                  width: 175.0,
+                  height: 40.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15.0),
+                    color: Colors.amberAccent
+                  ),
+                  child: Center(
+                    child: Text(
+                      value,
+                      style: TextStyle(
+                        fontFamily: 'Arial',
+                        fontSize: 18,
+                        color: Colors.black,
+                        height: 1,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
           ],
         )
       ],
     ));
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id,
+  Widget expenseTile(double  value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(
@@ -409,7 +461,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double  value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(

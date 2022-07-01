@@ -107,6 +107,7 @@ class SearchScreen extends SearchDelegate<String> {
               );
     }).toList();
 
+
     return ListView.builder(
       itemBuilder: (context, index) {
         final item = suggestion[index];
@@ -123,8 +124,8 @@ class SearchScreen extends SearchDelegate<String> {
     );
   }
 
-  Widget expenseTile(int value, String note, DateTime dateTime, int id,
-      String category, String type, Dbhelper dataBase, BuildContext context) {
+  Widget expenseTile(double value, String note, DateTime dateTime, int id,
+      String category, String type, Dbhelper dataBase, BuildContext context){
     return Card(
       child: GestureDetector(
         onTap: () {
@@ -145,16 +146,16 @@ class SearchScreen extends SearchDelegate<String> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?'),
+                  title: Text('Confirm Delete?',style: TextStyle(color: Colors.black,fontSize: 18)),
                   actions: [
                     ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: ()=> Navigator.of(context).pop(),
                         child: Text("Cancel")),
                     ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async{
                           dataBase
                               .removeSingleItem(id)
-                              .whenComplete(() => getRawMap());
+                              .whenComplete(() =>  getRawMap());
                           Navigator.of(context).pop();
                         },
                         child: Text("OK"))
@@ -217,7 +218,7 @@ class SearchScreen extends SearchDelegate<String> {
     );
   }
 
-  Widget incomeTile(int value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double  value, String note, DateTime dateTime, int id,
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
@@ -239,7 +240,7 @@ class SearchScreen extends SearchDelegate<String> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?'),
+                  title: Text('Confirm Delete?',style: TextStyle(color: Colors.black),),
                   actions: [
                     ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
