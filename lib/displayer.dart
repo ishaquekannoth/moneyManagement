@@ -13,7 +13,7 @@ class MainDisplay extends StatefulWidget {
 
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
-  List<Widget> pages = [HomePage(), ViewAllTransactions(),Analysis(),SettingsMenu()];
+  List<Widget> pages = [HomePage(),Analysis(),ViewAllTransactions(),SettingsMenu()];
   @override
   Widget build(BuildContext context) {
     return (Scaffold(

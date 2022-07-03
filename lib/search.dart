@@ -198,11 +198,21 @@ class _BrutalSearchState extends State<BrutalSearch> {
                           fontWeight: FontWeight.bold))
                 ],
               ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  ))
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Category: $category',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      )),
+                  Text('Note: $note',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ))
+                ],
+              ),
             ],
           ),
         )),
@@ -282,11 +292,21 @@ class _BrutalSearchState extends State<BrutalSearch> {
                           fontWeight: FontWeight.bold))
                 ],
               ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  )),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Category: $category',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      )),
+                  Text('Note: $note',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ))
+                ],
+              ),
             ],
           ),
         )),

@@ -19,7 +19,7 @@ class _AddTransactionsState extends State<AddTransactions> {
   }
 
   double? amount;
-  String note = "Some Notes";
+  String note = "None";
   String type = "Income";
   DateTime selectedDate = DateTime.now();
   String? temp;
@@ -134,14 +134,16 @@ class _AddTransactionsState extends State<AddTransactions> {
                   Icons.description,
                   size: 24.0,
                   color: Colors.white,
-                )),
+                )
+                ),
             SizedBox(
               width: 15,
             ),
             Expanded(
               child: TextField(
                 decoration: const InputDecoration(
-                    hintText: 'Description', border: InputBorder.none),
+                    hintText: 'Short Note', border: InputBorder.none
+                    ),
                 style: const TextStyle(fontSize: 24.0),
                 onChanged: (value) {
                   note = value;
@@ -399,7 +401,7 @@ class _AddTransactionsState extends State<AddTransactions> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Donations/Gifts Recieved",
+        value: "Donations/Gifts",
         child: Text('Donations/Gifts',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
@@ -409,12 +411,12 @@ class _AddTransactionsState extends State<AddTransactions> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Winning Lotteries",
+        value: "Won Lottery",
         child: Text('Winning Lotteries',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Miscallaneous Income",
+        value: "Misc Income",
         child: Text('Miscallaneous Income',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
@@ -449,7 +451,7 @@ class _AddTransactionsState extends State<AddTransactions> {
         ),
       ),
       DropdownMenuItem(
-        value: "Capital Losses Incured",
+        value: "Capital Loss",
         child: Text('Capital Losses Incured',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
@@ -459,8 +461,8 @@ class _AddTransactionsState extends State<AddTransactions> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Lost bets",
-        child: Text('Losing Lotteries',
+        value: "Lost Lottery",
+        child: Text('Lost Lottery',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
@@ -469,7 +471,7 @@ class _AddTransactionsState extends State<AddTransactions> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Miscallaneous Expense",
+        value: "Misc Expense",
         child: Text('Miscallaneous Expense',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),

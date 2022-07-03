@@ -31,6 +31,7 @@ class _AnalysisState extends State<Analysis> {
   bool isSelectedMonthly = true;
   bool isSelectedDated = false;
   bool isSelectedWeekly = false;
+  bool isAllHistorySelected = false;
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
@@ -118,8 +119,33 @@ class _AnalysisState extends State<Analysis> {
               ),
               body: Column(
                 children: [
+                  ChoiceChip(
+                    elevation: 5,
+                    pressElevation: 10,
+                    label: Text('All History',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: isAllHistorySelected
+                              ? Colors.white
+                              : Colors.black,
+                        )),
+                    selectedColor: Colors.green,
+                    selected: isAllHistorySelected,
+                    onSelected: (value) async {
+                      if (value == true) {
+                        isSelectedMonthly = false;
+                        isSelectedWeekly = false;
+                        isSelectedDated = false;
+                        isAllHistorySelected = true;
+                        await selectAPeriod(
+                            DateTime.utc(2020),
+                            DateTime.now());
+                        setState(() {});
+                      }
+                    },
+                  ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 25),
+                    padding: const EdgeInsets.only(top: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -140,6 +166,7 @@ class _AnalysisState extends State<Analysis> {
                               isSelectedMonthly = true;
                               isSelectedWeekly = false;
                               isSelectedDated = false;
+                              isAllHistorySelected = false;
                               await selectAPeriod(
                                   DateTime.now().subtract(Duration(days: 30)),
                                   DateTime.now());
@@ -166,6 +193,7 @@ class _AnalysisState extends State<Analysis> {
                               isSelectedDated = true;
                               isSelectedWeekly = false;
                               isSelectedMonthly = false;
+                              isAllHistorySelected = false;
                               setState(() {});
                             }
                           },
@@ -186,6 +214,7 @@ class _AnalysisState extends State<Analysis> {
                               isSelectedMonthly = false;
                               isSelectedWeekly = true;
                               isSelectedDated = false;
+                              isAllHistorySelected = false;
                               await selectAPeriod(
                                   DateTime.now().subtract(Duration(days: 7)),
                                   DateTime.now());
@@ -200,6 +229,9 @@ class _AnalysisState extends State<Analysis> {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: TabBar(
+                        indicator: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(25)),
                         labelColor: Color.fromARGB(255, 0, 0, 0),
                         tabs: const [
                           Tab(
@@ -281,7 +313,11 @@ class _AnalysisState extends State<Analysis> {
                   FloatingActionButton.extended(
                       backgroundColor: Colors.lightBlue,
                       onPressed: () async {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>BrutalSearch())).whenComplete(() => getRawMap().whenComplete(() => selectAPeriod(
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => BrutalSearch()))
+                            .whenComplete(() => getRawMap().whenComplete(() =>
+                                selectAPeriod(
                                     DateTime.now().subtract(Duration(days: 30)),
                                     DateTime.now())));
                         setState(() {});
@@ -373,11 +409,21 @@ class _AnalysisState extends State<Analysis> {
                       ))
                 ],
               ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  ))
+               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Category: $category',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      )),
+                  Text('Note: $note',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ))
+                ]
+              ),
             ],
           ),
         )),
@@ -426,7 +472,8 @@ class _AnalysisState extends State<Analysis> {
                         onPressed: () {
                           dataBase
                               .removeSingleItem(id)
-                              .whenComplete(() => getRawMap()).then((value) => selectAPeriod(
+                              .whenComplete(() => getRawMap())
+                              .then((value) => selectAPeriod(
                                   DateTime.now().subtract(Duration(days: 30)),
                                   DateTime.now()));
                           Navigator.of(context).pop();
@@ -468,13 +515,23 @@ class _AnalysisState extends State<Analysis> {
                         fontSize: 15,
                         color: Colors.black87,
                       ))
+                ]
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Category: $category',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      )),
+                  Text('Note: $note',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.black87,
+                      ))
                 ],
               ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  )),
             ],
           ),
         )),

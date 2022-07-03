@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<Map> sortedMap() async {
+  Future<Map> getRawMap() async {
     Map unsorted = await dbhelper.fetchAllData();
     LinkedHashMap sortMapByValue = LinkedHashMap.fromEntries(
         unsorted.entries.toList()
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
         label: Text("ADD"),
       ),
       body: FutureBuilder<Map>(
-          future: sortedMap(),
+          future: getRawMap(),
           builder: (context, snapshot) {
             if (snapshot.error != null) {
               return (Center(
