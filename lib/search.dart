@@ -82,7 +82,7 @@ class _BrutalSearchState extends State<BrutalSearch> {
             TextField(
               style: TextStyle(fontSize: 25),
               cursorHeight: 35,
-              onChanged: (value) => _runFilter(value),
+              onChanged: (value)=> _runFilter(value),
               decoration: const InputDecoration(
                   labelText: 'Category/Amount/Note/Date', suffixIcon: Icon(Icons.search)),
             ),
@@ -166,8 +166,6 @@ class _BrutalSearchState extends State<BrutalSearch> {
               });
         },
         child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(

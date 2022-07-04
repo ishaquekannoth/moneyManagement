@@ -1,4 +1,6 @@
 import 'dart:core';
+import 'dart:math';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
@@ -16,8 +18,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   void initState() {
     getRawMap();
     categoryAdder();
-    incomeCategoryMapper(incomeCat);
-    expenseCategoryMapper(expenseCat);
     super.initState();
   }
 
@@ -45,8 +45,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   ];
   List<String> incomeCat = [];
   List<String> expenseCat = [];
-  Map<String, double> categoryMappedIncomes = {};
-  Map<String, double> categoryMappedExpenses = {};
+  // Map<String, double> categoryMappedIncomes = {};
+  // Map<String, double> categoryMappedExpenses = {};
   //ValueNotifier<Map<dynamic, dynamic>> sortedMap = ValueNotifier({});
   Map<dynamic, dynamic> sortedMap = {};
   Dbhelper helper = Dbhelper();
@@ -54,6 +54,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   ValueNotifier<List> myList = ValueNotifier([]);
   ValueNotifier<List> incomeList = ValueNotifier([]);
   ValueNotifier<List> expenseList = ValueNotifier([]);
+  List<PieChartSectionData> expenseChartData = [];
+  List<PieChartSectionData> incomeChartData = [];
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
@@ -76,8 +78,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     myList.notifyListeners();
     expenseList.notifyListeners();
     incomeList.notifyListeners();
-    incomeCategoryMapper(incomeCat);
-    expenseCategoryMapper(expenseCat);
+    await getTotalBalance(myList.value);
+    await incomeCategoryMapper(incomeCat);
+    await expenseCategoryMapper(expenseCat);
+    setState(() {});
   }
 
   getTotalBalance(List data) {
@@ -93,13 +97,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         totalExpence += value['amount'] as double;
       }
     });
-    print('$totalBalance,$totalIncome,$totalExpence');
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: (Scaffold(
           appBar: AppBar(
             backgroundColor: Color.fromARGB(225, 255, 255, 255),
@@ -115,7 +118,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 isScrollable: true,
                 labelColor: Color.fromARGB(255, 0, 0, 0),
                 tabs: const [
-                  Tab(text: 'All List'),
                   Tab(
                     text: 'Incomes',
                   ),
@@ -126,88 +128,20 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              //await category.printCategoryValues();
-              // getTotalBalance(myList.value);
-              expenseCategoryMapper(expenseCat);
-              print(categoryMappedExpenses.values);
-              incomeCategoryMapper(incomeCat);
-              print(categoryMappedIncomes.values);
+              // print('Incomes ${categoryMappedIncomes.values}');
+              // print('Expense ${categoryMappedExpenses.values}');
             },
           ),
           body: Padding(
             padding: EdgeInsets.all(15),
             child: TabBarView(
               children: [
-                ValueListenableBuilder(
-                    valueListenable: myList,
-                    builder: (BuildContext context, List myLocalList, widget) {
-                      return (ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: myLocalList.length,
-                          itemBuilder: (context, index) {
-                            if (myList.value[index]['type'] == 'Expense') {
-                              return (ListTile(
-                                  title: expenseTile(
-                                      myList.value[index]['amount'],
-                                      myList.value[index]['note'],
-                                      myList.value[index]['date'],
-                                      myList.value[index]['id'],
-                                      myList.value[index]['category'],
-                                      myList.value[index]['type'],
-                                      helper,
-                                      context)));
-                            } else {
-                              return (ListTile(
-                                title: incomeTile(
-                                    myList.value[index]['amount'],
-                                    myList.value[index]['note'],
-                                    myList.value[index]['date'],
-                                    myList.value[index]['id'],
-                                    myList.value[index]['category'],
-                                    myList.value[index]['type'],
-                                    helper,
-                                    context),
-                              ));
-                            }
-                          }));
-                    }),
-                ValueListenableBuilder(
-                    valueListenable: incomeList,
-                    builder: (BuildContext context, List myLocalList, widget) {
-                      return (ListView.builder(
-                          itemCount: incomeList.value.length,
-                          itemBuilder: (context, index) {
-                            return (ListTile(
-                                title: incomeTile(
-                                    incomeList.value[index]['amount'],
-                                    incomeList.value[index]['note'],
-                                    incomeList.value[index]['date'],
-                                    incomeList.value[index]['id'],
-                                    incomeList.value[index]['category'],
-                                    incomeList.value[index]['type'],
-                                    helper,
-                                    context)));
-                          }));
-                    }),
-                ValueListenableBuilder(
-                    valueListenable: incomeList,
-                    builder: (BuildContext context, List myLocalList, widget) {
-                      return (ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: expenseList.value.length,
-                          itemBuilder: (context, index) {
-                            return (ListTile(
-                                title: expenseTile(
-                                    expenseList.value[index]['amount'],
-                                    expenseList.value[index]['note'],
-                                    expenseList.value[index]['date'],
-                                    expenseList.value[index]['id'],
-                                    expenseList.value[index]['category'],
-                                    expenseList.value[index]['type'],
-                                    helper,
-                                    context)));
-                          }));
-                    }),
+                PieChart(
+                  PieChartData(sections: incomeChartData),
+                ),
+                PieChart(PieChartData(
+                  sections: expenseChartData
+                ))
               ],
             ),
           ))),
@@ -253,8 +187,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               });
         },
         child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
@@ -393,32 +325,40 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     }
     incomeCat.addAll(defaultIncomes);
     incomeCat.addAll(dropDown);
-   
+
     dropDown.clear();
     List<dynamic> expenses = await categories.fetchExpenseCategory();
     for (int i = 0; i < expenses.length; i++) {
       String val = expenses[i]['name'].toString();
       dropDown.add(val);
     }
-      expenseCat.addAll(defaultExpenses);
-      expenseCat.addAll(dropDown);
-       setState(() {
-    });
+    expenseCat.addAll(defaultExpenses);
+    expenseCat.addAll(dropDown);
+    setState(() {});
   }
 
   expenseCategoryMapper(List<String> data) {
     for (var category in data) {
       double total = 0;
+      
       expenseList.value.forEach((expenseItem) {
         if (expenseItem['category'].toString() == category) {
           total = total + expenseItem['amount'];
+
         }
       });
-      categoryMappedExpenses[category] = total;
+      PieChartSectionData pieChartItem = PieChartSectionData(
+        radius: 150,
+        value: total,
+        title: category,
+        color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+      );
+      expenseChartData.add(pieChartItem);
     }
   }
 
   incomeCategoryMapper(List<String> data) {
+    incomeChartData.clear();
     for (var category in data) {
       double total = 0;
       incomeList.value.forEach((incomeItem) {
@@ -426,7 +366,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           total = total + incomeItem['amount'];
         }
       });
-      categoryMappedIncomes[category] = total;
+      PieChartSectionData pieChartItem = PieChartSectionData(
+        radius: 150,
+        value: total,
+        title: category,
+        color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+      );
+      incomeChartData.add(pieChartItem);
     }
   }
 }
