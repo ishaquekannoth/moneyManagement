@@ -45,8 +45,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   ];
   List<String> incomeCat = [];
   List<String> expenseCat = [];
-  // Map<String, double> categoryMappedIncomes = {};
-  // Map<String, double> categoryMappedExpenses = {};
+  Map<String, double> categoryMappedIncomes = {};
+  Map<String, double> categoryMappedExpenses = {};
   //ValueNotifier<Map<dynamic, dynamic>> sortedMap = ValueNotifier({});
   Map<dynamic, dynamic> sortedMap = {};
   Dbhelper helper = Dbhelper();
@@ -128,8 +128,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
-              // print('Incomes ${categoryMappedIncomes.values}');
-              // print('Expense ${categoryMappedExpenses.values}');
+              print('Incomes ${categoryMappedIncomes.values}');
+              print('Expense ${categoryMappedExpenses.values}');
             },
           ),
           body: Padding(
@@ -137,11 +137,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
             child: TabBarView(
               children: [
                 PieChart(
-                  PieChartData(sections: incomeChartData),
+                  PieChartData(
+                    sections: incomeChartData,
+                  ),
                 ),
                 PieChart(PieChartData(
-                  sections: expenseChartData
-                ))
+                  sections: expenseChartData,
+                  ))
               ],
             ),
           ))),
@@ -340,17 +342,17 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   expenseCategoryMapper(List<String> data) {
     for (var category in data) {
       double total = 0;
-      
       expenseList.value.forEach((expenseItem) {
         if (expenseItem['category'].toString() == category) {
           total = total + expenseItem['amount'];
-
         }
+         categoryMappedExpenses[category] = (total/totalExpence)*100;
       });
       PieChartSectionData pieChartItem = PieChartSectionData(
+        titleStyle: TextStyle(fontWeight: FontWeight.bold),
         radius: 150,
         value: total,
-        title: category,
+        title:  '${category}\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       expenseChartData.add(pieChartItem);
@@ -365,11 +367,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         if (incomeItem['category'].toString() == category) {
           total = total + incomeItem['amount'];
         }
+        categoryMappedIncomes[category] = (total/totalIncome)*100;
       });
       PieChartSectionData pieChartItem = PieChartSectionData(
+        titleStyle: TextStyle(fontWeight: FontWeight.bold),
         radius: 150,
         value: total,
-        title: category,
+        title: '${category}\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       incomeChartData.add(pieChartItem);

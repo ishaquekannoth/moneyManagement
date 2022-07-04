@@ -313,9 +313,10 @@ class _AnalysisState extends State<Analysis> {
                   FloatingActionButton.extended(
                       backgroundColor: Colors.lightBlue,
                       onPressed: () async {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                                builder: (context) => BrutalSearch()))
+                        showSearch(context: context,delegate: SearchScreen())
+                        // Navigator.of(context)
+                        //     .push(MaterialPageRoute(
+                        //         builder: (context) => BrutalSearch()))
                             .whenComplete(() => getRawMap().whenComplete(() =>
                                 selectAPeriod(
                                     DateTime.now().subtract(Duration(days: 30)),
