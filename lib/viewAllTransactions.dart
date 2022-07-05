@@ -314,9 +314,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       backgroundColor: Colors.lightBlue,
                       onPressed: () async {
                         showSearch(context: context,delegate: SearchScreen())
-                        // Navigator.of(context)
-                        //     .push(MaterialPageRoute(
-                        //         builder: (context) => BrutalSearch()))
                             .whenComplete(() => getRawMap().whenComplete(() =>
                                 selectAPeriod(
                                     DateTime.now().subtract(Duration(days: 30)),
