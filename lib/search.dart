@@ -429,33 +429,36 @@ class SearchScreen extends SearchDelegate<String> {
       valueListenable: myList,
       builder: (context, list, widget) {
         return (ListView.builder(
-          itemBuilder: (context, index) {
-            final item = myList.value[index];
-            String temp = item['type'];
-            if (temp == 'Expense') {
-              return ((expenseTile(
-                  item['amount'],
-                  item['note'],
-                  item['date'],
-                  item['id'],
-                  item['category'],
-                  item['type'],
-                  helper,
-                  context)));
-            } else {
-              return ((incomeTile(
-                  item['amount'],
-                  item['note'],
-                  item['date'],
-                  item['id'],
-                  item['category'],
-                  item['type'],
-                  helper,
-                  context)));
-            }
-          },
-          itemCount: myList.value.length,
-        ));
+            itemBuilder: (context, index) {
+               var item = suggestion[index];
+              
+              String temp = item['type'];
+              if (temp == 'Expense') {
+                return ((expenseTile(
+                    item['amount'],
+                    item['note'],
+                    item['date'],
+                    item['id'],
+                    item['category'],
+                    item['type'],
+                    helper,
+                    context)));
+              } else {
+                return ((incomeTile(
+                    item['amount'],
+                    item['note'],
+                    item['date'],
+                    item['id'],
+                    item['category'],
+                    item['type'],
+                    helper,
+                    context)));
+              }
+            },
+            itemCount: myList.value.length >= suggestion.length
+                ? suggestion.length
+                : myList.value.length));
+        //itemCount: suggestion.length));
       },
     ));
   }
@@ -494,6 +497,7 @@ class SearchScreen extends SearchDelegate<String> {
                               .whenComplete(() => getRawMap());
 
                           Navigator.of(context).pop();
+                          myList.notifyListeners();
                         },
                         child: Text("OK"))
                   ],
@@ -590,7 +594,9 @@ class SearchScreen extends SearchDelegate<String> {
                           dataBase
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap());
+
                           Navigator.of(context).pop();
+                          myList.notifyListeners();
                         },
                         child: Text("OK"))
                   ],

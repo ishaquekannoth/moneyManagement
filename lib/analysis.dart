@@ -5,14 +5,14 @@ import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
 import 'package:moneymanager/search.dart';
 
-class Analysis extends StatefulWidget {
-  const Analysis({Key? key}) : super(key: key);
+class ViewAllTransactions extends StatefulWidget {
+  const ViewAllTransactions({Key? key}) : super(key: key);
 
   @override
-  State<Analysis> createState() => _AnalysisState();
+  State<ViewAllTransactions> createState() => _ViewAllTransactionsState();
 }
 
-class _AnalysisState extends State<Analysis> {
+class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   @override
   void initState() {
     getRawMap().then((value) => selectAPeriod(
@@ -112,7 +112,7 @@ class _AnalysisState extends State<Analysis> {
               appBar: AppBar(
                 backgroundColor: Colors.white,
                 title: Text(
-                  'Analysis Page',
+                  'Transaction History',
                   style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
                 ),
                 centerTitle: true,

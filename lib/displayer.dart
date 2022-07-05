@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moneymanager/analysis.dart';
 import 'package:moneymanager/controllers/settings.dart';
 import 'package:moneymanager/homePage.dart';
-import 'package:moneymanager/viewAllTransactions.dart';
+import 'package:moneymanager/reportsAndChart.dart';
 
 class MainDisplay extends StatefulWidget {
   const MainDisplay({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class MainDisplay extends StatefulWidget {
 
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
-  List<Widget> pages = [HomePage(),Analysis(),ViewAllTransactions(),SettingsMenu()];
+  List<Widget> pages = [HomePage(),ViewAllTransactions(),Reports(),SettingsMenu()];
   @override
   Widget build(BuildContext context) {
     return (Scaffold(

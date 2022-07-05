@@ -6,14 +6,14 @@ import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
 
-class ViewAllTransactions extends StatefulWidget {
-  const ViewAllTransactions({Key? key}) : super(key: key);
+class Reports extends StatefulWidget {
+  const Reports({Key? key}) : super(key: key);
 
   @override
-  State<ViewAllTransactions> createState() => _ViewAllTransactionsState();
+  State<Reports> createState() => _ReportsState();
 }
 
-class _ViewAllTransactionsState extends State<ViewAllTransactions> {
+class _ReportsState extends State<Reports> {
   @override
   void initState() {
     getRawMap();
@@ -107,7 +107,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           appBar: AppBar(
             backgroundColor: Color.fromARGB(225, 255, 255, 255),
             title: Text(
-              'All Transactions',
+              'Analysis&Reports',
               style: TextStyle(color: Colors.black),
             ),
             centerTitle: true,
@@ -138,12 +138,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               children: [
                 PieChart(
                   PieChartData(
+                    
                     sections: incomeChartData,
                   ),
                 ),
                 PieChart(PieChartData(
                   sections: expenseChartData,
-                  ))
+                ))
               ],
             ),
           ))),
@@ -346,13 +347,14 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         if (expenseItem['category'].toString() == category) {
           total = total + expenseItem['amount'];
         }
-         categoryMappedExpenses[category] = (total/totalExpence)*100;
+        categoryMappedExpenses[category] = (total / totalExpence) * 100;
       });
       PieChartSectionData pieChartItem = PieChartSectionData(
         titleStyle: TextStyle(fontWeight: FontWeight.bold),
         radius: 150,
         value: total,
-        title:  '${category}\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
+        title:
+            '${category}\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       expenseChartData.add(pieChartItem);
@@ -367,13 +369,15 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         if (incomeItem['category'].toString() == category) {
           total = total + incomeItem['amount'];
         }
-        categoryMappedIncomes[category] = (total/totalIncome)*100;
+        categoryMappedIncomes[category] = (total / totalIncome) * 100;
       });
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titleStyle: TextStyle(fontWeight: FontWeight.bold),
+        titlePositionPercentageOffset: 0.5,
         radius: 150,
+        titleStyle: TextStyle(fontWeight: FontWeight.bold),
         value: total,
-        title: '${category}\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
+        title:
+            '${category}\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       incomeChartData.add(pieChartItem);
