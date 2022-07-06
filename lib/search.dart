@@ -406,7 +406,7 @@ class SearchScreen extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final suggestion = myList.value.where((element) {
+    final List suggestion = myList.value.where((element) {
       return (element['category']
               .toString()
               .toLowerCase()
@@ -429,42 +429,47 @@ class SearchScreen extends SearchDelegate<String> {
       valueListenable: myList,
       builder: (context, list, widget) {
         return (ListView.builder(
-            itemBuilder: (context, index) {
-               var item = suggestion[index];
-              
-              String temp = item['type'];
-              if (temp == 'Expense') {
-                return ((expenseTile(
-                    item['amount'],
-                    item['note'],
-                    item['date'],
-                    item['id'],
-                    item['category'],
-                    item['type'],
-                    helper,
-                    context)));
-              } else {
-                return ((incomeTile(
-                    item['amount'],
-                    item['note'],
-                    item['date'],
-                    item['id'],
-                    item['category'],
-                    item['type'],
-                    helper,
-                    context)));
-              }
-            },
-            itemCount: myList.value.length >= suggestion.length
-                ? suggestion.length
-                : myList.value.length));
-        //itemCount: suggestion.length));
+          itemBuilder: (context, index) {
+            final item = suggestion[index];
+            String temp = item['type'];
+            if (temp == 'Expense') {
+              return ((expenseTile(
+                  item['amount'],
+                  item['note'],
+                  item['date'],
+                  item['id'],
+                  item['category'],
+                  item['type'],
+                  helper,
+                  context)));
+            } else {
+              return ((incomeTile(
+                  item['amount'],
+                  item['note'],
+                  item['date'],
+                  item['id'],
+                  item['category'],
+                  item['type'],
+                  helper,
+                  context)));
+            }
+          },
+          itemCount: suggestion.length,
+        ));
       },
     ));
   }
 
-  Widget expenseTile(double value, String note, DateTime dateTime, int id,
-      String category, String type, Dbhelper dataBase, BuildContext context) {
+  Widget expenseTile(
+      double value,
+      String note,
+      DateTime dateTime,
+      int id,
+      String category,
+      String type,
+      Dbhelper dataBase,
+      BuildContext context,
+      ) {
     return Card(
       child: GestureDetector(
         onTap: () {
@@ -480,33 +485,33 @@ class SearchScreen extends SearchDelegate<String> {
               .whenComplete(() => getRawMap());
         },
         onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return (AlertDialog(
-                  title: Text('Confirm Delete?',
-                      style: TextStyle(color: Colors.black, fontSize: 18)),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
-                    ElevatedButton(
-                        onPressed: () async {
-                          dataBase
-                              .removeSingleItem(id)
-                              .whenComplete(() => getRawMap());
+         
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return (AlertDialog(
+                    title: Text('Confirm Delete?',
+                        style: TextStyle(color: Colors.black, fontSize: 18)),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text("Cancel")),
+                      ElevatedButton(
+                          onPressed: () async {
+                            dataBase
+                                .removeSingleItem(id)
+                                .whenComplete(() => getRawMap()).then((value) => query=query);
 
-                          Navigator.of(context).pop();
-                          myList.notifyListeners();
-                        },
-                        child: Text("OK"))
-                  ],
-                ));
-              });
+                            Navigator.of(context).pop();
+                            myList.notifyListeners();
+                          },
+                          child: Text("OK"))
+                    ],
+                  ));
+                });
+          
         },
         child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
@@ -563,7 +568,8 @@ class SearchScreen extends SearchDelegate<String> {
       String category, String type, Dbhelper dataBase, BuildContext context) {
     return Card(
       child: GestureDetector(
-        onTap: () {
+        onTap: () 
+        {
           Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: (context) => (EditScreen(
@@ -593,8 +599,7 @@ class SearchScreen extends SearchDelegate<String> {
                         onPressed: () {
                           dataBase
                               .removeSingleItem(id)
-                              .whenComplete(() => getRawMap());
-
+                              .whenComplete(() => getRawMap()).then((value) => query=query);
                           Navigator.of(context).pop();
                           myList.notifyListeners();
                         },
@@ -602,10 +607,9 @@ class SearchScreen extends SearchDelegate<String> {
                   ],
                 ));
               });
+      
         },
         child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(

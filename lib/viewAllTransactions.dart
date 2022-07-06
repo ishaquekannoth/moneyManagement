@@ -16,7 +16,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   @override
   void initState() {
     getRawMap().then((value) => selectAPeriod(
-        DateTime.now().subtract(Duration(days: 30)), DateTime.now()));
+        DateTime.utc(2020), DateTime.now()));
     super.initState();
   }
 
@@ -28,10 +28,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   List selectiveSortedAll = [];
   List selectiveSortedIncomes = [];
   List selectiveSortedExpenses = [];
-  bool isSelectedMonthly = true;
+  bool isSelectedMonthly = false;
   bool isSelectedDated = false;
   bool isSelectedWeekly = false;
-  bool isAllHistorySelected = false;
+  bool isAllHistorySelected = true;
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
@@ -119,37 +119,68 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               ),
               body: Column(
                 children: [
-                  ChoiceChip(
-                    elevation: 5,
-                    pressElevation: 10,
-                    label: Text('All History',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: isAllHistorySelected
-                              ? Colors.white
-                              : Colors.black,
-                        )),
-                    selectedColor: Colors.green,
-                    selected: isAllHistorySelected,
-                    onSelected: (value) async {
-                      if (value == true) {
-                        isSelectedMonthly = false;
-                        isSelectedWeekly = false;
-                        isSelectedDated = false;
-                        isAllHistorySelected = true;
-                        await selectAPeriod(
-                            DateTime.utc(2020),
-                            DateTime.now());
-                        setState(() {});
-                      }
-                    },
+                  Center(
+                    child: ChoiceChip(
+                   backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                      elevation: 5,
+                      pressElevation: 10,
+                      label: Text('Complete History',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: isAllHistorySelected
+                                ? Colors.white
+                                : Colors.black,
+                          )),
+                      selectedColor: Colors.purple,
+                      selected: isAllHistorySelected,
+                      onSelected: (value) async {
+                        if (value == true) {
+                          isSelectedMonthly = false;
+                          isSelectedWeekly = false;
+                          isSelectedDated = false;
+                          isAllHistorySelected = true;
+                          await selectAPeriod(
+                              DateTime.utc(2020),
+                              DateTime.now());
+                          setState(() {});
+                        }
+                      },
+                    ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ChoiceChip(
+                         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Last Week',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: isSelectedWeekly
+                                      ? Colors.white
+                                      : Colors.black)),
+                         selectedColor: Colors.purple,
+                          selected: isSelectedWeekly,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelectedMonthly = false;
+                              isSelectedWeekly = true;
+                              isSelectedDated = false;
+                              isAllHistorySelected = false;
+                              await selectAPeriod(
+                                  DateTime.now().subtract(Duration(days: 7)),
+                                  DateTime.now());
+
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                           backgroundColor: Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last 30 Days',
@@ -159,7 +190,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                     ? Colors.white
                                     : Colors.black,
                               )),
-                          selectedColor: Colors.green,
+                          selectedColor: Colors.purple,
                           selected: isSelectedMonthly,
                           onSelected: (value) async {
                             if (value == true) {
@@ -176,15 +207,16 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           },
                         ),
                         ChoiceChip(
+                           backgroundColor: Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
-                          label: Text('B/W Dates',
+                          label: Text('Custom',
                               style: TextStyle(
                                   fontSize: 20,
                                   color: isSelectedDated
                                       ? Colors.white
                                       : Colors.black)),
-                          selectedColor: Colors.green,
+                          selectedColor: Colors.purple,
                           selected: isSelectedDated,
                           onSelected: (value) async {
                             if (value == true) {
@@ -198,31 +230,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                             }
                           },
                         ),
-                        ChoiceChip(
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last Week',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  color: isSelectedWeekly
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.green,
-                          selected: isSelectedWeekly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = false;
-                              isSelectedWeekly = true;
-                              isSelectedDated = false;
-                              isAllHistorySelected = false;
-                              await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 7)),
-                                  DateTime.now());
-
-                              setState(() {});
-                            }
-                          },
-                        ),
+            
                       ],
                     ),
                   ),
@@ -246,9 +254,10 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         ]),
                   ),
                   Expanded(
-                    child: TabBarView(
+                    child:
+                     TabBarView(
                       children: [
-                        ListView.builder(
+                        selectiveSortedAll.isNotEmpty?ListView.builder(
                             shrinkWrap: true,
                             itemCount: selectiveSortedAll.length,
                             itemBuilder: (context, index) {
@@ -277,7 +286,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                       context),
                                 ));
                               }
-                            }),
+                            }):Image.asset('Assets/images/noData.gif'),
+                       selectiveSortedIncomes.isNotEmpty?
                         ListView.builder(
                             itemCount: selectiveSortedIncomes.length,
                             itemBuilder: (context, index) {
@@ -291,7 +301,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                       selectiveSortedIncomes[index]['type'],
                                       helper,
                                       context)));
-                            }),
+                            }):Image.asset('Assets/images/noData.gif'),
+                            selectiveSortedExpenses.isNotEmpty?
                         ListView.builder(
                             itemCount: selectiveSortedExpenses.length,
                             itemBuilder: (context, index) {
@@ -306,18 +317,20 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                       selectiveSortedExpenses[index]['type'],
                                       helper,
                                       context)));
-                            }),
+                            }):Image.asset('Assets/images/noData.gif'),
                       ],
-                    ),
+                    )
                   ),
                   FloatingActionButton.extended(
                       backgroundColor: Colors.lightBlue,
                       onPressed: () async {
+                        myList.isNotEmpty?
                         showSearch(context: context,delegate: SearchScreen())
                             .whenComplete(() => getRawMap().whenComplete(() =>
                                 selectAPeriod(
                                     DateTime.now().subtract(Duration(days: 30)),
-                                    DateTime.now())));
+
+                                    DateTime.now()))):Image.asset('Assets/images/noData.gif');
                         setState(() {});
                       },
                       label: Icon(Icons.search))
@@ -364,7 +377,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap())
                               .then((value) => selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.utc(2020),
                                   DateTime.now()));
                           Navigator.of(context).pop();
                           setState(() {});
@@ -375,8 +388,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               });
         },
         child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
@@ -472,7 +483,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap())
                               .then((value) => selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.utc(2020),
                                   DateTime.now()));
                           Navigator.of(context).pop();
                           setState(() {});

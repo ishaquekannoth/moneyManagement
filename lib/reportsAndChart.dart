@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
-import 'package:moneymanager/editScreen.dart';
 
 class Reports extends StatefulWidget {
   const Reports({Key? key}) : super(key: key);
@@ -21,10 +20,6 @@ class _ReportsState extends State<Reports> {
     super.initState();
   }
 
-  CategoryBox categories = CategoryBox();
-  double totalBalance = 0;
-  double totalExpence = 0;
-  double totalIncome = 0;
   List<String> defaultIncomes = [
     'BlackMoney',
     "Business Income",
@@ -43,20 +38,28 @@ class _ReportsState extends State<Reports> {
     "Misc Expense",
     "Xtras"
   ];
+  Dbhelper helper = Dbhelper();
+  CategoryBox categories = CategoryBox();
   List<String> incomeCat = [];
   List<String> expenseCat = [];
   Map<String, double> categoryMappedIncomes = {};
   Map<String, double> categoryMappedExpenses = {};
-  //ValueNotifier<Map<dynamic, dynamic>> sortedMap = ValueNotifier({});
   Map<dynamic, dynamic> sortedMap = {};
-  Dbhelper helper = Dbhelper();
-  CategoryBox category = CategoryBox();
   ValueNotifier<List> myList = ValueNotifier([]);
   ValueNotifier<List> incomeList = ValueNotifier([]);
   ValueNotifier<List> expenseList = ValueNotifier([]);
   List<PieChartSectionData> expenseChartData = [];
   List<PieChartSectionData> incomeChartData = [];
-
+  bool isSelectedMonthly = false;
+  bool isSelectedDated = false;
+  bool isSelectedWeekly = false;
+  bool isAllHistorySelected = true;
+  List selectiveSortedAll = [];
+  List selectiveSortedIncomes = [];
+  List selectiveSortedExpenses = [];
+  double totalBalance = 0;
+  double totalExpence = 0;
+  double totalIncome = 0;
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
@@ -79,9 +82,11 @@ class _ReportsState extends State<Reports> {
     expenseList.notifyListeners();
     incomeList.notifyListeners();
     await getTotalBalance(myList.value);
-    await incomeCategoryMapper(incomeCat);
-    await expenseCategoryMapper(expenseCat);
-    setState(() {});
+    await incomeCategoryMapper(incomeCat, incomeList.value);
+    await expenseCategoryMapper(expenseCat, expenseList.value);
+    setState(() {
+       selectAPeriod(DateTime(2000), DateTime.now());
+    });
   }
 
   getTotalBalance(List data) {
@@ -99,221 +104,220 @@ class _ReportsState extends State<Reports> {
     });
   }
 
+  Future<DateTime> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2020),
+        lastDate: DateTime.now());
+    if (picked != null && picked != DateTime.now()) {
+      setState(() {});
+    }
+    return Future.value(picked);
+  }
+
+  selectAPeriod(DateTime start, DateTime end) async {
+    if (start.isAfter(end)) {
+      DateTime temp = end;
+      end = start;
+      start = temp;
+    }
+    List monthly = [];
+    for (var element in myList.value) {
+      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+        monthly.add(element);
+      }
+    }
+    selectiveSortedAll.clear();
+    selectiveSortedAll.addAll(monthly);
+    monthly.clear();
+
+    for (var element in incomeList.value) {
+      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+        monthly.add(element);
+      }
+    }
+    selectiveSortedIncomes.clear();
+    selectiveSortedIncomes.addAll(monthly);
+    monthly.clear();
+
+    expenseList.value.forEach((element) {
+      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+        monthly.add(element);
+      }
+    });
+    selectiveSortedExpenses.clear();
+    selectiveSortedExpenses.addAll(monthly);
+    setState(() {
+      expenseCategoryMapper(expenseCat, selectiveSortedExpenses);
+      incomeCategoryMapper(incomeCat, selectiveSortedIncomes);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
-      child: (Scaffold(
-          appBar: AppBar(
-            backgroundColor: Color.fromARGB(225, 255, 255, 255),
-            title: Text(
-              'Analysis&Reports',
-              style: TextStyle(color: Colors.black),
-            ),
-            centerTitle: true,
-            bottom: TabBar(
-                indicator: BoxDecoration(
-                    color: Colors.amber,
-                    borderRadius: BorderRadius.circular(25)),
-                isScrollable: true,
-                labelColor: Color.fromARGB(255, 0, 0, 0),
-                tabs: const [
-                  Tab(
-                    text: 'Incomes',
-                  ),
-                  Tab(
-                    text: 'Expenses',
-                  ),
-                ]),
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              print('Incomes ${categoryMappedIncomes.values}');
-              print('Expense ${categoryMappedExpenses.values}');
-            },
-          ),
-          body: Padding(
-            padding: EdgeInsets.all(15),
-            child: TabBarView(
-              children: [
-                PieChart(
-                  PieChartData(
-                    
-                    sections: incomeChartData,
-                  ),
+        length: 2,
+        child: SafeArea(
+          child: (Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.white,
+                title: Text(
+                  'Analysis And Reports',
+                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
                 ),
-                PieChart(PieChartData(
-                  sections: expenseChartData,
-                ))
-              ],
-            ),
-          ))),
-    );
-  }
-
-  Widget expenseTile(double value, String note, DateTime dateTime, int id,
-      String category, String type, Dbhelper dataBase, BuildContext context) {
-    return Card(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) => (EditScreen(
-                      value: value,
-                      note: note,
-                      dateTime: dateTime,
-                      id: id,
-                      type: type,
-                      category: category))))
-              .whenComplete(() => getRawMap());
-        },
-        onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return (AlertDialog(
-                  title: Text('Confirm Delete?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
-                    ElevatedButton(
-                        onPressed: () {
-                          dataBase
-                              .removeSingleItem(id)
-                              .whenComplete(() => getRawMap());
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("OK"))
-                  ],
-                ));
-              });
-        },
-        child: (Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: Colors.white),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Icon(
-                    Icons.arrow_circle_up_outlined,
-                    size: 28,
-                    color: Colors.red,
-                  ),
-                  Text("Expense",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
-                  Text('-$value AED',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 170, 20, 9),
-                          fontWeight: FontWeight.bold)),
-                  Text(
-                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold))
-                ],
+                centerTitle: true,
               ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  ))
-            ],
-          ),
-        )),
-      ),
-    );
-  }
-
-  Widget incomeTile(double value, String note, DateTime dateTime, int id,
-      String category, String type, Dbhelper dataBase, BuildContext context) {
-    return Card(
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(
-                  builder: (context) => (EditScreen(
-                        value: value,
-                        note: note,
-                        dateTime: dateTime,
-                        id: id,
-                        category: category,
-                        type: type,
-                      ))))
-              .whenComplete(() => getRawMap());
-        },
-        onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return (AlertDialog(
-                  title: Text('Confirm Delete?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
-                    ElevatedButton(
-                        onPressed: () {
-                          dataBase
-                              .removeSingleItem(id)
-                              .whenComplete(() => getRawMap());
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("OK"))
-                  ],
-                ));
-              });
-        },
-        child: (Container(
-          // padding: EdgeInsets.all(15),
-          // margin: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15), color: Colors.white),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              body: Column(
                 children: [
-                  Icon(
-                    Icons.arrow_circle_down_outlined,
-                    size: 28,
-                    color: Color.fromARGB(255, 5, 231, 5),
+                  ChoiceChip(
+                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                    elevation: 5,
+                    pressElevation: 10,
+                    label: Text('Full History Chart',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: isAllHistorySelected
+                              ? Colors.white
+                              : Colors.black,
+                        )),
+                    selectedColor: Colors.purple,
+                    selected: isAllHistorySelected,
+                    onSelected: (value) async {
+                      if (value == true) {
+                        isSelectedMonthly = false;
+                        isSelectedWeekly = false;
+                        isSelectedDated = false;
+                        isAllHistorySelected = true;
+                        await selectAPeriod(DateTime.utc(2020), DateTime.now());
+                        setState(() {});
+                      }
+                    },
                   ),
-                  Text("Income",
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
-                  Text('+$value AED',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Color.fromARGB(255, 4, 112, 8),
-                          fontWeight: FontWeight.bold)),
-                  Text(
-                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.black87,
-                          fontWeight: FontWeight.bold))
+                  Padding(
+                    padding: const EdgeInsets.only(top: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ChoiceChip(
+                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Last Week',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: isSelectedWeekly
+                                      ? Colors.white
+                                      : Colors.black)),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedWeekly,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelectedMonthly = false;
+                              isSelectedWeekly = true;
+                              isSelectedDated = false;
+                              isAllHistorySelected = false;
+                              await selectAPeriod(
+                                  DateTime.now().subtract(Duration(days: 7)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Last 30 Days',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: isSelectedMonthly
+                                    ? Colors.white
+                                    : Colors.black,
+                              )),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedMonthly,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelectedMonthly = true;
+                              isSelectedWeekly = false;
+                              isSelectedDated = false;
+                              isAllHistorySelected = false;
+                              await selectAPeriod(
+                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Custom',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: isSelectedDated
+                                      ? Colors.white
+                                      : Colors.black)),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedDated,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              await selectAPeriod(await _selectDate(context),
+                                  await _selectDate(context));
+                              isSelectedDated = true;
+                              isSelectedWeekly = false;
+                              isSelectedMonthly = false;
+                              isAllHistorySelected = false;
+                              setState(() {});
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: TabBar(
+                        unselectedLabelColor: Colors.black,
+                        indicator: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(25)),
+                        labelColor: Colors.white,
+                        tabs: const [
+                          Tab(
+                            text: 'Incomes',
+                          ),
+                          Tab(
+                            text: 'Expenses',
+                          ),
+                        ]),
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        selectiveSortedIncomes.isNotEmpty
+                            ? PieChart(
+                                PieChartData(
+                                  sections: incomeChartData,
+                                ),
+                              )
+                            : Image.asset('Assets/images/noData.gif'),
+                        selectiveSortedExpenses.isNotEmpty
+                            ? PieChart(PieChartData(
+                                sections: expenseChartData,
+                              ))
+                            : Image.asset('Assets/images/noData.gif'),
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-              Text(category,
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black87,
-                  )),
-            ],
-          ),
-        )),
-      ),
-    );
+              ))),
+        ));
   }
 
   categoryAdder() async {
@@ -340,17 +344,24 @@ class _ReportsState extends State<Reports> {
     setState(() {});
   }
 
-  expenseCategoryMapper(List<String> data) {
+  expenseCategoryMapper(List<String> data, List expenses) {
+    expenseChartData.clear();
+    double totalExp = 0;
+    expenses.forEach((element) {
+      totalExp = totalExp + element['amount'];
+    });
     for (var category in data) {
       double total = 0;
-      expenseList.value.forEach((expenseItem) {
+      expenses.forEach((expenseItem) {
         if (expenseItem['category'].toString() == category) {
           total = total + expenseItem['amount'];
         }
-        categoryMappedExpenses[category] = (total / totalExpence) * 100;
+
+        categoryMappedExpenses[category] = (total / totalExp) * 100;
       });
+
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titleStyle: TextStyle(fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         radius: 150,
         value: total,
         title:
@@ -361,22 +372,28 @@ class _ReportsState extends State<Reports> {
     }
   }
 
-  incomeCategoryMapper(List<String> data) {
+  incomeCategoryMapper(List<String> data, List incomes) {
     incomeChartData.clear();
+    double totalInc = 0;
+    incomes.forEach((element) {
+      totalInc = totalInc + element['amount'];
+    });
     for (var category in data) {
       double total = 0;
-      incomeList.value.forEach((incomeItem) {
+      incomes.forEach((incomeItem) {
         if (incomeItem['category'].toString() == category) {
           total = total + incomeItem['amount'];
         }
-        categoryMappedIncomes[category] = (total / totalIncome) * 100;
+        categoryMappedIncomes[category] = (total / totalInc) * 100;
       });
+
       PieChartSectionData pieChartItem = PieChartSectionData(
         titlePositionPercentageOffset: 0.5,
         radius: 150,
-        titleStyle: TextStyle(fontWeight: FontWeight.bold),
+        titleStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         value: total,
         title:
+            // category,
             '${category}\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );

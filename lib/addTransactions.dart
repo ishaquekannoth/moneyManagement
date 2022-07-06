@@ -224,7 +224,7 @@ class _AddTransactionsState extends State<AddTransactions> {
             menuMaxHeight: 200,
             items: type == 'Income' ? incomeCat : expenseCat,
             hint: (Text(
-              temp == null ? 'No value Selected' : selectedCategory,
+              temp == null ? 'No Category Selected' : selectedCategory,
               style: TextStyle(fontSize: 20),
             )),
             onChanged: (String? value) {

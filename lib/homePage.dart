@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context, snapshot) {
             if (snapshot.error != null) {
               return (Center(
-                child: Text('unExpected Err'),
+                child: Text('Fatal Err,Couldnt Connect to DB'),
               ));
             }
             if (snapshot.hasData) {
