@@ -21,21 +21,21 @@ class _ReportsState extends State<Reports> {
   }
 
   List<String> defaultIncomes = [
-    'BlackMoney',
-    "Business Income",
-    "Capital Gains",
-    "Donations/Gifts",
+    "BlackMoney",
+    "Business",
+    "Interests",
+    "Borrow",
     "Salary",
-    "Won Lottery",
-    "Misc Income",
+    "Dividends",
+    "Others",
   ];
   List<String> defaultExpenses = [
-    "Business Expense",
-    "Capital Loss",
-    "Donations/Gifts paid",
-    "Lost Lottery",
-    "Life Expenses",
-    "Misc Expense",
+    "Food",
+    "Losses",
+    "Gifts paid",
+    "Clothing",
+    "Travel",
+    "Lend",
     "Xtras"
   ];
   Dbhelper helper = Dbhelper();

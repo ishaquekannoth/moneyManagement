@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
-import 'package:moneymanager/theme.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationApi {
@@ -34,7 +33,11 @@ class NotificationApi {
   static Future _notificationDetails() async {
     return NotificationDetails(
         android: AndroidNotificationDetails("id", 'num',
-            importance: Importance.max, showProgress: true, color: Colors.red),
+            importance: Importance.max,
+              subText: 'Negative Balance!!!',
+              playSound: false,
+             showProgress: true, color: Colors.red),
+            
         iOS: IOSNotificationDetails());
   }
 

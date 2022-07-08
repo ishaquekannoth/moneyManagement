@@ -345,7 +345,7 @@ class _AddTransactionsState extends State<AddTransactions> {
               label: Text("Add Data"),
               extendedTextStyle: TextStyle(fontSize: 20),
               backgroundColor: (type == 'Income' ? Colors.green : Colors.red),
-              onPressed: () async{
+              onPressed: () async {
                 if (amount != null &&
                     amount! > 0.0 &&
                     note.isNotEmpty &&
@@ -357,13 +357,13 @@ class _AddTransactionsState extends State<AddTransactions> {
                       note: note,
                       type: type,
                       category: selectedCategory);
-                    await NotificationApi().getTotalBalance();
-                                if (NotificationApi.balance < 0) {
-                                  await NotificationApi.showNotification(
-                                      body:
-                                          'did you forget to add an income item? Click here to Add',
-                                      payload: 'Data');
-                                }
+                  await NotificationApi().getTotalBalance();
+                  if (NotificationApi.balance < 0) {
+                    await NotificationApi.showNotification(
+                        body:
+                            'did you forget to add an income item? Click here to Add',
+                        payload: 'Data');
+                  }
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -396,18 +396,28 @@ class _AddTransactionsState extends State<AddTransactions> {
         ),
       ),
       DropdownMenuItem(
-        value: "Business Income",
+        value: "Borrow",
+        child: Text('Borrowing',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      ),
+      DropdownMenuItem(
+        value: "Business",
         child: Text('Business Income',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Capital Gains",
-        child: Text('Capital Gains',
+        value: "Dividends",
+        child: Text('Dividends',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Donations/Gifts",
-        child: Text('Donations/Gifts',
+        value: "Interests",
+        child: Text('Interests',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      ),
+      DropdownMenuItem(
+        value: "Others",
+        child: Text('Others',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
@@ -415,18 +425,9 @@ class _AddTransactionsState extends State<AddTransactions> {
         child: Text('Salary Income',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
-      DropdownMenuItem(
-        value: "Won Lottery",
-        child: Text('Winning Lotteries',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-      ),
-      DropdownMenuItem(
-        value: "Misc Income",
-        child: Text('Miscallaneous Income',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-      ),
     ];
     List<dynamic> income = await categoryBox.fetchIncomeCategory();
+
     List<DropdownMenuItem<String>> dropDown = [];
 
     for (int i = 0; i < income.length; i++) {
@@ -442,6 +443,7 @@ class _AddTransactionsState extends State<AddTransactions> {
     setState(() {
       incomeCat.addAll(defaultIncomeCategory);
       incomeCat.addAll(dropDown);
+      incomeCat.sort((a, b) => a.value!.toLowerCase().compareTo(b.value!.toLowerCase()),);
     });
   }
 
@@ -449,35 +451,35 @@ class _AddTransactionsState extends State<AddTransactions> {
     expenseCat.clear();
     List<DropdownMenuItem<String>> defaultExpenseCategory = [
       DropdownMenuItem(
-        value: 'Business Expense',
+        value: "Clothing",
+        child: Text('Clothing',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+      ),
+      DropdownMenuItem(
+        value: "Food",
         child: Text(
-          'Business Expense',
+          'Food Expense',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
         ),
       ),
       DropdownMenuItem(
-        value: "Capital Loss",
-        child: Text('Capital Losses Incured',
+        value: "Gifts paid",
+        child: Text('Gifts/Donations',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Donations/Gifts paid",
-        child: Text('Donations/Gifts',
+        value: "Lend",
+        child: Text('Lend to friends',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Lost Lottery",
-        child: Text('Lost Lottery',
+        value: "Losses",
+        child: Text('Losses Incured',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
-        value: "Life Expenses",
-        child: Text('Normal Life Exp',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-      ),
-      DropdownMenuItem(
-        value: "Misc Expense",
-        child: Text('Miscallaneous Expense',
+        value: "Travel",
+        child: Text('Travelling',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
       ),
       DropdownMenuItem(
@@ -487,6 +489,7 @@ class _AddTransactionsState extends State<AddTransactions> {
       ),
     ];
     List<dynamic> expenses = await categoryBox.fetchExpenseCategory();
+
     List<DropdownMenuItem<String>> dropDown = [];
 
     for (int i = 0; i < expenses.length; i++) {
@@ -502,6 +505,7 @@ class _AddTransactionsState extends State<AddTransactions> {
     setState(() {
       expenseCat.addAll(defaultExpenseCategory);
       expenseCat.addAll(dropDown);
+      expenseCat.sort((a, b) => a.value!.toLowerCase().compareTo(b.value!.toLowerCase()),);
     });
   }
 }
