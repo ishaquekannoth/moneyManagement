@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/notifications.dart';
 
 class EditScreen extends StatefulWidget {
   final double value;
@@ -81,16 +82,16 @@ class _EditScreenState extends State<EditScreen> {
       appBar: AppBar(toolbarHeight: 0.0),
       body: ListView(padding: EdgeInsets.all(12.0), children: [
         Row(
-         children: [
+          children: [
             IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
               icon: Icon(Icons.arrow_back),
             ),
-
-          SizedBox(width: 15,),
-
+            SizedBox(
+              width: 15,
+            ),
             Text(
               'Update An Existing Item',
               textAlign: TextAlign.justify,
@@ -105,7 +106,9 @@ class _EditScreenState extends State<EditScreen> {
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: type=='Income'?Color.fromARGB(255, 3, 114, 7):Color.fromARGB(255, 182, 15, 3),
+                    color: type == 'Income'
+                        ? Color.fromARGB(255, 3, 114, 7)
+                        : Color.fromARGB(255, 182, 15, 3),
                     borderRadius: BorderRadius.circular(16.0)),
                 child: Icon(
                   Icons.attach_money,
@@ -206,7 +209,7 @@ class _EditScreenState extends State<EditScreen> {
                 if (value == true) {
                   setState(() {
                     type = 'Expense';
-                    scg = 'Cateogory Not Selected';         
+                    scg = 'Cateogory Not Selected';
                   });
                 }
               },
@@ -226,7 +229,6 @@ class _EditScreenState extends State<EditScreen> {
             menuMaxHeight: 200,
             items: type == 'Income' ? incomeCat : expenseCat,
             hint: Text(scg),
-
             onChanged: (String? value) {
               setState(() {
                 scg = value!;
@@ -249,63 +251,62 @@ class _EditScreenState extends State<EditScreen> {
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
-             style: ElevatedButton.styleFrom(
-              primary: type=='Income'?Colors.green:Colors.red,
-            minimumSize: Size(25, 35),
+            style: ElevatedButton.styleFrom(
+              primary: type == 'Income' ? Colors.green : Colors.red,
+              minimumSize: Size(25, 35),
             ),
-              onPressed: () async {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return (AlertDialog(
-                        title: Text('Enter the category to add'),
-                        actions: [
-                          TextField(
-                              decoration: InputDecoration(
-                                  hintText: 'Category Name',
-                                  border: InputBorder.none),
-                              style: TextStyle(fontSize: 24.0),
-                              onChanged: (cat) {
-                                if (cat != null) {
-                                  category = cat.toString();
-                                  setState(() {});
-                                }
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.allow(
-                                    RegExp("[a-zA-Z]"))
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return (AlertDialog(
+                      title: Text('Enter the category to add'),
+                      actions: [
+                        TextField(
+                            decoration: InputDecoration(
+                                hintText: 'Category Name',
+                                border: InputBorder.none),
+                            style: TextStyle(fontSize: 24.0),
+                            onChanged: (cat) {
+                              if (cat != null) {
+                                category = cat.toString();
+                                setState(() {});
+                              }
+                            },
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp("[a-zA-Z]"))
+                            ],
+                            keyboardType: TextInputType.text,
+                            textCapitalization: TextCapitalization.sentences),
+                        TextButton(
+                            onPressed: () async {
+                              addCategoryToDB(category!, type);
+                              await expenseCategoryAdder();
+                              await incomeCategoryAdder();
+
+                              setState(() {});
+                              Navigator.of(context).pop();
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Add Category'),
+                                IconButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    icon: (Icon(Icons.close_outlined)))
                               ],
-                              keyboardType: TextInputType.text,
-                              textCapitalization: TextCapitalization.sentences),
-                          TextButton(
-                              onPressed: () async {
-                             
-                                addCategoryToDB(category!, type);
-                                await expenseCategoryAdder();
-                                await incomeCategoryAdder();
-                              
-                                setState(() {
-                                });
-                                Navigator.of(context).pop();
-                              },
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text('Add Category'),
-                                  IconButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(),
-                                      icon: (Icon(Icons.close_outlined)))
-                                ],
-                              )),
-                        ],
-                      ));
-                    });
-                setState(() {});
-              },
-              icon: (Icon(Icons.add)),
-              label: Text("Add an $type Category",style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold)),)
+                            )),
+                      ],
+                    ));
+                  });
+              setState(() {});
+            },
+            icon: (Icon(Icons.add)),
+            label: Text("Add an $type Category",
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+          )
         ]),
         SizedBox(
           height: 20,
@@ -323,15 +324,17 @@ class _EditScreenState extends State<EditScreen> {
                     Icon(
                       Icons.calendar_month,
                       size: 30.0,
-                      color: type=='Income'?Colors.green:Colors.red,
+                      color: type == 'Income' ? Colors.green : Colors.red,
                     ),
                     SizedBox(
                       width: 20,
                     ),
                     Text(
-                       "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20,color: type=='Income'?Colors.green:Colors.red),
+                      "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: type == 'Income' ? Colors.green : Colors.red),
                     ),
                   ],
                 ))),
@@ -339,35 +342,45 @@ class _EditScreenState extends State<EditScreen> {
           height: 45,
         ),
         FloatingActionButton.extended(
-          label: Text('Confirm Update',style: TextStyle(fontSize: 20),),
-          backgroundColor: type=='Income'?Colors.green:Colors.red,
-          extendedTextStyle: TextStyle(letterSpacing: 2,color: Colors.white),
-          onPressed:() {
-              if (_amount.text != null && _note.text.isNotEmpty
-                  &&double.parse(_amount.text)>0.0&&
-                  scg != 'Cateogory Not Selected'
-                  ) {
-                Dbhelper dbhelper = Dbhelper();
-                dbhelper.editSingleItem(
-                    amount: double.parse(_amount.text),
-                    date: selectedDate,
-                    note: _note.text,
-                    type: type,
-                    category: scg,
-                    id: widget.id);
-                Navigator.of(context).pop();
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    behavior: SnackBarBehavior.floating,
-                    duration: Duration(seconds: 1),
-                    margin: EdgeInsets.all(15),
-                    backgroundColor: Colors.red,
-                    content: Text('All fields are required',
-                        style: TextStyle(fontSize: 15),
-                        textAlign: TextAlign.center)));
+          label: Text(
+            'Confirm Update',
+            style: TextStyle(fontSize: 20),
+          ),
+          backgroundColor: type == 'Income' ? Colors.green : Colors.red,
+          extendedTextStyle: TextStyle(letterSpacing: 2, color: Colors.white),
+          onPressed: () async {
+            if (_amount.text != null &&
+                _note.text.isNotEmpty &&
+                double.parse(_amount.text) > 0.0 &&
+                scg != 'Cateogory Not Selected') {
+              Dbhelper dbhelper = Dbhelper();
+              dbhelper.editSingleItem(
+                  amount: double.parse(_amount.text),
+                  date: selectedDate,
+                  note: _note.text,
+                  type: type,
+                  category: scg,
+                  id: widget.id);
+              Navigator.of(context).pop();
+              await NotificationApi().getTotalBalance();
+              if(NotificationApi.balance<0) {
+                await NotificationApi.showNotification(
+                  body:
+                      'did you forget to add an income item? Click here to Add',
+                  payload: 'Data');
               }
-            },
-            ),
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  behavior: SnackBarBehavior.floating,
+                  duration: Duration(seconds: 1),
+                  margin: EdgeInsets.all(15),
+                  backgroundColor: Colors.red,
+                  content: Text('All fields are required',
+                      style: TextStyle(fontSize: 15),
+                      textAlign: TextAlign.center)));
+            }
+          },
+        ),
       ]),
     ));
   }

@@ -31,9 +31,11 @@ dependencies:
   fl_chart: ^0.55.0
   flutter:
     sdk: flutter
+  flutter_local_notifications: ^9.6.1
   hive: ^2.2.2
   hive_flutter: ^1.1.0
   shared_preferences: ^2.0.15
+  timezone: ^0.8.0
 
 dev_dependencies:
   build_runner: ^2.1.11

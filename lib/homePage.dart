@@ -1,9 +1,12 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
+import 'package:moneymanager/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -14,23 +17,30 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final _notifications = FlutterLocalNotificationsPlugin();
+  @override
+  void initState() {
+    NotificationApi.init(context);
+    super.initState();
+  }
+
   late SharedPreferences pref;
   List tempList = [];
   Dbhelper dbhelper = Dbhelper();
-  double  totalBalance = 0;
-  double  totalExpence = 0;
-  double  totalIncome = 0;
+  double totalBalance = 0;
+  double totalExpence = 0;
+  double totalIncome = 0;
   getTotalBalance(Map data) {
     totalBalance = 0;
     totalExpence = 0;
     totalIncome = 0;
     data.forEach((key, value) {
       if (value['type'] == 'Income') {
-        totalBalance += value['amount'] as double ;
-        totalIncome += value['amount'] as double ;
+        totalBalance += value['amount'] as double;
+        totalIncome += value['amount'] as double;
       } else {
-        totalBalance -= value['amount'] as double ;
-        totalExpence += value['amount'] as double ;
+        totalBalance -= value['amount'] as double;
+        totalExpence += value['amount'] as double;
       }
     });
   }
@@ -59,7 +69,8 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Colors.red,
         onPressed: () => Navigator.of(context)
             .push(MaterialPageRoute(builder: ((context) => AddTransactions())))
-            .whenComplete(() {
+            .whenComplete(() async {
+          getTotalBalance(await getRawMap());
           setState(() {});
         }),
         label: Text("ADD"),
@@ -87,16 +98,15 @@ class _HomePageState extends State<HomePage> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24.0),
                           //color: Colors.blue.shade200
-                        
                         ),
                         child: Center(
                           child: Column(
-                            mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               Text(
                                 'Hei ${pref.getString('UserName')} ,Nothing in here yet..',
                                 style: TextStyle(
-                                  fontWeight:FontWeight.w300,
+                                  fontWeight: FontWeight.w300,
                                   fontFamily: 'Arial',
                                   fontSize: 25,
                                   color: Colors.black,
@@ -104,10 +114,10 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 textAlign: TextAlign.center,
                               ),
-                               Text(
-                               'Click the add button to get started',
+                              Text(
+                                'Click the add button to get started',
                                 style: TextStyle(
-                                  fontWeight:FontWeight.w300,
+                                  fontWeight: FontWeight.w300,
                                   fontFamily: 'Arial',
                                   fontSize: 25,
                                   color: Colors.black,
@@ -160,15 +170,15 @@ class _HomePageState extends State<HomePage> {
                                 color: Colors.red,
                                 size: 32,
                               ),
-                              onPressed: () {
-                                dbhelper.printKeys();
+                              onPressed: () async {
+                                await dbhelper.printKeys();
                                 setState(() {});
                               },
                             )),
                       ]),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width ,
+                  width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.only(left: 10, right: 15),
                   child: Container(
                     decoration: BoxDecoration(
@@ -181,7 +191,6 @@ class _HomePageState extends State<HomePage> {
                       vertical: 30,
                     ),
                     child: Column(
-
                       children: [
                         Text(
                           'You have got',
@@ -191,35 +200,33 @@ class _HomePageState extends State<HomePage> {
                               fontWeight: FontWeight.w700,
                               color: Colors.black),
                         ),
-
-                        SizedBox(height: 10,),
-                        
+                        SizedBox(
+                          height: 10,
+                        ),
                         Container(
-                  width: 250.0,
-                  height: 42.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24.0),
-                    color: Color.fromARGB(255, 9, 4, 58)
-                    
-                    
-                  ),
-                  child: Center(
-                    child: Text(
-                      '$totalBalance AED',
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 22,
-                        color: Colors.white,
-                        height: 1,
-                        fontWeight: FontWeight.w700
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                        SizedBox(height: 20,),
+                          width: 250.0,
+                          height: 42.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24.0),
+                              color: Color.fromARGB(255, 9, 4, 58)),
+                          child: Center(
+                            child: Text(
+                              '$totalBalance AED',
+                              style: TextStyle(
+                                  fontFamily: 'Arial',
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                  height: 1,
+                                  fontWeight: FontWeight.w700),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
                         Row(
-                          mainAxisAlignment:MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             cardIncome('$totalIncome AED'),
                             cardExpense('$totalExpence AED')
@@ -229,16 +236,15 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  height:4
-                ),
+                SizedBox(height: 4),
                 Padding(
                     padding: EdgeInsets.all(1),
                     child: Text(
                       "Recent Transactions",
                       textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 20,),
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
                     )),
                 ListView.builder(
                     shrinkWrap: true,
@@ -296,7 +302,10 @@ class _HomePageState extends State<HomePage> {
                   fontSize: 14,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
-            ), SizedBox(height: 5,),
+            ),
+            SizedBox(
+              height: 5,
+            ),
             // Text(
             //   value,
             //   style: TextStyle(
@@ -304,26 +313,25 @@ class _HomePageState extends State<HomePage> {
             //       color: Colors.white,
             //       fontWeight: FontWeight.bold),
             // ),
-             Container(
-                  width: 175.0,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.amberAccent
+            Container(
+              width: 175.0,
+              height: 40.0,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.amberAccent),
+              child: Center(
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Colors.black,
+                    height: 1,
                   ),
-                  child: Center(
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18,
-                        color: Colors.black,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            )
           ],
         )
       ],
@@ -353,34 +361,35 @@ class _HomePageState extends State<HomePage> {
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 5,),
-              Container(
-                  width: 175.0,
-                  height: 40.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15.0),
-                    color: Colors.amberAccent
+            SizedBox(
+              height: 5,
+            ),
+            Container(
+              width: 175.0,
+              height: 40.0,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.amberAccent),
+              child: Center(
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontFamily: 'Arial',
+                    fontSize: 18,
+                    color: Colors.black,
+                    height: 1,
                   ),
-                  child: Center(
-                    child: Text(
-                      value,
-                      style: TextStyle(
-                        fontFamily: 'Arial',
-                        fontSize: 18,
-                        color: Colors.black,
-                        height: 1,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
+                  textAlign: TextAlign.center,
                 ),
+              ),
+            ),
           ],
         )
       ],
     ));
   }
 
-  Widget expenseTile(double  value, String note, DateTime dateTime, int id,
+  Widget expenseTile(double value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(
@@ -461,7 +470,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget incomeTile(double  value, String note, DateTime dateTime, int id,
+  Widget incomeTile(double value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
     return Card(

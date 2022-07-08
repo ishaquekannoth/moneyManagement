@@ -82,6 +82,5 @@ class Dbhelper {
   printKeys() {
     CategoryBox category = CategoryBox();
     print(moneyBox.keys);
-    print(moneyBox.values);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/notifications.dart';
 
 class AddTransactions extends StatefulWidget {
   const AddTransactions({Key? key}) : super(key: key);
@@ -103,9 +104,7 @@ class _AddTransactionsState extends State<AddTransactions> {
               child: TextField(
                 onChanged: (value) {
                   try {
-                   
-                      amount = double.parse(value);
-                    
+                    amount = double.parse(value);
                   } catch (e) {
                     Text("only numbers permitted");
                   }
@@ -134,16 +133,14 @@ class _AddTransactionsState extends State<AddTransactions> {
                   Icons.description,
                   size: 24.0,
                   color: Colors.white,
-                )
-                ),
+                )),
             SizedBox(
               width: 15,
             ),
             Expanded(
               child: TextField(
                 decoration: const InputDecoration(
-                    hintText: 'Short Note', border: InputBorder.none
-                    ),
+                    hintText: 'Short Note', border: InputBorder.none),
                 style: const TextStyle(fontSize: 24.0),
                 onChanged: (value) {
                   note = value;
@@ -348,8 +345,9 @@ class _AddTransactionsState extends State<AddTransactions> {
               label: Text("Add Data"),
               extendedTextStyle: TextStyle(fontSize: 20),
               backgroundColor: (type == 'Income' ? Colors.green : Colors.red),
-              onPressed: () {
-                if (amount != null && amount!>0.0&&
+              onPressed: () async{
+                if (amount != null &&
+                    amount! > 0.0 &&
                     note.isNotEmpty &&
                     selectedCategory != 'Unspecified') {
                   Dbhelper dbhelper = Dbhelper();
@@ -359,6 +357,13 @@ class _AddTransactionsState extends State<AddTransactions> {
                       note: note,
                       type: type,
                       category: selectedCategory);
+                    await NotificationApi().getTotalBalance();
+                                if (NotificationApi.balance < 0) {
+                                  await NotificationApi.showNotification(
+                                      body:
+                                          'did you forget to add an income item? Click here to Add',
+                                      payload: 'Data');
+                                }
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
