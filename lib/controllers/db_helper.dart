@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-import 'package:moneymanager/controllers/category.dart';
 
 class Dbhelper {
   late Box moneyBox;
@@ -79,8 +78,4 @@ class Dbhelper {
     moneyBox.put(desiredkey, newValue);
   }
 
-  printKeys() {
-    CategoryBox category = CategoryBox();
-    print(moneyBox.keys);
-  }
 }

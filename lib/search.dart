@@ -304,7 +304,7 @@ class SearchScreen extends SearchDelegate<String> {
     var superThemeData = super.appBarTheme(context);
     return superThemeData.copyWith(
       textTheme: superThemeData.textTheme.copyWith(
-        headline6: TextStyle(fontSize: 14),
+        headline6: const TextStyle(fontSize: 14),
       ),
     );
   }
@@ -335,7 +335,7 @@ class SearchScreen extends SearchDelegate<String> {
           onPressed: () {
             query = '';
           },
-          icon: (Icon(Icons.clear)))
+          icon: (const Icon(Icons.clear)))
     ];
   }
 
@@ -345,7 +345,7 @@ class SearchScreen extends SearchDelegate<String> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        icon: (Icon(Icons.arrow_back)));
+        icon: (const Icon(Icons.arrow_back)));
   }
 
   @override
@@ -490,12 +490,12 @@ class SearchScreen extends SearchDelegate<String> {
                 context: context,
                 builder: (context) {
                   return (AlertDialog(
-                    title: Text('Confirm Delete?',
+                    title: const Text('Confirm Delete?',
                         style: TextStyle(color: Colors.black, fontSize: 18)),
                     actions: [
                       ElevatedButton(
                           onPressed: () => Navigator.of(context).pop(),
-                          child: Text("Cancel")),
+                          child: const Text("Cancel")),
                       ElevatedButton(
                           onPressed: () async {
                             dataBase
@@ -505,7 +505,7 @@ class SearchScreen extends SearchDelegate<String> {
                             Navigator.of(context).pop();
                             myList.notifyListeners();
                           },
-                          child: Text("OK"))
+                          child: const Text("OK"))
                     ],
                   ));
                 });
@@ -519,24 +519,24 @@ class SearchScreen extends SearchDelegate<String> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.arrow_circle_up_outlined,
                     size: 28,
                     color: Colors.red,
                   ),
-                  Text("Expense",
+                  const Text("Expense",
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold)),
                   Text('-$value AED',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold))
@@ -546,12 +546,12 @@ class SearchScreen extends SearchDelegate<String> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Category: $category',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.black87,
                       ))
@@ -587,14 +587,14 @@ class SearchScreen extends SearchDelegate<String> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text(
+                  title: const Text(
                     'Confirm Delete?',
                     style: TextStyle(color: Colors.black),
                   ),
                   actions: [
                     ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
+                        child: const Text("Cancel")),
                     ElevatedButton(
                         onPressed: () {
                           dataBase
@@ -603,7 +603,7 @@ class SearchScreen extends SearchDelegate<String> {
                           Navigator.of(context).pop();
                           myList.notifyListeners();
                         },
-                        child: Text("OK"))
+                        child: const Text("OK"))
                   ],
                 ));
               });
@@ -617,24 +617,24 @@ class SearchScreen extends SearchDelegate<String> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.arrow_circle_down_outlined,
                     size: 28,
                     color: Color.fromARGB(255, 5, 231, 5),
                   ),
-                  Text("Income",
+                  const Text("Income",
                       style: TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold)),
                   Text('+$value AED',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold))
@@ -644,12 +644,12 @@ class SearchScreen extends SearchDelegate<String> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Category: $category',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 15,
                         color: Colors.black87,
                       ))

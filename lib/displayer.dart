@@ -13,7 +13,7 @@ class MainDisplay extends StatefulWidget {
 
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
-  List<Widget> pages = [HomePage(),ViewAllTransactions(),Reports(),SettingsMenu()];
+  List<Widget> pages = [const HomePage(),const ViewAllTransactions(),const Reports(),const SettingsMenu()];
   @override
   Widget build(BuildContext context) {
     return (Scaffold(
@@ -21,7 +21,7 @@ class _MainDisplayState extends State<MainDisplay> {
         mouseCursor: MouseCursor.uncontrolled,
         elevation: 35,
         unselectedFontSize: 15,
-       selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+       selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         backgroundColor: Colors.white,
         selectedFontSize:15,
         iconSize: 35,

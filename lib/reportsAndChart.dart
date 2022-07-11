@@ -1,3 +1,5 @@
+
+
 import 'dart:core';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
@@ -93,7 +95,7 @@ class _ReportsState extends State<Reports> {
     totalBalance = 0;
     totalExpence = 0;
     totalIncome = 0;
-    data.forEach((value) {
+    for (var value in data) {
       if (value['type'] == 'Income') {
         totalBalance += value['amount'] as double;
         totalIncome += value['amount'] as double;
@@ -101,7 +103,7 @@ class _ReportsState extends State<Reports> {
         totalBalance -= value['amount'] as double;
         totalExpence += value['amount'] as double;
       }
-    });
+    }
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -124,8 +126,8 @@ class _ReportsState extends State<Reports> {
     }
     List monthly = [];
     for (var element in myList.value) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
     }
@@ -134,8 +136,8 @@ class _ReportsState extends State<Reports> {
     monthly.clear();
 
     for (var element in incomeList.value) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
     }
@@ -143,12 +145,12 @@ class _ReportsState extends State<Reports> {
     selectiveSortedIncomes.addAll(monthly);
     monthly.clear();
 
-    expenseList.value.forEach((element) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+    for (var element in expenseList.value) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
-    });
+    }
     selectiveSortedExpenses.clear();
     selectiveSortedExpenses.addAll(monthly);
     setState(() {
@@ -165,7 +167,7 @@ class _ReportsState extends State<Reports> {
           child: (Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                title: Text(
+                title: const Text(
                   'Analysis And Reports',
                   style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
                 ),
@@ -174,12 +176,12 @@ class _ReportsState extends State<Reports> {
               body: Column(
                 children: [
                   ChoiceChip(
-                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     elevation: 5,
                     pressElevation: 10,
                     label: Text('Full History Chart',
                         style: TextStyle(
-                          fontSize: 20,
+                       
                           color: isAllHistorySelected
                               ? Colors.white
                               : Colors.black,
@@ -203,12 +205,12 @@ class _ReportsState extends State<Reports> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ChoiceChip(
-                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last Week',
                               style: TextStyle(
-                                  fontSize: 20,
+                                  
                                   color: isSelectedWeekly
                                       ? Colors.white
                                       : Colors.black)),
@@ -221,19 +223,19 @@ class _ReportsState extends State<Reports> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 7)),
+                                  DateTime.now().subtract(const Duration(days: 7)),
                                   DateTime.now());
                               setState(() {});
                             }
                           },
                         ),
                         ChoiceChip(
-                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last 30 Days',
                               style: TextStyle(
-                                fontSize: 20,
+                        
                                 color: isSelectedMonthly
                                     ? Colors.white
                                     : Colors.black,
@@ -247,19 +249,19 @@ class _ReportsState extends State<Reports> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.now().subtract(const Duration(days: 30)),
                                   DateTime.now());
                               setState(() {});
                             }
                           },
                         ),
                         ChoiceChip(
-                          backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Custom',
                               style: TextStyle(
-                                  fontSize: 20,
+                                 
                                   color: isSelectedDated
                                       ? Colors.white
                                       : Colors.black)),
@@ -347,25 +349,25 @@ class _ReportsState extends State<Reports> {
   expenseCategoryMapper(List<String> data, List expenses) {
     expenseChartData.clear();
     double totalExp = 0;
-    expenses.forEach((element) {
+    for (var element in expenses) {
       totalExp = totalExp + element['amount'];
-    });
+    }
     for (var category in data) {
       double total = 0;
-      expenses.forEach((expenseItem) {
+      for (var expenseItem in expenses) {
         if (expenseItem['category'].toString() == category) {
           total = total + expenseItem['amount'];
         }
 
         categoryMappedExpenses[category] = (total / totalExp) * 100;
-      });
+      }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titleStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         radius: 150,
         value: total,
         title:
-            '${category}\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
+            '$category\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       expenseChartData.add(pieChartItem);
@@ -375,26 +377,26 @@ class _ReportsState extends State<Reports> {
   incomeCategoryMapper(List<String> data, List incomes) {
     incomeChartData.clear();
     double totalInc = 0;
-    incomes.forEach((element) {
+    for (var element in incomes) {
       totalInc = totalInc + element['amount'];
-    });
+    }
     for (var category in data) {
       double total = 0;
-      incomes.forEach((incomeItem) {
+      for (var incomeItem in incomes) {
         if (incomeItem['category'].toString() == category) {
           total = total + incomeItem['amount'];
         }
         categoryMappedIncomes[category] = (total / totalInc) * 100;
-      });
+      }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
         titlePositionPercentageOffset: 0.5,
         radius: 150,
-        titleStyle: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         value: total,
         title:
             // category,
-            '${category}\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
+            '$category\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       incomeChartData.add(pieChartItem);

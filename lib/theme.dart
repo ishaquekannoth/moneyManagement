@@ -76,6 +76,6 @@
             const Color(0xff15049b),
           ),
         ),
-      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: PrimaryMaterialColor).copyWith(secondary: Color(0xff15049b)),
+      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: PrimaryMaterialColor).copyWith(secondary: const Color(0xff15049b)),
     );
   

@@ -73,8 +73,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     }
     List monthly = [];
     for (var element in myList) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
     }
@@ -83,8 +83,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     monthly.clear();
 
     for (var element in incomeList) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
     }
@@ -92,12 +92,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
     selectiveSortedIncomes.addAll(monthly);
     monthly.clear();
 
-    expenseList.forEach((element) {
-      if ((element['date'].isAfter(start.subtract(Duration(days: 1)))) &&
-          (element['date'].isBefore(end.add(Duration(days: 1))))) {
+    for (var element in expenseList) {
+      if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
+          (element['date'].isBefore(end.add(const Duration(days: 1))))) {
         monthly.add(element);
       }
-    });
+    }
     selectiveSortedExpenses.clear();
     selectiveSortedExpenses.addAll(monthly);
     setState(() {});
@@ -111,9 +111,9 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
           child: (Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.white,
-                title: Text(
+                title: const Text(
                   'Transaction History',
-                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
+                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0),fontWeight: FontWeight.w500),
                 ),
                 centerTitle: true,
               ),
@@ -121,12 +121,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 children: [
                   Center(
                     child: ChoiceChip(
-                   backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       elevation: 5,
                       pressElevation: 10,
                       label: Text('Complete History',
                           style: TextStyle(
-                            fontSize: 20,
+                           
                             color: isAllHistorySelected
                                 ? Colors.white
                                 : Colors.black,
@@ -154,12 +154,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ChoiceChip(
-                         backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last Week',
                               style: TextStyle(
-                                  fontSize: 20,
+                                 
                                   color: isSelectedWeekly
                                       ? Colors.white
                                       : Colors.black)),
@@ -172,7 +172,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 7)),
+                                  DateTime.now().subtract(const Duration(days: 7)),
                                   DateTime.now());
 
                               setState(() {});
@@ -180,12 +180,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           },
                         ),
                         ChoiceChip(
-                           backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last 30 Days',
                               style: TextStyle(
-                                fontSize: 20,
+                               
                                 color: isSelectedMonthly
                                     ? Colors.white
                                     : Colors.black,
@@ -199,7 +199,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(Duration(days: 30)),
+                                  DateTime.now().subtract(const Duration(days: 30)),
                                   DateTime.now());
 
                               setState(() {});
@@ -207,12 +207,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           },
                         ),
                         ChoiceChip(
-                           backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Custom',
                               style: TextStyle(
-                                  fontSize: 20,
+                                 
                                   color: isSelectedDated
                                       ? Colors.white
                                       : Colors.black)),
@@ -240,7 +240,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         indicator: BoxDecoration(
                             color: Colors.amber,
                             borderRadius: BorderRadius.circular(25)),
-                        labelColor: Color.fromARGB(255, 0, 0, 0),
+                        labelColor: const Color.fromARGB(255, 0, 0, 0),
                         tabs: const [
                           Tab(
                             text: 'ALL',
@@ -328,12 +328,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         showSearch(context: context,delegate: SearchScreen())
                             .whenComplete(() => getRawMap().whenComplete(() =>
                                 selectAPeriod(
-                                    DateTime.now().subtract(Duration(days: 30)),
+                                    DateTime.now().subtract(const Duration(days: 30)),
 
                                     DateTime.now()))):Image.asset('Assets/images/noData.gif');
                         setState(() {});
                       },
-                      label: Icon(Icons.search))
+                      label: const Icon(Icons.search))
                 ],
               ))),
         ));
@@ -356,7 +356,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               .whenComplete(() => getRawMap())
               .whenComplete(() {
             selectAPeriod(
-                DateTime.now().subtract(Duration(days: 30)), DateTime.now());
+                DateTime.now().subtract(const Duration(days: 30)), DateTime.now());
             setState(() {});
           });
           super.initState();
@@ -366,11 +366,11 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?'),
+                  title: const Text('Confirm Delete?'),
                   actions: [
                     ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
+                        child: const Text("Cancel")),
                     ElevatedButton(
                         onPressed: () async {
                           dataBase
@@ -382,7 +382,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           Navigator.of(context).pop();
                           setState(() {});
                         },
-                        child: Text("OK"))
+                        child: const Text("OK"))
                   ],
                 ));
               });
@@ -395,25 +395,25 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.arrow_circle_up_outlined,
                     size: 28,
                     color: Colors.red,
                   ),
-                  Text("Expense",
+                  const Text("Expense",
                       style: TextStyle(
-                        fontSize: 18,
+                    
                         color: Colors.black87,
                       )),
                   Text('-$value AED',
-                      style: TextStyle(
-                          fontSize: 18,
+                      style: const TextStyle(
+                        
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                      
                         color: Colors.black87,
                       ))
                 ],
@@ -422,13 +422,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Category: $category',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                       
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                      
                         color: Colors.black87,
                       ))
                 ]
@@ -458,7 +458,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               .whenComplete(() => getRawMap())
               .whenComplete(() {
             selectAPeriod(
-                DateTime.now().subtract(Duration(days: 30)), DateTime.now());
+                DateTime.now().subtract(const Duration(days: 30)), DateTime.now());
             setState(() {
               isSelectedMonthly = true;
               isSelectedWeekly = false;
@@ -472,11 +472,11 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               context: context,
               builder: (context) {
                 return (AlertDialog(
-                  title: Text('Confirm Delete?'),
+                  title: const Text('Confirm Delete?'),
                   actions: [
                     ElevatedButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: Text("Cancel")),
+                        child: const Text("Cancel")),
                     ElevatedButton(
                         onPressed: () {
                           dataBase
@@ -488,7 +488,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           Navigator.of(context).pop();
                           setState(() {});
                         },
-                        child: Text("OK"))
+                        child: const Text("OK"))
                   ],
                 ));
               });
@@ -503,25 +503,25 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.arrow_circle_down_outlined,
                     size: 28,
                     color: Color.fromARGB(255, 5, 231, 5),
                   ),
-                  Text("Income",
+                  const Text("Income",
                       style: TextStyle(
-                        fontSize: 18,
+                     
                         color: Colors.black87,
                       )),
                   Text('+$value AED',
-                      style: TextStyle(
-                          fontSize: 18,
+                      style: const TextStyle(
+                   
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                        
                         color: Colors.black87,
                       ))
                 ]
@@ -530,13 +530,13 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Category: $category',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                        
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
-                      style: TextStyle(
-                        fontSize: 15,
+                      style: const TextStyle(
+                        
                         color: Colors.black87,
                       ))
                 ],

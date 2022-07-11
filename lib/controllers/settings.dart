@@ -5,7 +5,7 @@ import 'package:moneymanager/splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsMenu extends StatefulWidget {
-  SettingsMenu({Key? key}) : super(key: key);
+  const SettingsMenu({Key? key}) : super(key: key);
 
   @override
   State<SettingsMenu> createState() => _SettingsMenuState();
@@ -26,14 +26,14 @@ class _SettingsMenuState extends State<SettingsMenu> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: RichText(
-          text: TextSpan(
+          text: const TextSpan(
             text: 'S',
             style: TextStyle(
               fontSize: 23,
               color: Colors.red,
               fontWeight: FontWeight.w600,
             ),
-            children: const [
+            children: [
               TextSpan(
                   text: 'ettings',
                   style: TextStyle(
@@ -51,23 +51,23 @@ class _SettingsMenuState extends State<SettingsMenu> {
           children: [
             GestureDetector(
               child: ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                     Icons.delete_forever_rounded,
                     color: Colors.red,
                   ),
-                  title: Text('Reset Everything'),
+                  title: const Text('Reset Everything'),
                   onTap: (){
                     showDialog(
                         context: context,
                         builder: (context) {
                           return (AlertDialog(
-                            title: Text('Are you sure to Reset the App?'),
+                            title: const Text('Are you sure to Reset the App?'),
                             actions: [ ElevatedButton.icon(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  icon: Icon(Icons.cancel ),
-                                  label: Text('Cancel')),
+                                  icon: const Icon(Icons.cancel ),
+                                  label: const Text('Cancel')),
                                   
                               ElevatedButton.icon(
                                   onPressed: () async {
@@ -77,58 +77,58 @@ class _SettingsMenuState extends State<SettingsMenu> {
                                         await SharedPreferences.getInstance();
                                     await pref.clear();
                                      Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => SplashScreen()),
+                        MaterialPageRoute(builder: (context) => const SplashScreen()),
                         (route) => false);
                                   },
-                                  icon: Icon(Icons.delete_forever_outlined),
-                                  label: Text('Confirm')),
+                                  icon: const Icon(Icons.delete_forever_outlined),
+                                  label: const Text('Confirm')),
                              
                             ],
                           ));
                         });
                   }),
             ),
-            Divider(
+            const Divider(
               thickness: 1,
             ),
-            ListTile(
+            const ListTile(
               leading: Text('communicate'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(
                 Icons.mail_outline,
                 color: Colors.red,
               ),
               title: Text('Contact us'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(
                 Icons.feedback_outlined,
                 color: Colors.red,
               ),
               title: Text('Feedback'),
             ),
-            Divider(
+            const Divider(
               thickness: 1,
             ),
-            ListTile(
+            const ListTile(
               leading: Text('Info'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(
                 Icons.privacy_tip_outlined,
                 color: Colors.red,
               ),
               title: Text('Privacy policy'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(
                 Icons.share_outlined,
                 color: Colors.red,
               ),
               title: Text('Share'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(
                 Icons.info_outline,
                 color: Colors.red,

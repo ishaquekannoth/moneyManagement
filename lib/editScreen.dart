@@ -80,26 +80,26 @@ class _EditScreenState extends State<EditScreen> {
   Widget build(BuildContext context) {
     return (Scaffold(
       appBar: AppBar(toolbarHeight: 0.0),
-      body: ListView(padding: EdgeInsets.all(12.0), children: [
+      body: ListView(padding: const EdgeInsets.all(12.0), children: [
         Row(
           children: [
             IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
             ),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
-            Text(
+            const Text(
               'Update An Existing Item',
               textAlign: TextAlign.justify,
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700),
+              style: TextStyle( fontWeight: FontWeight.w700),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -107,15 +107,15 @@ class _EditScreenState extends State<EditScreen> {
             Container(
                 decoration: BoxDecoration(
                     color: type == 'Income'
-                        ? Color.fromARGB(255, 3, 114, 7)
-                        : Color.fromARGB(255, 182, 15, 3),
+                        ? const Color.fromARGB(255, 3, 114, 7)
+                        : const Color.fromARGB(255, 182, 15, 3),
                     borderRadius: BorderRadius.circular(16.0)),
-                child: Icon(
+                child: const Icon(
                   Icons.attach_money,
                   size: 24.0,
                   color: Colors.white,
                 )),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Expanded(
@@ -127,12 +127,12 @@ class _EditScreenState extends State<EditScreen> {
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                     hintText: 'Put The Amount', border: InputBorder.none),
-                style: TextStyle(fontSize: 24.0),
+                style: const TextStyle(),
               ),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
@@ -141,12 +141,12 @@ class _EditScreenState extends State<EditScreen> {
                 decoration: BoxDecoration(
                     color: Colors.blueGrey,
                     borderRadius: BorderRadius.circular(16.0)),
-                child: Icon(
+                child: const Icon(
                   Icons.description,
                   size: 24.0,
                   color: Colors.white,
                 )),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             Expanded(
@@ -154,33 +154,33 @@ class _EditScreenState extends State<EditScreen> {
                 controller: _note,
                 decoration: const InputDecoration(
                     hintText: 'Description', border: InputBorder.none),
-                style: const TextStyle(fontSize: 24.0),
+                style: const TextStyle(),
               ),
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         Row(
           children: [
             Container(
                 decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 226, 6, 116),
+                    color: const Color.fromARGB(255, 226, 6, 116),
                     borderRadius: BorderRadius.circular(16.0)),
-                child: Icon(
+                child: const Icon(
                   Icons.moving_sharp,
                   size: 24.0,
                   color: Colors.white,
                 )),
-            SizedBox(
+            const SizedBox(
               width: 15,
             ),
             ChoiceChip(
               label: Text(
                 'Income',
                 style: TextStyle(
-                    fontSize: 20,
+                    
                     color: type == 'Income' ? Colors.white : Colors.black),
               ),
               selectedColor: Colors.green,
@@ -194,13 +194,13 @@ class _EditScreenState extends State<EditScreen> {
                 }
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 25,
             ),
             ChoiceChip(
               label: Text('Expense',
                   style: TextStyle(
-                    fontSize: 20,
+                    
                     color: type == 'Expense' ? Colors.white : Colors.black,
                   )),
               selectedColor: Colors.red,
@@ -216,15 +216,15 @@ class _EditScreenState extends State<EditScreen> {
             ),
           ],
         ),
-        SizedBox(
+        const SizedBox(
           height: 25,
         ),
         Text(
           'Choose a category of $type',
-          style: TextStyle(fontSize: 20),
+          style: const TextStyle(),
         ),
         Container(
-          padding: EdgeInsets.only(top: 15),
+          padding: const EdgeInsets.only(top: 15),
           child: DropdownButton(
             menuMaxHeight: 200,
             items: type == 'Income' ? incomeCat : expenseCat,
@@ -237,36 +237,36 @@ class _EditScreenState extends State<EditScreen> {
             isExpanded: true,
           ),
         ),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        Text(
+        const Text(
           'Category Not Listed?',
           style: TextStyle(
-              fontSize: 18.0, color: Colors.red, fontWeight: FontWeight.bold),
+              color: Colors.red, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
-        SizedBox(
+        const SizedBox(
           height: 15,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               primary: type == 'Income' ? Colors.green : Colors.red,
-              minimumSize: Size(25, 35),
+              minimumSize: const Size(25, 35),
             ),
             onPressed: () async {
               showDialog(
                   context: context,
                   builder: (context) {
                     return (AlertDialog(
-                      title: Text('Enter the category to add'),
+                      title: const Text('Enter the category to add'),
                       actions: [
                         TextField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: 'Category Name',
                                 border: InputBorder.none),
-                            style: TextStyle(fontSize: 24.0),
+                            style: const TextStyle(),
                             onChanged: (cat) {
                               if (cat != null) {
                                 category = cat.toString();
@@ -291,11 +291,11 @@ class _EditScreenState extends State<EditScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text('Add Category'),
+                                const Text('Add Category'),
                                 IconButton(
                                     onPressed: () =>
                                         Navigator.of(context).pop(),
-                                    icon: (Icon(Icons.close_outlined)))
+                                    icon: (const Icon(Icons.close_outlined)))
                               ],
                             )),
                       ],
@@ -303,12 +303,12 @@ class _EditScreenState extends State<EditScreen> {
                   });
               setState(() {});
             },
-            icon: (Icon(Icons.add)),
+            icon: (const Icon(Icons.add)),
             label: Text("Add an $type Category",
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           )
         ]),
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
         SizedBox(
@@ -326,28 +326,28 @@ class _EditScreenState extends State<EditScreen> {
                       size: 30.0,
                       color: type == 'Income' ? Colors.green : Colors.red,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                     ),
                     Text(
                       "${selectedDate.day}${" ${months[selectedDate.month - 1]}"}${" ${selectedDate.year}"}",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                         
                           color: type == 'Income' ? Colors.green : Colors.red),
                     ),
                   ],
                 ))),
-        SizedBox(
+        const SizedBox(
           height: 45,
         ),
         FloatingActionButton.extended(
-          label: Text(
+          label: const Text(
             'Confirm Update',
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(),
           ),
           backgroundColor: type == 'Income' ? Colors.green : Colors.red,
-          extendedTextStyle: TextStyle(letterSpacing: 2, color: Colors.white),
+          extendedTextStyle: const TextStyle(letterSpacing: 2, color: Colors.white),
           onPressed: () async {
             if (_amount.text != null &&
                 _note.text.isNotEmpty &&
@@ -366,17 +366,17 @@ class _EditScreenState extends State<EditScreen> {
               if(NotificationApi.balance<0) {
                 await NotificationApi.showNotification(
                   body:
-                      'did you forget to add an income item? Click here to Add',
+                      'Click here to Add an Income item',
                   payload: 'Data');
               }
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   behavior: SnackBarBehavior.floating,
                   duration: Duration(seconds: 1),
                   margin: EdgeInsets.all(15),
                   backgroundColor: Colors.red,
                   content: Text('All fields are required',
-                      style: TextStyle(fontSize: 15),
+                      style: TextStyle(),
                       textAlign: TextAlign.center)));
             }
           },
@@ -392,42 +392,42 @@ class _EditScreenState extends State<EditScreen> {
   incomeCategoryAdder() async {
     incomeCat.clear();
     List<DropdownMenuItem<String>> defaultIncomeCategory = [
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: 'BlackMoney',
         child: Text(
           'BlackMoney',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          style: TextStyle(fontWeight: FontWeight.bold,),
         ),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Business Income",
         child: Text('Business Income',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold,)),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Capital Gains",
         child: Text('Capital Gains',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Donations/Gifts Recieved",
         child: Text('Donations/Gifts',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Salary",
         child: Text('Salary Income',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold,)),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Winning Lotteries",
         child: Text('Winning Lotteries',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Miscallaneous Income",
         child: Text('Miscallaneous Income',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
     ];
     List<dynamic> income = await categoryBox.fetchIncomeCategory();
@@ -439,7 +439,7 @@ class _EditScreenState extends State<EditScreen> {
           value: val,
           child: Text(
             val,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.bold, ),
           ));
       dropDown.add(item);
     }
@@ -452,42 +452,42 @@ class _EditScreenState extends State<EditScreen> {
   expenseCategoryAdder() async {
     expenseCat.clear();
     List<DropdownMenuItem<String>> defaultExpenseCategory = [
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: 'Business Expense',
         child: Text(
           'Business Expense',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          style: TextStyle(fontWeight: FontWeight.bold, ),
         ),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Capital Losses Incured",
         child: Text('Capital Losses Incured',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Donations/Gifts paid",
         child: Text('Donations/Gifts',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Lost bets",
         child: Text('Losing Lotteries',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Life Expenses",
         child: Text('Normal Life Exp',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Miscallaneous Expense",
         child: Text('Miscallaneous Expense',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
-      DropdownMenuItem(
+      const DropdownMenuItem(
         value: "Xtras",
         child: Text('Xtras',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
     ];
     List<dynamic> expenses = await categoryBox.fetchExpenseCategory();
@@ -499,7 +499,7 @@ class _EditScreenState extends State<EditScreen> {
           value: val,
           child: Text(
             val,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: const TextStyle(fontWeight: FontWeight.bold,),
           ));
       dropDown.add(item);
     }

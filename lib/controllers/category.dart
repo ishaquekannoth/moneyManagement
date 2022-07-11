@@ -18,8 +18,7 @@ class CategoryBox {
   }
 
   printCategoryValues() {
-    print(categoryBox.values);
-    print(categoryBox.keys);
+  
   }
 
   clearCategoryBox() {

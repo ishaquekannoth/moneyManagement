@@ -16,26 +16,26 @@ class NotificationApi {
   static final _notifications = FlutterLocalNotificationsPlugin();
   static Future init(BuildContext context) async {
     var androidInitialise =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-    var ios = IOSInitializationSettings();
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var ios = const IOSInitializationSettings();
     final settings =
         InitializationSettings(android: androidInitialise, iOS: ios);
     await _notifications.initialize(
       settings,
       onSelectNotification: (payload) {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AddTransactions();
+          return const AddTransactions();
         }));
       },
     );
   }
 
   static Future _notificationDetails() async {
-    return NotificationDetails(
+    return const NotificationDetails(
         android: AndroidNotificationDetails("id", 'num',
             importance: Importance.max,
-              subText: 'Negative Balance!!!',
-              playSound: false,
+              subText: 'Negative Balance!',
+              playSound: true,
              showProgress: true, color: Colors.red),
             
         iOS: IOSNotificationDetails());
@@ -50,7 +50,7 @@ class NotificationApi {
     await NotificationApi().getTotalBalance();
     return _notifications.show(
       id,
-      'Your Current balance is below Zero ($balance)',
+      'OOPS..Negative Balance! [$balance]',
       body,
       await _notificationDetails(),
     );
@@ -81,7 +81,6 @@ class NotificationApi {
           ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
     sortMapByValue.forEach((key, value) => myList.add(value));
     double totalBalance = 0;
-    print(myList.length);
     for (var value in myList) {
       if (value['type'] == 'Income') {
         totalBalance += value['amount'] as double;
@@ -90,6 +89,5 @@ class NotificationApi {
       }
     }
     balance = totalBalance;
-    print(balance);
   }
 }
