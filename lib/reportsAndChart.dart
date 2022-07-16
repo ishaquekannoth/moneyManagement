@@ -1,11 +1,10 @@
-
-
 import 'dart:core';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Reports extends StatefulWidget {
   const Reports({Key? key}) : super(key: key);
@@ -40,6 +39,7 @@ class _ReportsState extends State<Reports> {
     "Lend",
     "Xtras"
   ];
+  late SharedPreferences pref;
   Dbhelper helper = Dbhelper();
   CategoryBox categories = CategoryBox();
   List<String> incomeCat = [];
@@ -62,6 +62,7 @@ class _ReportsState extends State<Reports> {
   double totalBalance = 0;
   double totalExpence = 0;
   double totalIncome = 0;
+  String? currency;
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
@@ -86,9 +87,13 @@ class _ReportsState extends State<Reports> {
     await getTotalBalance(myList.value);
     await incomeCategoryMapper(incomeCat, incomeList.value);
     await expenseCategoryMapper(expenseCat, expenseList.value);
+    pref=await SharedPreferences.getInstance();
+    currency = pref.getString('Currency').toString();
     setState(() {
-       selectAPeriod(DateTime(2000), DateTime.now());
+      selectAPeriod(DateTime(2000), DateTime.now()); 
+    
     });
+  
   }
 
   getTotalBalance(List data) {
@@ -166,10 +171,26 @@ class _ReportsState extends State<Reports> {
         child: SafeArea(
           child: (Scaffold(
               appBar: AppBar(
+                toolbarHeight: 80,
+                elevation: 0,
                 backgroundColor: Colors.white,
-                title: const Text(
-                  'Analysis And Reports',
-                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0)),
+                title: RichText(
+                  text: const TextSpan(
+                    text: 'A',
+                    style: TextStyle(
+                      fontSize: 23,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: 'nalysis',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
                 ),
                 centerTitle: true,
               ),
@@ -181,7 +202,6 @@ class _ReportsState extends State<Reports> {
                     pressElevation: 10,
                     label: Text('Full History Chart',
                         style: TextStyle(
-                       
                           color: isAllHistorySelected
                               ? Colors.white
                               : Colors.black,
@@ -205,12 +225,12 @@ class _ReportsState extends State<Reports> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ChoiceChip(
-                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last Week',
                               style: TextStyle(
-                                  
                                   color: isSelectedWeekly
                                       ? Colors.white
                                       : Colors.black)),
@@ -223,19 +243,20 @@ class _ReportsState extends State<Reports> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(const Duration(days: 7)),
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 7)),
                                   DateTime.now());
                               setState(() {});
                             }
                           },
                         ),
                         ChoiceChip(
-                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last 30 Days',
                               style: TextStyle(
-                        
                                 color: isSelectedMonthly
                                     ? Colors.white
                                     : Colors.black,
@@ -249,19 +270,20 @@ class _ReportsState extends State<Reports> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(const Duration(days: 30)),
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 30)),
                                   DateTime.now());
                               setState(() {});
                             }
                           },
                         ),
                         ChoiceChip(
-                          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Custom',
                               style: TextStyle(
-                                 
                                   color: isSelectedDated
                                       ? Colors.white
                                       : Colors.black)),
@@ -305,12 +327,17 @@ class _ReportsState extends State<Reports> {
                         selectiveSortedIncomes.isNotEmpty
                             ? PieChart(
                                 PieChartData(
+                              
+                                  sectionsSpace: 2,
+                                  centerSpaceRadius: 50,
                                   sections: incomeChartData,
                                 ),
                               )
                             : Image.asset('Assets/images/noData.gif'),
                         selectiveSortedExpenses.isNotEmpty
                             ? PieChart(PieChartData(
+                                sectionsSpace: 2,
+                                centerSpaceRadius: 50,
                                 sections: expenseChartData,
                               ))
                             : Image.asset('Assets/images/noData.gif'),
@@ -363,11 +390,12 @@ class _ReportsState extends State<Reports> {
       }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        radius: 150,
+        titleStyle:
+            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white),
+        radius: 120,
         value: total,
         title:
-            '$category\n(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)',
+            '$category(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)\n$total$currency',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       expenseChartData.add(pieChartItem);
@@ -390,13 +418,13 @@ class _ReportsState extends State<Reports> {
       }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titlePositionPercentageOffset: 0.5,
-        radius: 150,
-        titleStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+       titlePositionPercentageOffset: 0.5,
+        radius: 120,
+        titleStyle:
+            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white),
         value: total,
         title:
-            // category,
-            '$category\n(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)',
+            '$category(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)\n$total$currency',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       incomeChartData.add(pieChartItem);

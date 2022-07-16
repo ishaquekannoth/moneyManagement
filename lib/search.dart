@@ -373,6 +373,7 @@ class SearchScreen extends SearchDelegate<String> {
       valueListenable: myList,
       builder: (context, list, widget) {
         return (ListView.builder(
+
           itemBuilder: (context, index) {
             final item = suggestion[index];
             String temp = item['type'];
@@ -491,7 +492,7 @@ class SearchScreen extends SearchDelegate<String> {
                 builder: (context) {
                   return (AlertDialog(
                     title: const Text('Confirm Delete?',
-                        style: TextStyle(color: Colors.black, fontSize: 18)),
+                        style: TextStyle(color: Colors.black,)),
                     actions: [
                       ElevatedButton(
                           onPressed: () => Navigator.of(context).pop(),
@@ -519,25 +520,21 @@ class SearchScreen extends SearchDelegate<String> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.arrow_circle_up_outlined,
-                    size: 28,
-                    color: Colors.red,
-                  ),
+            
                   const Text("Expense",
                       style: TextStyle(
-                          fontSize: 18,
+                     
                           color: Colors.black87,
                           fontWeight: FontWeight.bold)),
                   Text('-$value AED',
                       style: const TextStyle(
-                          fontSize: 18,
+                       
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
-                          fontSize: 18,
+                        
                           color: Colors.black87,
                           fontWeight: FontWeight.bold))
                 ],
@@ -547,12 +544,12 @@ class SearchScreen extends SearchDelegate<String> {
                 children: [
                   Text('Category: $category',
                       style: const TextStyle(
-                        fontSize: 15,
+                      
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
                       style: const TextStyle(
-                        fontSize: 15,
+                  
                         color: Colors.black87,
                       ))
                 ],
@@ -617,25 +614,21 @@ class SearchScreen extends SearchDelegate<String> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.arrow_circle_down_outlined,
-                    size: 28,
-                    color: Color.fromARGB(255, 5, 231, 5),
-                  ),
+               
                   const Text("Income",
                       style: TextStyle(
-                          fontSize: 18,
+                         
                           color: Colors.black87,
                           fontWeight: FontWeight.bold)),
                   Text('+$value AED',
                       style: const TextStyle(
-                          fontSize: 18,
+                          
                           color: Color.fromARGB(255, 4, 112, 8),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
-                          fontSize: 18,
+                        
                           color: Colors.black87,
                           fontWeight: FontWeight.bold))
                 ],
@@ -645,12 +638,12 @@ class SearchScreen extends SearchDelegate<String> {
                 children: [
                   Text('Category: $category',
                       style: const TextStyle(
-                        fontSize: 15,
+                       
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
                       style: const TextStyle(
-                        fontSize: 15,
+                        
                         color: Colors.black87,
                       ))
                 ],

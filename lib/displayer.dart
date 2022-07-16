@@ -13,37 +13,50 @@ class MainDisplay extends StatefulWidget {
 
 class _MainDisplayState extends State<MainDisplay> {
   int _selectedIndex = 0;
-  List<Widget> pages = [const HomePage(),const ViewAllTransactions(),const Reports(),const SettingsMenu()];
+  List<Widget> pages = [
+    const HomePage(),
+    const ViewAllTransactions(),
+    const Reports(),
+    const SettingsMenu()
+  ];
   @override
   Widget build(BuildContext context) {
-    return (Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        mouseCursor: MouseCursor.uncontrolled,
-        elevation: 35,
-        unselectedFontSize: 15,
-       selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        backgroundColor: Colors.white,
-        selectedFontSize:15,
-        iconSize: 35,
-        selectedItemColor: Colors.red,
-        type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home,size: 25,), label: 'Home',),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.history), label: 'History',),
-          BottomNavigationBarItem(icon: Icon(Icons.pie_chart_rounded   ), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings),label: 'Settings'),
-        ],
-        onTap: (ind) {
-          setState(() {
-            _selectedIndex = ind;
-          });
-        },
-      ),
-      body:pages[_selectedIndex]
-    )
     
-    );
+    return (Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          mouseCursor: MouseCursor.uncontrolled,
+          elevation: 35,
+          unselectedFontSize: 15,
+          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: Colors.white,
+          selectedFontSize: 15,
+          iconSize: 35,
+          selectedItemColor: Colors.red,
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+                size: 25,
+              ),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              label: 'History',
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.pie_chart_rounded), label: 'Reports'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings), label: 'Settings'),
+          ],
+          onTap: (ind) {
+            setState(() {
+              _selectedIndex = ind;
+            });
+          },
+        ),
+        body: pages[_selectedIndex]));
   }
 }

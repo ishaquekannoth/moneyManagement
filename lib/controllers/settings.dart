@@ -1,22 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:moneymanager/notifications.dart';
 import 'package:moneymanager/splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class SettingsMenu extends StatefulWidget {
   const SettingsMenu({Key? key}) : super(key: key);
-
   @override
   State<SettingsMenu> createState() => _SettingsMenuState();
 }
 
 class _SettingsMenuState extends State<SettingsMenu> {
-  Dbhelper db = Dbhelper();
-
-  CategoryBox cat = CategoryBox();
-
   @override
+  void initState() {
+    setSwitchValue();
+    super.initState();
+  }
+
+  setSwitchValue() async {
+    //SharedPreferences pref = await SharedPreferences.getInstance();
+    // SharedPreferences pref = NotificationApi.pref;
+
+    if (NotificationApi.pref.getBool('isOn') == null) {
+      NotificationApi.pref.setBool('isOn', false);
+      isSwitchOn = false;
+    } else {
+      setState(() {
+        isSwitchOn = NotificationApi.pref.getBool('isOn')!;
+      });
+    }
+
+    print(isSwitchOn);
+  }
+
+  Dbhelper db = Dbhelper();
+  static late bool isSwitchOn;
+  CategoryBox cat = CategoryBox();
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? picked =
+        await showTimePicker(context: context, initialTime: selectedTime);
+    if (picked != null) {
+      setState(() {
+        selectedTime = picked;
+        isSwitchOn = true;
+      });
+      await NotificationApi.showScheduledNotification(
+          time: Time(picked.hour, picked.minute));
+
+      DateTime tempDate = DateFormat("hh:mm").parse(
+          "${selectedTime.hour}:${selectedTime.minute}");
+      var dateFormat = DateFormat("h:mm a"); 
+
+      NotificationApi.pref.setBool('isOn', isSwitchOn);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          margin: const EdgeInsets.all(15),
+          backgroundColor: const Color.fromARGB(255, 16, 141, 58),
+          content: Text('Reminder Set at  ${dateFormat.format(tempDate)}', textAlign: TextAlign.center)));
+    } else {
+      NotificationApi.cancelDailyotification(1);
+      setState(() {
+        isSwitchOn = false;
+      });
+      // SharedPreferences pref = await SharedPreferences.getInstance();
+      NotificationApi.pref.setBool('isOn', isSwitchOn);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,19 +114,19 @@ class _SettingsMenuState extends State<SettingsMenu> {
                     color: Colors.red,
                   ),
                   title: const Text('Reset Everything'),
-                  onTap: (){
+                  onTap: () {
                     showDialog(
                         context: context,
                         builder: (context) {
                           return (AlertDialog(
                             title: const Text('Are you sure to Reset the App?'),
-                            actions: [ ElevatedButton.icon(
+                            actions: [
+                              ElevatedButton.icon(
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
-                                  icon: const Icon(Icons.cancel ),
+                                  icon: const Icon(Icons.cancel),
                                   label: const Text('Cancel')),
-                                  
                               ElevatedButton.icon(
                                   onPressed: () async {
                                     db.resetData();
@@ -76,16 +134,52 @@ class _SettingsMenuState extends State<SettingsMenu> {
                                     SharedPreferences pref =
                                         await SharedPreferences.getInstance();
                                     await pref.clear();
-                                     Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => const SplashScreen()),
-                        (route) => false);
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SplashScreen()),
+                                        (route) => false);
                                   },
-                                  icon: const Icon(Icons.delete_forever_outlined),
+                                  icon:
+                                      const Icon(Icons.delete_forever_outlined),
                                   label: const Text('Confirm')),
-                             
                             ],
                           ));
                         });
+                  }),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.alarm,
+                color: Colors.red,
+              ),
+              title: const Text('Set a Reminder'),
+              trailing: Switch(
+                  value: isSwitchOn,
+                  onChanged: (value) async {
+                    {
+                      if (value == true) {
+                        await selectTime(context);
+                      } else {
+                        setState(() {
+                          isSwitchOn = false;
+                          NotificationApi.pref.setBool('isOn', false);
+                        });
+                      }
+                    }
+                    // if (isSwitchOn == false) {
+                    //   await selectTime(context);
+                    //   setState(() {
+                    //     isSwitchOn;
+                    //   });
+                    // } else {
+                    //   setState(() {
+                    //     isSwitchOn = false;
+                    //   });
+                    //   SharedPreferences pref =
+                    //       await SharedPreferences.getInstance();
+                    //   pref.setBool('isOn', false);
+                    // }
                   }),
             ),
             const Divider(
@@ -94,19 +188,59 @@ class _SettingsMenuState extends State<SettingsMenu> {
             const ListTile(
               leading: Text('communicate'),
             ),
-            const ListTile(
-              leading: Icon(
+            ListTile(
+              leading: const Icon(
                 Icons.mail_outline,
                 color: Colors.red,
               ),
-              title: Text('Contact us'),
-            ),
-            const ListTile(
-              leading: Icon(
-                Icons.feedback_outlined,
-                color: Colors.red,
-              ),
-              title: Text('Feedback'),
+              title: const Text('Contact Me'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return (AlertDialog(
+                        actions: [
+                          TextButton(
+                              onPressed: (() => Navigator.of(context).pop()),
+                              child: Text("OK"))
+                        ],
+                        title: const Text('Contact Me'),
+                        content: SizedBox(
+                          height: 300,
+                          width: 300,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                'Devoloped by\nIshaque Muhammed kannoth',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Email\nishaque.kannoth@gmail.com'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Github'),
+                              Text('https://github.com/ishaquekannoth'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Phone/Whatsapp\n+91-9747344535'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('\nSpecial thanks to Shees&Rabeeh'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ));
+                    });
+              },
             ),
             const Divider(
               thickness: 1,
@@ -114,26 +248,36 @@ class _SettingsMenuState extends State<SettingsMenu> {
             const ListTile(
               leading: Text('Info'),
             ),
-            const ListTile(
-              leading: Icon(
-                Icons.privacy_tip_outlined,
-                color: Colors.red,
-              ),
-              title: Text('Privacy policy'),
-            ),
-            const ListTile(
-              leading: Icon(
-                Icons.share_outlined,
-                color: Colors.red,
-              ),
-              title: Text('Share'),
-            ),
-            const ListTile(
-              leading: Icon(
+            ListTile(
+              leading: const Icon(
                 Icons.info_outline,
                 color: Colors.red,
               ),
-              title: Text('About'),
+              title: const Text('About the App'),
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return (AlertDialog(
+                        actions: [
+                          TextButton(
+                              onPressed: (() => Navigator.of(context).pop()),
+                              child: const Text("OK"))
+                        ],
+                        title: const Text('About the App'),
+                        content: SizedBox(
+                          height: 250,
+                          width: 200,
+                          child: Column(
+                            children: const [
+                              Text(
+                                  'This Application has been devoloped for keeping your day today expenses and incomes on track.Though I have made a lot of efforts to make the app bug free,its still a lot likely to be filled with bugs since it has not been specifically gone through any testing phase..Please click on the contact me button to report a bug or suggest your valuable opinions and suggestions...')
+                            ],
+                          ),
+                        ),
+                      ));
+                    });
+              },
             ),
           ],
         ),

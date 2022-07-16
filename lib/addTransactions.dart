@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
@@ -242,12 +244,12 @@ class _AddTransactionsState extends State<AddTransactions> {
               
               color: type == 'Income' ? Colors.green : Colors.red,
               fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+          textAlign: TextAlign.start,
         ),
         const SizedBox(
           height: 15,
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 primary: type == 'Income' ? Colors.green : Colors.red,
@@ -266,10 +268,8 @@ class _AddTransactionsState extends State<AddTransactions> {
                                   border: InputBorder.none),
                              
                               onChanged: (cat) {
-                                if (cat != null) {
-                                  category = cat.toString();
-                                  setState(() {});
-                                }
+                                category = cat.toString();
+                                setState(() {});
                               },
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(

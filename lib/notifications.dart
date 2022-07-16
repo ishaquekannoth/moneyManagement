@@ -1,19 +1,25 @@
 import 'dart:collection';
-
+import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tztime;
 
 class NotificationApi {
   NotificationApi() {
     getTotalBalance();
+    tztime.initializeTimeZones();
   }
+  static late SharedPreferences pref;
   Dbhelper dbhelper = Dbhelper();
   static List myList = [];
-  static double balance=0;
+  static double balance = 0;
   static final _notifications = FlutterLocalNotificationsPlugin();
+
   static Future init(BuildContext context) async {
     var androidInitialise =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -27,49 +33,6 @@ class NotificationApi {
           return const AddTransactions();
         }));
       },
-    );
-  }
-
-  static Future _notificationDetails() async {
-    return const NotificationDetails(
-        android: AndroidNotificationDetails("id", 'num',
-            importance: Importance.max,
-              subText: 'Negative Balance!',
-              playSound: true,
-             showProgress: true, color: Colors.red),
-            
-        iOS: IOSNotificationDetails());
-  }
-
-  static Future showNotification({
-    int id = 0,
-    String? title,
-    String? body,
-    String? payload,
-  }) async {
-    await NotificationApi().getTotalBalance();
-    return _notifications.show(
-      id,
-      'OOPS..Negative Balance! [$balance]',
-      body,
-      await _notificationDetails(),
-    );
-  }
-  static Future showScheduledNotification(
-      {int id = 0,
-      String? title,
-      String? body,
-      var payload,
-      required DateTime scheduleTime}) async {
-    return _notifications.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduleTime, tz.local),
-      await _notificationDetails(),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -89,5 +52,80 @@ class NotificationApi {
       }
     }
     balance = totalBalance;
+  }
+
+  static Future _notificationDetails() async {
+    return const NotificationDetails(
+        android: AndroidNotificationDetails("id", 'num',
+            importance: Importance.max,
+            subText: 'Negative Balance!',
+            playSound: true,
+            showProgress: true,
+            color: Colors.red),
+        iOS: IOSNotificationDetails());
+  }
+
+  static Future _notificationDetailsDaily() async {
+    String zone = await FlutterNativeTimezone.getLocalTimezone();
+    tz.setLocalLocation(tz.getLocation(zone));
+    return const NotificationDetails(
+        android: AndroidNotificationDetails("id", 'num',
+            importance: Importance.max,
+            subText: 'Update!',
+            playSound: true,
+            showProgress: true,
+            color: Colors.red),
+        iOS: IOSNotificationDetails());
+  }
+
+  static Future showNotification({
+    int id = 0,
+    String? title,
+    String? body,
+    String? payload,
+  }) async {
+    await NotificationApi().getTotalBalance();
+    return _notifications.show(
+      id,
+      'OOPS..Negative Balance! [$balance]',
+      body,
+      await _notificationDetails(),
+    );
+  }
+
+  static Future showScheduledNotification(
+      {int id = 1,
+      String? title,
+      String? body,
+      var payload,
+      required Time time}) async {
+    var notificationDetails = await _notificationDetailsDaily();
+    print('Called scheduler');
+    return _notifications.zonedSchedule(
+        id,
+        "Time's Up",
+        "Did you Update your Transactions Today?",
+        scheduleDaily(Time(time.hour, time.minute)),
+        notificationDetails,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time);
+  }
+
+  static tz.TZDateTime scheduleDaily(Time time) {
+    final now = tz.TZDateTime.now(tz.local);
+    final scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
+        time.hour, time.minute, time.second);
+    print(now.toString());
+    print(scheduledDate.toString());
+    return scheduledDate.isBefore(now)
+        ? scheduledDate.add(const Duration(days: 1))
+        : scheduledDate;
+  }
+
+  static cancelDailyotification(int id) async {
+    await _notifications.cancel(id);
+    print('Cancelled');
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:moneymanager/controllers/settings.dart';
 import 'package:moneymanager/displayer.dart';
 import 'package:moneymanager/firstLogin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
@@ -14,7 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   final TextEditingController _controller = TextEditingController();
   String UserName = 'UserName';
   String name = '';
-
   @override
   void initState() {
     super.initState();

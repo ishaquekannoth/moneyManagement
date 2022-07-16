@@ -6,6 +6,7 @@ import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
 import 'package:moneymanager/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
@@ -16,10 +17,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _notifications = FlutterLocalNotificationsPlugin();
   @override
   void initState() {
     NotificationApi.init(context);
+    
+    tz.initializeTimeZones();
     super.initState();
   }
 
@@ -63,17 +65,18 @@ class _HomePageState extends State<HomePage> {
     return SafeArea(
       child: (Scaffold(
         appBar: AppBar(toolbarHeight: 0.0),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: FloatingActionButton(
           elevation: 15,
-          backgroundColor: Colors.red,
+          backgroundColor: const Color.fromARGB(255, 206, 7, 7),
           onPressed: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: ((context) => const AddTransactions())))
+              .push(MaterialPageRoute(
+                  builder: ((context) => const AddTransactions())))
               .whenComplete(() async {
             getTotalBalance(await getRawMap());
             setState(() {});
           }),
-          label: const Text("ADD"),
+          child: const Icon(Icons.add),
         ),
         body: FutureBuilder<Map>(
             future: getRawMap(),
@@ -87,9 +90,8 @@ class _HomePageState extends State<HomePage> {
                 if (snapshot.data!.isEmpty) {
                   return Center(
                     child: ListView(
-                      children: 
-                        [
-                          Image.asset('Assets/images/empty.gif'),
+                      children: [
+                        Image.asset('Assets/images/empty.gif'),
                         const SizedBox(
                           height: 15,
                         ),
@@ -101,10 +103,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Center(
                             child: ListView(
-                              children: 
-                                [
-                                  Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       'Hei ${pref.getString('UserName')},Nothing in here yet..',
@@ -173,8 +175,7 @@ class _HomePageState extends State<HomePage> {
                                   size: 32,
                                 ),
                                 onPressed: () async {
-                                 
-                                  
+                                 await NotificationApi.showScheduledNotification(time: const Time(13,59));        
                                 },
                               )),
                         ]),
@@ -197,7 +198,8 @@ class _HomePageState extends State<HomePage> {
                             'You have got',
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                                fontWeight: FontWeight.w700, color: Colors.black),
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black),
                           ),
                           const SizedBox(
                             height: 10,
@@ -210,7 +212,7 @@ class _HomePageState extends State<HomePage> {
                                 color: const Color.fromARGB(255, 9, 4, 58)),
                             child: Center(
                               child: Text(
-                                '$totalBalance AED',
+                                '$totalBalance ${pref.getString('Currency')}',
                                 style: const TextStyle(
                                     fontFamily: 'Arial',
                                     color: Colors.white,
@@ -226,8 +228,10 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              cardIncome('$totalIncome AED'),
-                              cardExpense('$totalExpence AED')
+                              cardIncome(
+                                  '$totalIncome ${pref.getString('Currency')}'),
+                              cardExpense(
+                                  '$totalExpence ${pref.getString('Currency')}')
                             ],
                           ),
                         ],
@@ -236,10 +240,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   const SizedBox(height: 4),
                   const Padding(
-                      padding: EdgeInsets.all(1),
+                      padding: EdgeInsets.only(left: 30),
                       child: Text(
                         "Recent Transactions",
-                        textAlign: TextAlign.center,
+                        textAlign: TextAlign.start,
                         style: TextStyle(),
                       )),
                   ListView.builder(
@@ -356,118 +360,130 @@ class _HomePageState extends State<HomePage> {
   Widget expenseTile(double value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
-    return Card(
-      child: (ListTile(
-        selectedColor: Colors.amber,
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => (EditScreen(
-                  value: value,
-                  note: note,
-                  dateTime: dateTime,
-                  id: id,
-                  type: type,
-                  category: category))));
-        },
-        onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return (AlertDialog(
-                  title: const Text('Confirm Delete?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("Cancel")),
-                    ElevatedButton(
-                        onPressed: () {
-                          help.removeSingleItem(id);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"))
-                  ],
-                ));
-              });
-        },
-        minLeadingWidth: 100,
-        title: Text(category,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
-        leading: const CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.red,
-        ),
-        trailing: Text('-$value AED',
-            style: const TextStyle(
-                color: Color.fromARGB(255, 255, 1, 1),
-                fontWeight: FontWeight.bold)),
-        subtitle:
-            Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black87,
-                )),
-      )
+    return Column(
+      children: [
+        (ListTile(
+          minVerticalPadding: 2,
+          dense: true,
+          selectedColor: Colors.amber,
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => (EditScreen(
+                    value: value,
+                    note: note,
+                    dateTime: dateTime,
+                    id: id,
+                    type: type,
+                    category: category))));
+          },
+          onLongPress: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return (AlertDialog(
+                    title: const Text('Confirm Delete?'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Cancel")),
+                      ElevatedButton(
+                          onPressed: () {
+                            help.removeSingleItem(id);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("OK"))
+                    ],
+                  ));
+                });
+          },
+          title: Text(category,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.black87, fontWeight: FontWeight.bold)),
+          leading: const CircleAvatar(
+            radius: 30,
+            backgroundColor: Color.fromARGB(255, 255, 1, 1),
+            child: Icon(
+              Icons.arrow_circle_up,
+              color: Colors.white,
+            ),
           ),
+          trailing: Text('-$value ${pref.getString('Currency')}',
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 255, 1, 1),
+                  fontWeight: FontWeight.bold)),
+          subtitle:
+              Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                  )),
+        )),
+      ],
     );
-   
   }
 
   Widget incomeTile(double value, String note, DateTime dateTime, int id,
       String type, String category) {
     Dbhelper help = Dbhelper();
-    return Card(
-      child: (ListTile(
-        onTap: () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => (EditScreen(
-                  value: value,
-                  note: note,
-                  dateTime: dateTime,
-                  id: id,
-                  type: type,
-                  category: category))));
-        },
-        onLongPress: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return (AlertDialog(
-                  title: const Text('Confirm Delete?'),
-                  actions: [
-                    ElevatedButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        child: const Text("Cancel")),
-                    ElevatedButton(
-                        onPressed: () {
-                          help.removeSingleItem(id);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"))
-                  ],
-                ));
-              });
-        },
-        minLeadingWidth: 100,
-        title: Text(category,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.black87, fontWeight: FontWeight.bold)),
-        leading: const CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.green,
-        ),
-        trailing: Text('+$value AED',
-            style: const TextStyle(
-                color: Color.fromARGB(255, 4, 112, 8),
-                fontWeight: FontWeight.bold)),
-        subtitle:
-            Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.black87,
-                )),
-      )
+    return Column(
+      children: [
+        (ListTile(
+          dense: true,
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => (EditScreen(
+                    value: value,
+                    note: note,
+                    dateTime: dateTime,
+                    id: id,
+                    type: type,
+                    category: category))));
+          },
+          onLongPress: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return (AlertDialog(
+                    title: const Text('Confirm Delete?'),
+                    actions: [
+                      ElevatedButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: const Text("Cancel")),
+                      ElevatedButton(
+                          onPressed: () {
+                            help.removeSingleItem(id);
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("OK"))
+                    ],
+                  ));
+                });
+          },
+          title: Text(category,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.black87, fontWeight: FontWeight.bold)),
+          leading: const CircleAvatar(
+            radius: 30,
+            backgroundColor: Colors.green,
+            child: Icon(
+              Icons.arrow_circle_down,
+              color: Colors.white,
+            ),
           ),
+          trailing: Text('+$value ${pref.getString('Currency')}',
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 4, 112, 8),
+                  fontWeight: FontWeight.bold)),
+          subtitle:
+              Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black87,
+                  )),
+        )),
+      ],
     );
   }
 }

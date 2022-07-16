@@ -1,9 +1,11 @@
 import 'dart:core';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
 import 'package:moneymanager/search.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ViewAllTransactions extends StatefulWidget {
   const ViewAllTransactions({Key? key}) : super(key: key);
@@ -15,11 +17,12 @@ class ViewAllTransactions extends StatefulWidget {
 class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   @override
   void initState() {
-    getRawMap().then((value) => selectAPeriod(
-        DateTime.utc(2020), DateTime.now()));
+    getRawMap()
+        .then((value) => selectAPeriod(DateTime.utc(2020), DateTime.now()));
     super.initState();
   }
 
+  late SharedPreferences pref;
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
   List myList = [];
@@ -35,6 +38,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
 
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
+    pref = await SharedPreferences.getInstance();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
       ..sort((e1, e2) => e2.value['date'].compareTo(e1.value['date'])));
     List sortedList = [];
@@ -110,10 +114,26 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         child: SafeArea(
           child: (Scaffold(
               appBar: AppBar(
+                toolbarHeight: 60,
+                elevation: 0,
                 backgroundColor: Colors.white,
-                title: const Text(
-                  'Transaction History',
-                  style: TextStyle(color: Color.fromARGB(235, 0, 0, 0),fontWeight: FontWeight.w500),
+                title: RichText(
+                  text: const TextSpan(
+                    text: 'T',
+                    style: TextStyle(
+                      fontSize: 23,
+                      color: Colors.red,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: 'ransaction History',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700)),
+                    ],
+                  ),
                 ),
                 centerTitle: true,
               ),
@@ -121,12 +141,11 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                 children: [
                   Center(
                     child: ChoiceChip(
-                   backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       elevation: 5,
                       pressElevation: 10,
                       label: Text('Complete History',
                           style: TextStyle(
-                           
                             color: isAllHistorySelected
                                 ? Colors.white
                                 : Colors.black,
@@ -140,30 +159,28 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           isSelectedDated = false;
                           isAllHistorySelected = true;
                           await selectAPeriod(
-                              DateTime.utc(2020),
-                              DateTime.now());
+                              DateTime.utc(2020), DateTime.now());
                           setState(() {});
                         }
                       },
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         ChoiceChip(
-                         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last Week',
                               style: TextStyle(
-                                 
                                   color: isSelectedWeekly
                                       ? Colors.white
                                       : Colors.black)),
-                         selectedColor: Colors.purple,
+                          selectedColor: Colors.purple,
                           selected: isSelectedWeekly,
                           onSelected: (value) async {
                             if (value == true) {
@@ -172,7 +189,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(const Duration(days: 7)),
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 7)),
                                   DateTime.now());
 
                               setState(() {});
@@ -180,12 +198,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           },
                         ),
                         ChoiceChip(
-                           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Last 30 Days',
                               style: TextStyle(
-                               
                                 color: isSelectedMonthly
                                     ? Colors.white
                                     : Colors.black,
@@ -199,7 +217,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               isSelectedDated = false;
                               isAllHistorySelected = false;
                               await selectAPeriod(
-                                  DateTime.now().subtract(const Duration(days: 30)),
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 30)),
                                   DateTime.now());
 
                               setState(() {});
@@ -207,12 +226,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           },
                         ),
                         ChoiceChip(
-                           backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
                           elevation: 5,
                           pressElevation: 10,
                           label: Text('Custom',
                               style: TextStyle(
-                                 
                                   color: isSelectedDated
                                       ? Colors.white
                                       : Colors.black)),
@@ -230,7 +249,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                             }
                           },
                         ),
-            
                       ],
                     ),
                   ),
@@ -254,86 +272,113 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         ]),
                   ),
                   Expanded(
-                    child:
-                     TabBarView(
-                      children: [
-                        selectiveSortedAll.isNotEmpty?ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: selectiveSortedAll.length,
-                            itemBuilder: (context, index) {
-                              if (selectiveSortedAll[index]['type'] ==
-                                  'Expense') {
-                                return (ListTile(
-                                    title: expenseTile(
-                                        selectiveSortedAll[index]['amount'],
-                                        selectiveSortedAll[index]['note'],
-                                        selectiveSortedAll[index]['date'],
-                                        selectiveSortedAll[index]['id'],
-                                        selectiveSortedAll[index]['category'],
-                                        selectiveSortedAll[index]['type'],
-                                        helper,
-                                        context)));
-                              } else {
-                                return (ListTile(
-                                  title: incomeTile(
-                                      selectiveSortedAll[index]['amount'],
-                                      selectiveSortedAll[index]['note'],
-                                      selectiveSortedAll[index]['date'],
-                                      selectiveSortedAll[index]['id'],
-                                      selectiveSortedAll[index]['category'],
-                                      selectiveSortedAll[index]['type'],
-                                      helper,
-                                      context),
-                                ));
-                              }
-                            }):Image.asset('Assets/images/noData.gif'),
-                       selectiveSortedIncomes.isNotEmpty?
-                        ListView.builder(
-                            itemCount: selectiveSortedIncomes.length,
-                            itemBuilder: (context, index) {
-                              return (ListTile(
-                                  title: incomeTile(
-                                      selectiveSortedIncomes[index]['amount'],
-                                      selectiveSortedIncomes[index]['note'],
-                                      selectiveSortedIncomes[index]['date'],
-                                      selectiveSortedIncomes[index]['id'],
-                                      selectiveSortedIncomes[index]['category'],
-                                      selectiveSortedIncomes[index]['type'],
-                                      helper,
-                                      context)));
-                            }):Image.asset('Assets/images/noData.gif'),
-                            selectiveSortedExpenses.isNotEmpty?
-                        ListView.builder(
-                            itemCount: selectiveSortedExpenses.length,
-                            itemBuilder: (context, index) {
-                              return (ListTile(
-                                  title: expenseTile(
-                                      selectiveSortedExpenses[index]['amount'],
-                                      selectiveSortedExpenses[index]['note'],
-                                      selectiveSortedExpenses[index]['date'],
-                                      selectiveSortedExpenses[index]['id'],
-                                      selectiveSortedExpenses[index]
-                                          ['category'],
-                                      selectiveSortedExpenses[index]['type'],
-                                      helper,
-                                      context)));
-                            }):Image.asset('Assets/images/noData.gif'),
-                      ],
-                    )
-                  ),
-                  FloatingActionButton.extended(
-                      backgroundColor: Colors.lightBlue,
-                      onPressed: () async {
-                        myList.isNotEmpty?
-                        showSearch(context: context,delegate: SearchScreen())
-                            .whenComplete(() => getRawMap().whenComplete(() =>
-                                selectAPeriod(
-                                    DateTime.now().subtract(const Duration(days: 30)),
-
-                                    DateTime.now()))):Image.asset('Assets/images/noData.gif');
-                        setState(() {});
-                      },
-                      label: const Icon(Icons.search))
+                      child: Stack(
+                    alignment: const Alignment(0.9, 0.9),
+                    children: [
+                      TabBarView(
+                        children: [
+                          selectiveSortedAll.isNotEmpty
+                              ? ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: selectiveSortedAll.length,
+                                  itemBuilder: (context, index) {
+                                    if (selectiveSortedAll[index]['type'] ==
+                                        'Expense') {
+                                      return (Container(
+                                          child: expenseTile(
+                                              selectiveSortedAll[index]
+                                                  ['amount'],
+                                              selectiveSortedAll[index]['note'],
+                                              selectiveSortedAll[index]['date'],
+                                              selectiveSortedAll[index]['id'],
+                                              selectiveSortedAll[index]
+                                                  ['category'],
+                                              selectiveSortedAll[index]['type'],
+                                              helper,
+                                              context)));
+                                    } else {
+                                      return (Container(
+                                        child: incomeTile(
+                                            selectiveSortedAll[index]['amount'],
+                                            selectiveSortedAll[index]['note'],
+                                            selectiveSortedAll[index]['date'],
+                                            selectiveSortedAll[index]['id'],
+                                            selectiveSortedAll[index]
+                                                ['category'],
+                                            selectiveSortedAll[index]['type'],
+                                            helper,
+                                            context),
+                                      ));
+                                    }
+                                  })
+                              : Image.asset('Assets/images/noData.gif'),
+                          selectiveSortedIncomes.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: selectiveSortedIncomes.length,
+                                  itemBuilder: (context, index) {
+                                    return (Container(
+                                      
+                                        child: incomeTile(
+                                            selectiveSortedIncomes[index]
+                                                ['amount'],
+                                            selectiveSortedIncomes[index]
+                                                ['note'],
+                                            selectiveSortedIncomes[index]
+                                                ['date'],
+                                            selectiveSortedIncomes[index]['id'],
+                                            selectiveSortedIncomes[index]
+                                                ['category'],
+                                            selectiveSortedIncomes[index]
+                                                ['type'],
+                                            helper,
+                                            context)));
+                                  })
+                              : Image.asset(
+                                  'Assets/images/noData.gif',
+                                ),
+                          selectiveSortedExpenses.isNotEmpty
+                              ? ListView.builder(
+                                  itemCount: selectiveSortedExpenses.length,
+                                  itemBuilder: (context, index) {
+                                    return (Container(
+                                        child: expenseTile(
+                                            selectiveSortedExpenses[index]
+                                                ['amount'],
+                                            selectiveSortedExpenses[index]
+                                                ['note'],
+                                            selectiveSortedExpenses[index]
+                                                ['date'],
+                                            selectiveSortedExpenses[index]
+                                                ['id'],
+                                            selectiveSortedExpenses[index]
+                                                ['category'],
+                                            selectiveSortedExpenses[index]
+                                                ['type'],
+                                            helper,
+                                            context)));
+                                  })
+                              : Image.asset('Assets/images/noData.gif'),
+                        ],
+                      ),
+                      FloatingActionButton(
+                        backgroundColor: const Color.fromARGB(255, 206, 7, 7),
+                        onPressed: () async {
+                          myList.isNotEmpty
+                              ? showSearch(
+                                      context: context,
+                                      delegate: SearchScreen())
+                                  .whenComplete(() => getRawMap().whenComplete(
+                                      () => selectAPeriod(
+                                          DateTime.now().subtract(
+                                              const Duration(days: 30)),
+                                          DateTime.now())))
+                              : Image.asset('Assets/images/noData.gif');
+                          setState(() {});
+                        },
+                        child: const Icon(Icons.search),
+                      )
+                    ],
+                  )),
                 ],
               ))),
         ));
@@ -355,8 +400,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       category: category))))
               .whenComplete(() => getRawMap())
               .whenComplete(() {
-            selectAPeriod(
-                DateTime.now().subtract(const Duration(days: 30)), DateTime.now());
+            selectAPeriod(DateTime.now().subtract(const Duration(days: 30)),
+                DateTime.now());
             setState(() {});
           });
           super.initState();
@@ -377,8 +422,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap())
                               .then((value) => selectAPeriod(
-                                  DateTime.utc(2020),
-                                  DateTime.now()));
+                                  DateTime.utc(2020), DateTime.now()));
                           Navigator.of(context).pop();
                           setState(() {});
                         },
@@ -395,44 +439,31 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(
-                    Icons.arrow_circle_up_outlined,
-                    size: 28,
-                    color: Colors.red,
-                  ),
                   const Text("Expense",
                       style: TextStyle(
-                    
                         color: Colors.black87,
                       )),
-                  Text('-$value AED',
+                  Text('-$value ${pref.getString('Currency')}',
                       style: const TextStyle(
-                        
                           color: Color.fromARGB(255, 170, 20, 9),
                           fontWeight: FontWeight.bold)),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
-                      
                         color: Colors.black87,
                       ))
                 ],
               ),
-               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Category: $category',
-                      style: const TextStyle(
-                       
-                        color: Colors.black87,
-                      )),
-                  Text('Note: $note',
-                      style: const TextStyle(
-                      
-                        color: Colors.black87,
-                      ))
-                ]
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text('Category: $category',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                    )),
+                Text('Note: $note',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                    ))
+              ]),
             ],
           ),
         )),
@@ -457,8 +488,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       ))))
               .whenComplete(() => getRawMap())
               .whenComplete(() {
-            selectAPeriod(
-                DateTime.now().subtract(const Duration(days: 30)), DateTime.now());
+            selectAPeriod(DateTime.now().subtract(const Duration(days: 30)),
+                DateTime.now());
             setState(() {
               isSelectedMonthly = true;
               isSelectedWeekly = false;
@@ -483,8 +514,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap())
                               .then((value) => selectAPeriod(
-                                  DateTime.utc(2020),
-                                  DateTime.now()));
+                                  DateTime.utc(2020), DateTime.now()));
                           Navigator.of(context).pop();
                           setState(() {});
                         },
@@ -500,43 +530,29 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
               borderRadius: BorderRadius.circular(15), color: Colors.white),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(
-                    Icons.arrow_circle_down_outlined,
-                    size: 28,
-                    color: Color.fromARGB(255, 5, 231, 5),
-                  ),
-                  const Text("Income",
-                      style: TextStyle(
-                     
-                        color: Colors.black87,
-                      )),
-                  Text('+$value AED',
-                      style: const TextStyle(
-                   
-                          color: Color.fromARGB(255, 4, 112, 8),
-                          fontWeight: FontWeight.bold)),
-                  Text(
-                      '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
-                      style: const TextStyle(
-                        
-                        color: Colors.black87,
-                      ))
-                ]
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                const Text("Income",
+                    style: TextStyle(
+                      color: Colors.black87,
+                    )),
+                Text('+$value ${pref.getString('Currency')}',
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 4, 112, 8),
+                        fontWeight: FontWeight.bold)),
+                Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
+                    style: const TextStyle(
+                      color: Colors.black87,
+                    ))
+              ]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Category: $category',
                       style: const TextStyle(
-                        
                         color: Colors.black87,
                       )),
                   Text('Note: $note',
                       style: const TextStyle(
-                        
                         color: Colors.black87,
                       ))
                 ],

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
@@ -240,16 +241,16 @@ class _EditScreenState extends State<EditScreen> {
         const SizedBox(
           height: 20,
         ),
-        const Text(
+        Text(
           'Category Not Listed?',
           style: TextStyle(
-              color: Colors.red, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
+            color: type == 'Income' ? Colors.green : Colors.red, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.start,
         ),
         const SizedBox(
           height: 15,
         ),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
               primary: type == 'Income' ? Colors.green : Colors.red,
@@ -268,10 +269,8 @@ class _EditScreenState extends State<EditScreen> {
                                 border: InputBorder.none),
                             style: const TextStyle(),
                             onChanged: (cat) {
-                              if (cat != null) {
-                                category = cat.toString();
-                                setState(() {});
-                              }
+                              category = cat.toString();
+                              setState(() {});
                             },
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(
@@ -392,42 +391,42 @@ class _EditScreenState extends State<EditScreen> {
   incomeCategoryAdder() async {
     incomeCat.clear();
     List<DropdownMenuItem<String>> defaultIncomeCategory = [
-      const DropdownMenuItem(
+          const DropdownMenuItem(
         value: 'BlackMoney',
         child: Text(
           'BlackMoney',
-          style: TextStyle(fontWeight: FontWeight.bold,),
+          style: TextStyle(fontWeight: FontWeight.bold, ),
         ),
       ),
       const DropdownMenuItem(
-        value: "Business Income",
+        value: "Borrow",
+        child: Text('Borrowing',
+            style: TextStyle(fontWeight: FontWeight.bold,)),
+      ),
+      const DropdownMenuItem(
+        value: "Business",
         child: Text('Business Income',
             style: TextStyle(fontWeight: FontWeight.bold,)),
       ),
       const DropdownMenuItem(
-        value: "Capital Gains",
-        child: Text('Capital Gains',
+        value: "Dividends",
+        child: Text('Dividends',
             style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
       const DropdownMenuItem(
-        value: "Donations/Gifts Recieved",
-        child: Text('Donations/Gifts',
+        value: "Interests",
+        child: Text('Interests',
+            style: TextStyle(fontWeight: FontWeight.bold,)),
+      ),
+      const DropdownMenuItem(
+        value: "Others",
+        child: Text('Others',
             style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
       const DropdownMenuItem(
         value: "Salary",
         child: Text('Salary Income',
             style: TextStyle(fontWeight: FontWeight.bold,)),
-      ),
-      const DropdownMenuItem(
-        value: "Winning Lotteries",
-        child: Text('Winning Lotteries',
-            style: TextStyle(fontWeight: FontWeight.bold, )),
-      ),
-      const DropdownMenuItem(
-        value: "Miscallaneous Income",
-        child: Text('Miscallaneous Income',
-            style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
     ];
     List<dynamic> income = await categoryBox.fetchIncomeCategory();
@@ -452,36 +451,36 @@ class _EditScreenState extends State<EditScreen> {
   expenseCategoryAdder() async {
     expenseCat.clear();
     List<DropdownMenuItem<String>> defaultExpenseCategory = [
+     const DropdownMenuItem(
+        value: "Clothing",
+        child: Text('Clothing',
+            style: TextStyle(fontWeight: FontWeight.bold, )),
+      ),
       const DropdownMenuItem(
-        value: 'Business Expense',
+        value: "Food",
         child: Text(
-          'Business Expense',
+          'Food Expense',
           style: TextStyle(fontWeight: FontWeight.bold, ),
         ),
       ),
       const DropdownMenuItem(
-        value: "Capital Losses Incured",
-        child: Text('Capital Losses Incured',
+        value: "Gifts paid",
+        child: Text('Gifts/Donations',
             style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
       const DropdownMenuItem(
-        value: "Donations/Gifts paid",
-        child: Text('Donations/Gifts',
+        value: "Lend",
+        child: Text('Lend to friends',
+            style: TextStyle(fontWeight: FontWeight.bold,)),
+      ),
+      const DropdownMenuItem(
+        value: "Losses",
+        child: Text('Losses Incured',
             style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
       const DropdownMenuItem(
-        value: "Lost bets",
-        child: Text('Losing Lotteries',
-            style: TextStyle(fontWeight: FontWeight.bold, )),
-      ),
-      const DropdownMenuItem(
-        value: "Life Expenses",
-        child: Text('Normal Life Exp',
-            style: TextStyle(fontWeight: FontWeight.bold, )),
-      ),
-      const DropdownMenuItem(
-        value: "Miscallaneous Expense",
-        child: Text('Miscallaneous Expense',
+        value: "Travel",
+        child: Text('Travelling',
             style: TextStyle(fontWeight: FontWeight.bold, )),
       ),
       const DropdownMenuItem(
