@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:moneymanager/viewAllTransactions.dart';
 import 'package:moneymanager/controllers/settings.dart';
@@ -23,40 +26,26 @@ class _MainDisplayState extends State<MainDisplay> {
   Widget build(BuildContext context) {
     
     return (Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          mouseCursor: MouseCursor.uncontrolled,
-          elevation: 35,
-          unselectedFontSize: 15,
-          selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          backgroundColor: Colors.white,
-          selectedFontSize: 15,
-          iconSize: 35,
-          selectedItemColor: Colors.red,
-          type: BottomNavigationBarType.fixed,
-          currentIndex: _selectedIndex,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 25,
-              ),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.history),
-              label: 'History',
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.pie_chart_rounded), label: 'Reports'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), label: 'Settings'),
-          ],
-          onTap: (ind) {
+      backgroundColor: Colors.white,
+       bottomNavigationBar:
+     CurvedNavigationBar(
+          height: 60,
+    backgroundColor:  Colors.primaries[Random().nextInt(Colors.primaries.length)],
+    buttonBackgroundColor: Colors.primaries[Random().nextInt(Colors.primaries.length)],
+    animationCurve: Curves.easeInOutQuad,
+    items:  <Widget>[
+      Icon(Icons.home,size: 30,color:_selectedIndex==0?Colors.white:Colors.black,),
+      Icon(Icons.history,size: 30,color:_selectedIndex==1?Colors.white:Colors.black,),
+      Icon(Icons.pie_chart, size: 30,color:_selectedIndex==2?Colors.white:Colors.black,),
+      Icon(Icons.settings,size: 30,color:_selectedIndex==3?Colors.white:Colors.black,),
+    ],
+    onTap: (ind) {
             setState(() {
               _selectedIndex = ind;
             });
-          },
-        ),
+          }
+  ),
+
         body: pages[_selectedIndex]));
   }
 }

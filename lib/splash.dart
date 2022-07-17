@@ -32,10 +32,13 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: Center(child: Image.asset('Assets/images/loading.gif')),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        color: Colors.white,
+        child: Image.asset('Assets/images/loading.gif')),
     ));
   }
-
   Future<void> checkLoggedInStatus() async {
     final pref = await SharedPreferences.getInstance();
     final String? status = pref.getString('UserName');

@@ -189,155 +189,160 @@ class _ReportsState extends State<Reports> {
                 ),
                 centerTitle: true,
               ),
-              body: Column(
-                children: [
-                  ChoiceChip(
-                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-                    elevation: 5,
-                    pressElevation: 10,
-                    label: Text('Full History Chart',
-                        style: TextStyle(
-                          color: isAllHistorySelected
-                              ? Colors.white
-                              : Colors.black,
-                        )),
-                    selectedColor: Colors.purple,
-                    selected: isAllHistorySelected,
-                    onSelected: (value) async {
-                      if (value == true) {
-                        isSelectedMonthly = false;
-                        isSelectedWeekly = false;
-                        isSelectedDated = false;
-                        isAllHistorySelected = true;
-                        await selectAPeriod(DateTime.utc(2020), DateTime.now());
-                        setState(() {});
-                      }
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ChoiceChip(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        elevation: 5,
-                        pressElevation: 10,
-                        label: Text('Last Week',
-                            style: TextStyle(
-                                color: isSelectedWeekly
-                                    ? Colors.white
-                                    : Colors.black)),
-                        selectedColor: Colors.purple,
-                        selected: isSelectedWeekly,
-                        onSelected: (value) async {
-                          if (value == true) {
-                            isSelectedMonthly = false;
-                            isSelectedWeekly = true;
-                            isSelectedDated = false;
-                            isAllHistorySelected = false;
-                            await selectAPeriod(
-                                DateTime.now()
-                                    .subtract(const Duration(days: 7)),
-                                DateTime.now());
-                            setState(() {});
-                          }
-                        },
-                      ),
-                      ChoiceChip(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        elevation: 5,
-                        pressElevation: 10,
-                        label: Text('Last 30 Days',
-                            style: TextStyle(
-                              color: isSelectedMonthly
-                                  ? Colors.white
-                                  : Colors.black,
-                            )),
-                        selectedColor: Colors.purple,
-                        selected: isSelectedMonthly,
-                        onSelected: (value) async {
-                          if (value == true) {
-                            isSelectedMonthly = true;
-                            isSelectedWeekly = false;
-                            isSelectedDated = false;
-                            isAllHistorySelected = false;
-                            await selectAPeriod(
-                                DateTime.now()
-                                    .subtract(const Duration(days: 30)),
-                                DateTime.now());
-                            setState(() {});
-                          }
-                        },
-                      ),
-                      ChoiceChip(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        elevation: 5,
-                        pressElevation: 10,
-                        label: Text('Custom',
-                            style: TextStyle(
-                                color: isSelectedDated
-                                    ? Colors.white
-                                    : Colors.black)),
-                        selectedColor: Colors.purple,
-                        selected: isSelectedDated,
-                        onSelected: (value) async {
-                          if (value == true) {
-                            await selectAPeriod(await _selectDate(context),
-                                await _selectDate(context));
-                            isSelectedDated = true;
-                            isSelectedWeekly = false;
-                            isSelectedMonthly = false;
-                            isAllHistorySelected = false;
-                            setState(() {});
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    height: 45,
-                    width: MediaQuery.of(context).size.width,
-                    child: TabBar(
-                        unselectedLabelColor: Colors.black,
-                        indicator: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(25)),
-                        labelColor: Colors.white,
-                        tabs: const [
-                          Tab(
-                            text: 'Incomes',
-                          ),
-                          Tab(
-                            text: 'Expenses',
-                          ),
-                        ]),
-                  ),
-                  Expanded(
-                    child: TabBarView(
+              body: Container(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    ChoiceChip(
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                      elevation: 5,
+                      pressElevation: 10,
+                      label: Text('Full History Chart',
+                          style: TextStyle(
+                            color: isAllHistorySelected
+                                ? Colors.white
+                                : Colors.black,
+                          )),
+                      selectedColor: Colors.purple,
+                      selected: isAllHistorySelected,
+                      onSelected: (value) async {
+                        if (value == true) {
+                          isSelectedMonthly = false;
+                          isSelectedWeekly = false;
+                          isSelectedDated = false;
+                          isAllHistorySelected = true;
+                          await selectAPeriod(DateTime.utc(2020), DateTime.now());
+                          setState(() {});
+                        }
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        selectiveSortedIncomes.isNotEmpty
-                            ? PieChart(
-                                PieChartData(
-                                  sectionsSpace: 2,
-                                  centerSpaceRadius: 30,
-                                  sections: incomeChartData,
-                                ),
-                              )
-                            : Image.asset('Assets/images/noData.gif'),
-                        selectiveSortedExpenses.isNotEmpty
-                            ? PieChart(PieChartData(
-                                sectionsSpace: 2,
-                                centerSpaceRadius: 30,
-                                sections: expenseChartData,
-                              ))
-                            : Image.asset('Assets/images/noData.gif'),
+                        ChoiceChip(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Last Week',
+                              style: TextStyle(
+                                  color: isSelectedWeekly
+                                      ? Colors.white
+                                      : Colors.black)),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedWeekly,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelectedMonthly = false;
+                              isSelectedWeekly = true;
+                              isSelectedDated = false;
+                              isAllHistorySelected = false;
+                              await selectAPeriod(
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 7)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Last 30 Days',
+                              style: TextStyle(
+                                color: isSelectedMonthly
+                                    ? Colors.white
+                                    : Colors.black,
+                              )),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedMonthly,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              isSelectedMonthly = true;
+                              isSelectedWeekly = false;
+                              isSelectedDated = false;
+                              isAllHistorySelected = false;
+                              await selectAPeriod(
+                                  DateTime.now()
+                                      .subtract(const Duration(days: 30)),
+                                  DateTime.now());
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ChoiceChip(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          elevation: 5,
+                          pressElevation: 10,
+                          label: Text('Custom',
+                              style: TextStyle(
+                                  color: isSelectedDated
+                                      ? Colors.white
+                                      : Colors.black)),
+                          selectedColor: Colors.purple,
+                          selected: isSelectedDated,
+                          onSelected: (value) async {
+                            if (value == true) {
+                              await selectAPeriod(await _selectDate(context),
+                                  await _selectDate(context));
+                              isSelectedDated = true;
+                              isSelectedWeekly = false;
+                              isSelectedMonthly = false;
+                              isAllHistorySelected = false;
+                              setState(() {});
+                            }
+                          },
+                        ),
                       ],
                     ),
-                  ),
-                ],
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      height: 45,
+                      width: MediaQuery.of(context).size.width,
+                      child: TabBar(
+                          unselectedLabelColor: Colors.black,
+                          indicator: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(25)),
+                          labelColor: Colors.white,
+                          tabs: const [
+                            Tab(
+                              text: 'Incomes',
+                            ),
+                            Tab(
+                              text: 'Expenses',
+                            ),
+                          ]),
+                    ),
+                    Expanded(
+                      child: TabBarView(
+                        children: [
+                          selectiveSortedIncomes.isNotEmpty
+                              ? PieChart(
+                                  PieChartData(
+                                    sectionsSpace: 2,
+                                    centerSpaceRadius: 30,
+                                    sections: incomeChartData,
+                                  ),
+                                )
+                              : Image.asset('Assets/images/noData.gif'),
+                          selectiveSortedExpenses.isNotEmpty
+                              ? PieChart(PieChartData(
+                                  sectionsSpace: 2,
+                                  centerSpaceRadius: 30,
+                                  sections: expenseChartData,
+                                ))
+                              : Image.asset('Assets/images/noData.gif'),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ))),
         ));
   }

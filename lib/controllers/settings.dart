@@ -14,7 +14,6 @@ class SettingsMenu extends StatefulWidget {
 }
 
 class _SettingsMenuState extends State<SettingsMenu> {
-  var size,height,width;
   @override
   void initState() {
     setSwitchValue();
@@ -74,10 +73,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    size = MediaQuery.of(context).size;
-    height = size.height;
-    width = size.width;
+  Widget build(BuildContext context) { 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

@@ -93,7 +93,8 @@ class _HomePageState extends State<HomePage> {
               }
               if (snapshot.hasData) {
                 if (snapshot.data!.isEmpty) {
-                  return Center(
+                  return Container(
+                    color: Colors.white,
                     child: ListView(
                       children: [
                         Image.asset('Assets/images/empty.gif'),
@@ -295,7 +296,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              ' Total Expense',
+              ' Total Expenses',
               style:
                   TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
@@ -373,7 +374,7 @@ class _HomePageState extends State<HomePage> {
             radius: 15,
             backgroundColor: Color.fromARGB(255, 255, 1, 1),
             child: Icon(
-              Icons.arrow_circle_up,
+              Icons.remove,
               color: Colors.white,
             ),
           ),
@@ -437,7 +438,7 @@ class _HomePageState extends State<HomePage> {
             radius: 15,
             backgroundColor: Colors.green,
             child: Icon(
-              Icons.arrow_circle_down,
+              Icons.add,
               color: Colors.white,
             ),
           ),
