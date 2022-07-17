@@ -6,7 +6,6 @@ import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/notifications.dart';
 import 'package:moneymanager/splash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 class SettingsMenu extends StatefulWidget {
   const SettingsMenu({Key? key}) : super(key: key);
@@ -15,6 +14,7 @@ class SettingsMenu extends StatefulWidget {
 }
 
 class _SettingsMenuState extends State<SettingsMenu> {
+  var size,height,width;
   @override
   void initState() {
     setSwitchValue();
@@ -33,8 +33,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
         isSwitchOn = NotificationApi.pref.getBool('isOn')!;
       });
     }
-
-    print(isSwitchOn);
   }
 
   Dbhelper db = Dbhelper();
@@ -77,6 +75,9 @@ class _SettingsMenuState extends State<SettingsMenu> {
 
   @override
   Widget build(BuildContext context) {
+    size = MediaQuery.of(context).size;
+    height = size.height;
+    width = size.width;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -87,15 +88,13 @@ class _SettingsMenuState extends State<SettingsMenu> {
           text: const TextSpan(
             text: 'S',
             style: TextStyle(
-              fontSize: 23,
               color: Colors.red,
               fontWeight: FontWeight.w600,
             ),
             children: [
               TextSpan(
                   text: 'ettings',
-                  style: TextStyle(
-                      fontSize: 20,
+                  style: TextStyle(     
                       color: Colors.black,
                       fontWeight: FontWeight.w700)),
             ],
@@ -163,23 +162,12 @@ class _SettingsMenuState extends State<SettingsMenu> {
                       } else {
                         setState(() {
                           isSwitchOn = false;
+                          NotificationApi.cancelDailyotification(1);
                           NotificationApi.pref.setBool('isOn', false);
                         });
                       }
                     }
-                    // if (isSwitchOn == false) {
-                    //   await selectTime(context);
-                    //   setState(() {
-                    //     isSwitchOn;
-                    //   });
-                    // } else {
-                    //   setState(() {
-                    //     isSwitchOn = false;
-                    //   });
-                    //   SharedPreferences pref =
-                    //       await SharedPreferences.getInstance();
-                    //   pref.setBool('isOn', false);
-                    // }
+                    
                   }),
             ),
             const Divider(
@@ -202,41 +190,36 @@ class _SettingsMenuState extends State<SettingsMenu> {
                         actions: [
                           TextButton(
                               onPressed: (() => Navigator.of(context).pop()),
-                              child: Text("OK"))
+                              child: const Text("OK"))
                         ],
                         title: const Text('Contact Me'),
-                        content: SizedBox(
-                          height: 300,
-                          width: 300,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
-                              Text(
-                                'Devoloped by\nIshaque Muhammed kannoth',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Divider(
-                                thickness: 1,
-                              ),
-                              Text('Email\nishaque.kannoth@gmail.com'),
-                              Divider(
-                                thickness: 1,
-                              ),
-                              Text('Github'),
-                              Text('https://github.com/ishaquekannoth'),
-                              Divider(
-                                thickness: 1,
-                              ),
-                              Text('Phone/Whatsapp\n+91-9747344535'),
-                              Divider(
-                                thickness: 1,
-                              ),
-                              Text('\nSpecial thanks to Shees&Rabeeh'),
-                              Divider(
-                                thickness: 1,
-                              ),
-                            ],
-                          ),
+                        content: ListView(                        
+                          children: const [
+                            Text(
+                              'Devoloped by\nIshaque Muhammed kannoth',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            Text('Email\nishaque.kannoth@gmail.com'),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            Text('Github'),
+                            Text('https://github.com/ishaquekannoth'),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            Text('Phone/Whatsapp\n+91-9747344535'),
+                            Divider(
+                              thickness: 1,
+                            ),
+                            Text('\nSpecial thanks to Shees&Rabeeh'),
+                            Divider(
+                              thickness: 1,
+                            ),
+                          ],
                         ),
                       ));
                     });
@@ -265,15 +248,11 @@ class _SettingsMenuState extends State<SettingsMenu> {
                               child: const Text("OK"))
                         ],
                         title: const Text('About the App'),
-                        content: SizedBox(
-                          height: 250,
-                          width: 200,
-                          child: Column(
-                            children: const [
-                              Text(
-                                  'This Application has been devoloped for keeping your day today expenses and incomes on track.Though I have made a lot of efforts to make the app bug free,its still a lot likely to be filled with bugs since it has not been specifically gone through any testing phase..Please click on the contact me button to report a bug or suggest your valuable opinions and suggestions...')
-                            ],
-                          ),
+                        content: ListView(
+                          children: const [
+                            Text(
+                                'This Application has been devoloped for keeping your day today expenses and incomes on track.Though I have made a lot of efforts to make the app bug free,its still a lot likely to be filled with bugs since it has not been specifically gone through any testing phase..Please click on the Contact me button to report a bug or suggest your valuable opinions and suggestions...')
+                          ],
                         ),
                       ));
                     });

@@ -525,18 +525,18 @@ class SearchScreen extends SearchDelegate<String> {
                       style: TextStyle(
                      
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
+                       )),
                   Text('-$value AED',
                       style: const TextStyle(
                        
                           color: Color.fromARGB(255, 170, 20, 9),
-                          fontWeight: FontWeight.bold)),
+                          )),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
                         
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold))
+                          ))
                 ],
               ),
               Row(
@@ -619,18 +619,18 @@ class SearchScreen extends SearchDelegate<String> {
                       style: TextStyle(
                          
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold)),
+                          )),
                   Text('+$value AED',
                       style: const TextStyle(
                           
                           color: Color.fromARGB(255, 4, 112, 8),
-                          fontWeight: FontWeight.bold)),
+                         )),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
                         
                           color: Colors.black87,
-                          fontWeight: FontWeight.bold))
+                         ))
                 ],
               ),
               Row(

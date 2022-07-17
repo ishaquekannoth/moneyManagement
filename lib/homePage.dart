@@ -1,13 +1,12 @@
 import 'dart:collection';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:moneymanager/addTransactions.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
 import 'package:moneymanager/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'static.dart' as customcolor;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,11 +18,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    color1 = Colors.primaries[Random().nextInt(Colors.primaries.length)];
+    color2 = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     NotificationApi.init(context);
-    
+    nameColor = Colors.primaries[Random().nextInt(Colors.primaries.length)];
     tz.initializeTimeZones();
     super.initState();
   }
+
+  late Color color1;
+  late Color color2;
 
   late SharedPreferences pref;
   List tempList = [];
@@ -31,6 +35,7 @@ class _HomePageState extends State<HomePage> {
   double totalBalance = 0;
   double totalExpence = 0;
   double totalIncome = 0;
+  late Color nameColor;
   getTotalBalance(Map data) {
     totalBalance = 0;
     totalExpence = 0;
@@ -68,7 +73,7 @@ class _HomePageState extends State<HomePage> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
           elevation: 15,
-          backgroundColor: const Color.fromARGB(255, 206, 7, 7),
+          backgroundColor: color1,
           onPressed: () => Navigator.of(context)
               .push(MaterialPageRoute(
                   builder: ((context) => const AddTransactions())))
@@ -140,102 +145,66 @@ class _HomePageState extends State<HomePage> {
                 }
                 getTotalBalance(snapshot.data!);
                 return (ListView(children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(35)),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(35),
-                              child: Image.asset(
-                                "Assets/images/face.jpeg",
-                                fit: BoxFit.contain,
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            ('Hello ${pref.getString('UserName').toString()}'),
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 104, 42, 145)),
-                          ),
-                          Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15)),
-                              padding: const EdgeInsets.all(12.0),
-                              child: IconButton(
-                                icon: const Icon(
-                                  Icons.print_outlined,
-                                  color: Colors.red,
-                                  size: 32,
-                                ),
-                                onPressed: () async {
-                                 await NotificationApi.showScheduledNotification(time: const Time(13,59));        
-                                },
-                              )),
-                        ]),
-                  ),
                   Container(
-                    margin: const EdgeInsets.only(left: 10, right: 15),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(colors: [
-                            customcolor.primaryColor,
-                            Colors.blueAccent
-                          ]),
-                          borderRadius: BorderRadius.all(Radius.circular(25))),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 30,
-                      ),
-                      child: Column(
-                        children: [
-                          const Text(
-                            'You have got',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            width: 250.0,
-                            height: 42.0,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(24.0),
-                                color: const Color.fromARGB(255, 9, 4, 58)),
-                            child: Center(
-                              child: Text(
-                                '$totalBalance ${pref.getString('Currency')}',
-                                style: const TextStyle(
-                                    fontFamily: 'Arial',
-                                    color: Colors.white,
-                                    height: 1,
-                                    fontWeight: FontWeight.w700),
-                                textAlign: TextAlign.center,
-                              ),
+                    margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
+                    decoration:  BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                          // Color.fromARGB(255, 247, 20, 152),
+                          // Colors.blueAccent
+                          color1,color2
+                        ]),
+                        borderRadius: const BorderRadius.all(Radius.circular(25))),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                            ('\t Hei ${pref.getString('UserName').toString()}'),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600)),
+                        const Text(
+                          'Your Balance is',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, color: Colors.black),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          width: 250.0,
+                          height: 42.0,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(24.0),
+                              color: const Color.fromARGB(255, 9, 4, 58)),
+                          child: Center(
+                            child: Text(
+                              '$totalBalance ${pref.getString('Currency')}',
+                              style: const TextStyle(
+                                  fontFamily: 'Arial',
+                                  color: Colors.white,
+                                  height: 1,
+                                  fontWeight: FontWeight.w700),
+                              textAlign: TextAlign.center,
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              cardIncome(
-                                  '$totalIncome ${pref.getString('Currency')}'),
-                              cardExpense(
-                                  '$totalExpence ${pref.getString('Currency')}')
-                            ],
-                          ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            cardIncome(
+                                '$totalIncome ${pref.getString('Currency')}'),
+                            cardExpense(
+                                '$totalExpence ${pref.getString('Currency')}')
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -401,7 +370,7 @@ class _HomePageState extends State<HomePage> {
               style: const TextStyle(
                   color: Colors.black87, fontWeight: FontWeight.bold)),
           leading: const CircleAvatar(
-            radius: 30,
+            radius: 15,
             backgroundColor: Color.fromARGB(255, 255, 1, 1),
             child: Icon(
               Icons.arrow_circle_up,
@@ -411,7 +380,7 @@ class _HomePageState extends State<HomePage> {
           trailing: Text('-$value ${pref.getString('Currency')}',
               style: const TextStyle(
                   color: Color.fromARGB(255, 255, 1, 1),
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.w400)),
           subtitle:
               Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
                   textAlign: TextAlign.center,
@@ -465,7 +434,7 @@ class _HomePageState extends State<HomePage> {
               style: const TextStyle(
                   color: Colors.black87, fontWeight: FontWeight.bold)),
           leading: const CircleAvatar(
-            radius: 30,
+            radius: 15,
             backgroundColor: Colors.green,
             child: Icon(
               Icons.arrow_circle_down,
@@ -475,7 +444,7 @@ class _HomePageState extends State<HomePage> {
           trailing: Text('+$value ${pref.getString('Currency')}',
               style: const TextStyle(
                   color: Color.fromARGB(255, 4, 112, 8),
-                  fontWeight: FontWeight.bold)),
+                  fontWeight: FontWeight.w400)),
           subtitle:
               Text('${dateTime.day}/${dateTime.month}/${(dateTime.year) % 100}',
                   textAlign: TextAlign.center,

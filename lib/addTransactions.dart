@@ -76,7 +76,7 @@ class _AddTransactionsState extends State<AddTransactions> {
               icon: const Icon(Icons.arrow_back),
             ),
             const SizedBox(
-              width: 15,
+              width: 10,
             ),
             const Text(
               'Add a new Transaction',
@@ -86,7 +86,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           ],
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Row(
           children: [
@@ -100,7 +100,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                   color: Colors.white,
                 )),
             const SizedBox(
-              width: 15,
+              width: 10,
             ),
             Expanded(
               child: TextField(
@@ -123,7 +123,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           ],
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Row(
           children: [
@@ -137,7 +137,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                   color: Colors.white,
                 )),
             const SizedBox(
-              width: 15,
+              width: 10,
             ),
             Expanded(
               child: TextField(
@@ -152,7 +152,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           ],
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Row(
           children: [
@@ -166,7 +166,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                   color: Colors.white,
                 )),
             const SizedBox(
-              width: 15,
+              width: 10,
             ),
             ChoiceChip(
               label: Text(
@@ -188,7 +188,7 @@ class _AddTransactionsState extends State<AddTransactions> {
               },
             ),
             const SizedBox(
-              width: 25,
+              width: 10,
             ),
             ChoiceChip(
               label: Text('Expense',
@@ -211,7 +211,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           ],
         ),
         const SizedBox(
-          height: 25,
+          height: 10,
         ),
         Text(
           'Choose a category of $type',
@@ -236,7 +236,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           ),
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Text(
           'Category Not Listed?',
@@ -247,7 +247,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           textAlign: TextAlign.start,
         ),
         const SizedBox(
-          height: 15,
+          height: 10,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           ElevatedButton.icon(
@@ -310,7 +310,7 @@ class _AddTransactionsState extends State<AddTransactions> {
           height: 20,
         ),
         SizedBox(
-            height: 50,
+            height: 45,
             child: TextButton(
                 onPressed: () {
                   _selectDate(context);

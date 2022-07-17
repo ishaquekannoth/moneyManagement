@@ -134,7 +134,7 @@ class _EditScreenState extends State<EditScreen> {
           ],
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Row(
           children: [
@@ -161,7 +161,7 @@ class _EditScreenState extends State<EditScreen> {
           ],
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Row(
           children: [
@@ -175,7 +175,7 @@ class _EditScreenState extends State<EditScreen> {
                   color: Colors.white,
                 )),
             const SizedBox(
-              width: 15,
+              width: 10,
             ),
             ChoiceChip(
               label: Text(
@@ -239,7 +239,7 @@ class _EditScreenState extends State<EditScreen> {
           ),
         ),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         Text(
           'Category Not Listed?',
@@ -248,7 +248,7 @@ class _EditScreenState extends State<EditScreen> {
           textAlign: TextAlign.start,
         ),
         const SizedBox(
-          height: 15,
+          height: 10,
         ),
         Row(mainAxisAlignment: MainAxisAlignment.start, children: [
           ElevatedButton.icon(
@@ -308,7 +308,7 @@ class _EditScreenState extends State<EditScreen> {
           )
         ]),
         const SizedBox(
-          height: 20,
+          height: 10,
         ),
         SizedBox(
             height: 50,
@@ -338,7 +338,7 @@ class _EditScreenState extends State<EditScreen> {
                   ],
                 ))),
         const SizedBox(
-          height: 45,
+          height: 35,
         ),
         FloatingActionButton.extended(
           label: const Text(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneymanager/controllers/settings.dart';
 import 'package:moneymanager/displayer.dart';
 import 'package:moneymanager/firstLogin.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +10,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final TextEditingController _controller = TextEditingController();
   String UserName = 'UserName';
   String name = '';
   @override
@@ -48,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
     } else {
       await Future.delayed(const Duration(seconds: 3));
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => FirstLogin()));
+          MaterialPageRoute(builder: (context) => const FirstLogin()));
     }
   }
 }

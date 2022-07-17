@@ -87,13 +87,11 @@ class _ReportsState extends State<Reports> {
     await getTotalBalance(myList.value);
     await incomeCategoryMapper(incomeCat, incomeList.value);
     await expenseCategoryMapper(expenseCat, expenseList.value);
-    pref=await SharedPreferences.getInstance();
+    pref = await SharedPreferences.getInstance();
     currency = pref.getString('Currency').toString();
     setState(() {
-      selectAPeriod(DateTime(2000), DateTime.now()); 
-    
+      selectAPeriod(DateTime(2000), DateTime.now());
     });
-  
   }
 
   getTotalBalance(List data) {
@@ -171,22 +169,19 @@ class _ReportsState extends State<Reports> {
         child: SafeArea(
           child: (Scaffold(
               appBar: AppBar(
-                toolbarHeight: 80,
                 elevation: 0,
                 backgroundColor: Colors.white,
                 title: RichText(
                   text: const TextSpan(
                     text: 'A',
-                    style: TextStyle(
-                      fontSize: 23,
+                    style: TextStyle(          
                       color: Colors.red,
                       fontWeight: FontWeight.w600,
                     ),
                     children: [
                       TextSpan(
                           text: 'nalysis',
-                          style: TextStyle(
-                              fontSize: 20,
+                          style: TextStyle(                
                               color: Colors.black,
                               fontWeight: FontWeight.w700)),
                     ],
@@ -219,93 +214,92 @@ class _ReportsState extends State<Reports> {
                       }
                     },
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last Week',
-                              style: TextStyle(
-                                  color: isSelectedWeekly
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedWeekly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = false;
-                              isSelectedWeekly = true;
-                              isSelectedDated = false;
-                              isAllHistorySelected = false;
-                              await selectAPeriod(
-                                  DateTime.now()
-                                      .subtract(const Duration(days: 7)),
-                                  DateTime.now());
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last 30 Days',
-                              style: TextStyle(
-                                color: isSelectedMonthly
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last Week',
+                            style: TextStyle(
+                                color: isSelectedWeekly
                                     ? Colors.white
-                                    : Colors.black,
-                              )),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedMonthly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = true;
-                              isSelectedWeekly = false;
-                              isSelectedDated = false;
-                              isAllHistorySelected = false;
-                              await selectAPeriod(
-                                  DateTime.now()
-                                      .subtract(const Duration(days: 30)),
-                                  DateTime.now());
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Custom',
-                              style: TextStyle(
-                                  color: isSelectedDated
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedDated,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              await selectAPeriod(await _selectDate(context),
-                                  await _selectDate(context));
-                              isSelectedDated = true;
-                              isSelectedWeekly = false;
-                              isSelectedMonthly = false;
-                              isAllHistorySelected = false;
-                              setState(() {});
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                                    : Colors.black)),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedWeekly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = false;
+                            isSelectedWeekly = true;
+                            isSelectedDated = false;
+                            isAllHistorySelected = false;
+                            await selectAPeriod(
+                                DateTime.now()
+                                    .subtract(const Duration(days: 7)),
+                                DateTime.now());
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last 30 Days',
+                            style: TextStyle(
+                              color: isSelectedMonthly
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedMonthly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = true;
+                            isSelectedWeekly = false;
+                            isSelectedDated = false;
+                            isAllHistorySelected = false;
+                            await selectAPeriod(
+                                DateTime.now()
+                                    .subtract(const Duration(days: 30)),
+                                DateTime.now());
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Custom',
+                            style: TextStyle(
+                                color: isSelectedDated
+                                    ? Colors.white
+                                    : Colors.black)),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedDated,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            await selectAPeriod(await _selectDate(context),
+                                await _selectDate(context));
+                            isSelectedDated = true;
+                            isSelectedWeekly = false;
+                            isSelectedMonthly = false;
+                            isAllHistorySelected = false;
+                            setState(() {});
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    height: 45,
+                    width: MediaQuery.of(context).size.width,
                     child: TabBar(
                         unselectedLabelColor: Colors.black,
                         indicator: BoxDecoration(
@@ -327,9 +321,8 @@ class _ReportsState extends State<Reports> {
                         selectiveSortedIncomes.isNotEmpty
                             ? PieChart(
                                 PieChartData(
-                              
                                   sectionsSpace: 2,
-                                  centerSpaceRadius: 50,
+                                  centerSpaceRadius: 30,
                                   sections: incomeChartData,
                                 ),
                               )
@@ -337,7 +330,7 @@ class _ReportsState extends State<Reports> {
                         selectiveSortedExpenses.isNotEmpty
                             ? PieChart(PieChartData(
                                 sectionsSpace: 2,
-                                centerSpaceRadius: 50,
+                                centerSpaceRadius: 30,
                                 sections: expenseChartData,
                               ))
                             : Image.asset('Assets/images/noData.gif'),
@@ -391,11 +384,11 @@ class _ReportsState extends State<Reports> {
 
       PieChartSectionData pieChartItem = PieChartSectionData(
         titleStyle:
-            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white),
-        radius: 120,
+            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white,fontSize: 7),
+        radius: 110,
         value: total,
         title:
-            '$category(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)\n$total$currency',
+            '\n$category(${categoryMappedExpenses[category]?.toStringAsFixed(2)}%)\n$total$currency',
         color: Colors.primaries[Random().nextInt(Colors.primaries.length)],
       );
       expenseChartData.add(pieChartItem);
@@ -418,10 +411,10 @@ class _ReportsState extends State<Reports> {
       }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
-       titlePositionPercentageOffset: 0.5,
-        radius: 120,
+        titlePositionPercentageOffset: 0.5,
+        radius: 110,
         titleStyle:
-            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white),
+            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white,fontSize: 7),
         value: total,
         title:
             '$category(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)\n$total$currency',

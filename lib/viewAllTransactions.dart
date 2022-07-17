@@ -17,11 +17,13 @@ class ViewAllTransactions extends StatefulWidget {
 class _ViewAllTransactionsState extends State<ViewAllTransactions> {
   @override
   void initState() {
+    color1=Colors.primaries[Random().nextInt(Colors.primaries.length)];
     getRawMap()
         .then((value) => selectAPeriod(DateTime.utc(2020), DateTime.now()));
     super.initState();
   }
 
+  late Color color1;
   late SharedPreferences pref;
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
@@ -114,14 +116,12 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
         child: SafeArea(
           child: (Scaffold(
               appBar: AppBar(
-                toolbarHeight: 60,
                 elevation: 0,
                 backgroundColor: Colors.white,
                 title: RichText(
                   text: const TextSpan(
                     text: 'T',
                     style: TextStyle(
-                      fontSize: 23,
                       color: Colors.red,
                       fontWeight: FontWeight.w600,
                     ),
@@ -129,7 +129,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       TextSpan(
                           text: 'ransaction History',
                           style: TextStyle(
-                              fontSize: 20,
                               color: Colors.black,
                               fontWeight: FontWeight.w700)),
                     ],
@@ -165,92 +164,89 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       },
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last Week',
-                              style: TextStyle(
-                                  color: isSelectedWeekly
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedWeekly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = false;
-                              isSelectedWeekly = true;
-                              isSelectedDated = false;
-                              isAllHistorySelected = false;
-                              await selectAPeriod(
-                                  DateTime.now()
-                                      .subtract(const Duration(days: 7)),
-                                  DateTime.now());
-
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Last 30 Days',
-                              style: TextStyle(
-                                color: isSelectedMonthly
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last Week',
+                            style: TextStyle(
+                                color: isSelectedWeekly
                                     ? Colors.white
-                                    : Colors.black,
-                              )),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedMonthly,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              isSelectedMonthly = true;
-                              isSelectedWeekly = false;
-                              isSelectedDated = false;
-                              isAllHistorySelected = false;
-                              await selectAPeriod(
-                                  DateTime.now()
-                                      .subtract(const Duration(days: 30)),
-                                  DateTime.now());
+                                    : Colors.black)),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedWeekly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = false;
+                            isSelectedWeekly = true;
+                            isSelectedDated = false;
+                            isAllHistorySelected = false;
+                            await selectAPeriod(
+                                DateTime.now()
+                                    .subtract(const Duration(days: 7)),
+                                DateTime.now());
 
-                              setState(() {});
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 255, 255),
-                          elevation: 5,
-                          pressElevation: 10,
-                          label: Text('Custom',
-                              style: TextStyle(
-                                  color: isSelectedDated
-                                      ? Colors.white
-                                      : Colors.black)),
-                          selectedColor: Colors.purple,
-                          selected: isSelectedDated,
-                          onSelected: (value) async {
-                            if (value == true) {
-                              await selectAPeriod(await _selectDate(context),
-                                  await _selectDate(context));
-                              isSelectedDated = true;
-                              isSelectedWeekly = false;
-                              isSelectedMonthly = false;
-                              isAllHistorySelected = false;
-                              setState(() {});
-                            }
-                          },
-                        ),
-                      ],
-                    ),
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Last 30 Days',
+                            style: TextStyle(
+                              color: isSelectedMonthly
+                                  ? Colors.white
+                                  : Colors.black,
+                            )),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedMonthly,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            isSelectedMonthly = true;
+                            isSelectedWeekly = false;
+                            isSelectedDated = false;
+                            isAllHistorySelected = false;
+                            await selectAPeriod(
+                                DateTime.now()
+                                    .subtract(const Duration(days: 30)),
+                                DateTime.now());
+
+                            setState(() {});
+                          }
+                        },
+                      ),
+                      ChoiceChip(
+                        backgroundColor:
+                            const Color.fromARGB(255, 255, 255, 255),
+                        elevation: 5,
+                        pressElevation: 10,
+                        label: Text('Custom',
+                            style: TextStyle(
+                                color: isSelectedDated
+                                    ? Colors.white
+                                    : Colors.black)),
+                        selectedColor: Colors.purple,
+                        selected: isSelectedDated,
+                        onSelected: (value) async {
+                          if (value == true) {
+                            await selectAPeriod(await _selectDate(context),
+                                await _selectDate(context));
+                            isSelectedDated = true;
+                            isSelectedWeekly = false;
+                            isSelectedMonthly = false;
+                            isAllHistorySelected = false;
+                            setState(() {});
+                          }
+                        },
+                      ),
+                    ],
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
@@ -317,7 +313,6 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                   itemCount: selectiveSortedIncomes.length,
                                   itemBuilder: (context, index) {
                                     return (Container(
-                                      
                                         child: incomeTile(
                                             selectiveSortedIncomes[index]
                                                 ['amount'],
@@ -361,7 +356,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                         ],
                       ),
                       FloatingActionButton(
-                        backgroundColor: const Color.fromARGB(255, 206, 7, 7),
+                        backgroundColor:color1,
                         onPressed: () async {
                           myList.isNotEmpty
                               ? showSearch(
@@ -445,8 +440,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                       )),
                   Text('-$value ${pref.getString('Currency')}',
                       style: const TextStyle(
-                          color: Color.fromARGB(255, 170, 20, 9),
-                          fontWeight: FontWeight.bold)),
+                        color: Color.fromARGB(255, 170, 20, 9),
+                      )),
                   Text(
                       '${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                       style: const TextStyle(
@@ -537,8 +532,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                     )),
                 Text('+$value ${pref.getString('Currency')}',
                     style: const TextStyle(
-                        color: Color.fromARGB(255, 4, 112, 8),
-                        fontWeight: FontWeight.bold)),
+                      color: Color.fromARGB(255, 4, 112, 8),
+                    )),
                 Text('${dateTime.day}/${dateTime.month}/${dateTime.year % 100}',
                     style: const TextStyle(
                       color: Colors.black87,
