@@ -37,6 +37,7 @@ dependencies:
   hive: ^2.2.2
   hive_flutter: ^1.1.0
   intl: ^0.17.0
+  share_plus: ^4.0.10
   shared_preferences: ^2.0.15
   timezone: ^0.8.0
 

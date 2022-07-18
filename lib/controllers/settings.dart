@@ -5,6 +5,7 @@ import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/notifications.dart';
 import 'package:moneymanager/splash.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsMenu extends StatefulWidget {
@@ -21,7 +22,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
   }
 
   setSwitchValue() async {
-
     if (NotificationApi.pref.getBool('isOn') == null) {
       NotificationApi.pref.setBool('isOn', false);
       isSwitchOn = false;
@@ -48,18 +48,19 @@ class _SettingsMenuState extends State<SettingsMenu> {
       await NotificationApi.showScheduledNotification(
           time: Time(picked.hour, picked.minute));
 
-      DateTime tempDate = DateFormat("hh:mm").parse(
-          "${selectedTime.hour}:${selectedTime.minute}");
-      var dateFormat = DateFormat("h:mm a"); 
+      DateTime tempDate = DateFormat("hh:mm")
+          .parse("${selectedTime.hour}:${selectedTime.minute}");
+      var dateFormat = DateFormat("h:mm a");
 
       NotificationApi.pref.setBool('isOn', isSwitchOn);
 
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
           margin: const EdgeInsets.all(15),
           backgroundColor: const Color.fromARGB(255, 16, 141, 58),
-          content: Text('Reminder Set at  ${dateFormat.format(tempDate)}', textAlign: TextAlign.center)));
+          content: Text('Reminder Set at  ${dateFormat.format(tempDate)}',
+              textAlign: TextAlign.center)));
     } else {
       NotificationApi.cancelDailyotification(1);
       setState(() {
@@ -71,7 +72,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
   }
 
   @override
-  Widget build(BuildContext context) { 
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -88,9 +89,8 @@ class _SettingsMenuState extends State<SettingsMenu> {
             children: [
               TextSpan(
                   text: 'ettings',
-                  style: TextStyle(     
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700)),
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w700)),
             ],
           ),
         ),
@@ -161,7 +161,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
                         });
                       }
                     }
-                    
                   }),
             ),
             const Divider(
@@ -187,33 +186,35 @@ class _SettingsMenuState extends State<SettingsMenu> {
                               child: const Text("OK"))
                         ],
                         title: const Text('Contact Me'),
-                        content: ListView(                        
-                          children: const [
-                            Text(
-                              'Devoloped by\nIshaque Muhammed kannoth',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Divider(
-                              thickness: 1,
-                            ),
-                            Text('Email\nishaque.kannoth@gmail.com'),
-                            Divider(
-                              thickness: 1,
-                            ),
-                            Text('Github'),
-                            Text('https://github.com/ishaquekannoth'),
-                            Divider(
-                              thickness: 1,
-                            ),
-                            Text('Phone/Whatsapp\n+91-9747344535'),
-                            Divider(
-                              thickness: 1,
-                            ),
-                            Text('\nSpecial thanks to Shees&Rabeeh'),
-                            Divider(
-                              thickness: 1,
-                            ),
-                          ],
+                        content: SingleChildScrollView(
+                          child: Column(
+                            children: const [
+                              Text(
+                                'Devoloped by\nIshaque Muhammed kannoth',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Email\nishaque.kannoth@gmail.com'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Github'),
+                              Text('https://github.com/ishaquekannoth'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('Phone/Whatsapp\n+91-9747344535'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                              Text('\nSpecial thanks to Shees&Rabeeh'),
+                              Divider(
+                                thickness: 1,
+                              ),
+                            ],
+                          ),
                         ),
                       ));
                     });
@@ -242,14 +243,25 @@ class _SettingsMenuState extends State<SettingsMenu> {
                               child: const Text("OK"))
                         ],
                         title: const Text('About the App'),
-                        content: ListView(
-                          children: const [
-                            Text(
-                                'This Application has been devoloped for keeping your day today expenses and incomes on track.Though I have made a lot of efforts to make the app bug free,its still a lot likely to be filled with bugs since it has not been specifically gone through any testing phase..Please click on the Contact me button to report a bug or suggest your valuable opinions and suggestions...')
-                          ],
-                        ),
+                        content: const SingleChildScrollView(
+                            child: Text(
+                                'This Application has been devoloped for keeping your day today expenses and incomes on track.Though I have made a lot of efforts to make the app bug free,its still a lot likely to be filled with bugs since it has not been specifically gone through any testing phase..Please click on the Contact me button to report a bug or suggest your valuable opinions and suggestions...')),
                       ));
                     });
+              },
+            ),
+            const Divider(
+              thickness: 1,
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.share,
+                color: Colors.red,
+              ),
+              title: const Text('Share with Friends'),
+              onTap: () async {
+                Share.share(
+                    'https://play.google.com/store/apps/details?id=com.fouvty.MoneyIsh');
               },
             ),
           ],
