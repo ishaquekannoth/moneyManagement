@@ -100,11 +100,10 @@ class NotificationApi {
       var payload,
       required Time time}) async {
     var notificationDetails = await _notificationDetailsDaily();
-    print('Called scheduler');
     return _notifications.zonedSchedule(
         id,
         "Time's Up",
-        "Did you Update your Transactions Today?",
+        " Updated your Transactions Today?",
         scheduleDaily(Time(time.hour, time.minute)),
         notificationDetails,
         androidAllowWhileIdle: true,
@@ -117,8 +116,7 @@ class NotificationApi {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(tz.local, now.year, now.month, now.day,
         time.hour, time.minute, time.second);
-    print(now.toString());
-    print(scheduledDate.toString());
+   
     return scheduledDate.isBefore(now)
         ? scheduledDate.add(const Duration(days: 1))
         : scheduledDate;
@@ -126,6 +124,6 @@ class NotificationApi {
 
   static cancelDailyotification(int id) async {
     await _notifications.cancel(id);
-    print('Cancelled');
+    
   }
 }

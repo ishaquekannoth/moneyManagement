@@ -36,7 +36,14 @@ class _SplashScreenState extends State<SplashScreen> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         color: Colors.white,
-        child: Image.asset('Assets/images/loading.gif')),
+        child: Column(
+          children: [
+            Image.asset('Assets/images/loading.gif'),
+            const Text('\n\nMoneyIsh',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
+             const Text('\n\nVer 1.0.0')
+          ],
+        )),
+
     ));
   }
   Future<void> checkLoggedInStatus() async {

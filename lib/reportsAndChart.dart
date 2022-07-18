@@ -147,10 +147,10 @@ class _ReportsState extends State<Reports> {
       }
     }
     selectiveSortedIncomes.clear();
-    selectiveSortedIncomes.addAll(monthly);   
+    selectiveSortedIncomes.addAll(monthly);
     monthly.clear();
     selectedSortedIncomesTotal = 0;
-    for (var element in selectiveSortedIncomes) {     
+    for (var element in selectiveSortedIncomes) {
       selectedSortedIncomesTotal =
           selectedSortedIncomesTotal + element['amount'];
     }
@@ -163,8 +163,8 @@ class _ReportsState extends State<Reports> {
     }
     selectiveSortedExpenses.clear();
     selectiveSortedExpenses.addAll(monthly);
-     selectedSortedExpensesTotal = 0;
-    for (var element in selectiveSortedExpenses) {    
+    selectedSortedExpensesTotal = 0;
+    for (var element in selectiveSortedExpenses) {
       selectedSortedExpensesTotal =
           selectedSortedExpensesTotal + element['amount'];
     }
@@ -307,9 +307,7 @@ class _ReportsState extends State<Reports> {
                               isSelectedWeekly = false;
                               isSelectedMonthly = false;
                               isAllHistorySelected = false;
-                              setState(() {
-                             
-                              });
+                              setState(() {});
                             }
                           },
                         ),
@@ -335,7 +333,7 @@ class _ReportsState extends State<Reports> {
                           ]),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 55),
+                        padding: const EdgeInsets.symmetric(horizontal: 55),
                         height: 20,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
