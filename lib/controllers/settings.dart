@@ -21,8 +21,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
   }
 
   setSwitchValue() async {
-    //SharedPreferences pref = await SharedPreferences.getInstance();
-    // SharedPreferences pref = NotificationApi.pref;
 
     if (NotificationApi.pref.getBool('isOn') == null) {
       NotificationApi.pref.setBool('isOn', false);
@@ -55,7 +53,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
       var dateFormat = DateFormat("h:mm a"); 
 
       NotificationApi.pref.setBool('isOn', isSwitchOn);
-      // ignore: use_build_context_synchronously
+
       ScaffoldMessenger.of(context).showSnackBar( SnackBar(
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),

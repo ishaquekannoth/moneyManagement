@@ -62,6 +62,8 @@ class _ReportsState extends State<Reports> {
   double totalBalance = 0;
   double totalExpence = 0;
   double totalIncome = 0;
+  double selectedSortedIncomesTotal = 0;
+  double selectedSortedExpensesTotal = 0;
   String? currency;
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
@@ -145,8 +147,13 @@ class _ReportsState extends State<Reports> {
       }
     }
     selectiveSortedIncomes.clear();
-    selectiveSortedIncomes.addAll(monthly);
+    selectiveSortedIncomes.addAll(monthly);   
     monthly.clear();
+    selectedSortedIncomesTotal = 0;
+    for (var element in selectiveSortedIncomes) {     
+      selectedSortedIncomesTotal =
+          selectedSortedIncomesTotal + element['amount'];
+    }
 
     for (var element in expenseList.value) {
       if ((element['date'].isAfter(start.subtract(const Duration(days: 1)))) &&
@@ -156,6 +163,11 @@ class _ReportsState extends State<Reports> {
     }
     selectiveSortedExpenses.clear();
     selectiveSortedExpenses.addAll(monthly);
+     selectedSortedExpensesTotal = 0;
+    for (var element in selectiveSortedExpenses) {    
+      selectedSortedExpensesTotal =
+          selectedSortedExpensesTotal + element['amount'];
+    }
     setState(() {
       expenseCategoryMapper(expenseCat, selectiveSortedExpenses);
       incomeCategoryMapper(incomeCat, selectiveSortedIncomes);
@@ -174,14 +186,14 @@ class _ReportsState extends State<Reports> {
                 title: RichText(
                   text: const TextSpan(
                     text: 'A',
-                    style: TextStyle(          
+                    style: TextStyle(
                       color: Colors.red,
                       fontWeight: FontWeight.w600,
                     ),
                     children: [
                       TextSpan(
                           text: 'nalysis',
-                          style: TextStyle(                
+                          style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.w700)),
                     ],
@@ -190,8 +202,8 @@ class _ReportsState extends State<Reports> {
                 centerTitle: true,
               ),
               body: Container(
-                      height: MediaQuery.of(context).size.height,
-                      width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                width: MediaQuery.of(context).size.width,
                 color: Colors.white,
                 child: Column(
                   children: [
@@ -213,7 +225,8 @@ class _ReportsState extends State<Reports> {
                           isSelectedWeekly = false;
                           isSelectedDated = false;
                           isAllHistorySelected = true;
-                          await selectAPeriod(DateTime.utc(2020), DateTime.now());
+                          await selectAPeriod(
+                              DateTime.utc(2020), DateTime.now());
                           setState(() {});
                         }
                       },
@@ -294,7 +307,9 @@ class _ReportsState extends State<Reports> {
                               isSelectedWeekly = false;
                               isSelectedMonthly = false;
                               isAllHistorySelected = false;
-                              setState(() {});
+                              setState(() {
+                             
+                              });
                             }
                           },
                         ),
@@ -319,6 +334,16 @@ class _ReportsState extends State<Reports> {
                             ),
                           ]),
                     ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 55),
+                        height: 20,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('$selectedSortedIncomesTotal $currency'),
+                            Text('$selectedSortedExpensesTotal $currency')
+                          ],
+                        )),
                     Expanded(
                       child: TabBarView(
                         children: [
@@ -388,8 +413,8 @@ class _ReportsState extends State<Reports> {
       }
 
       PieChartSectionData pieChartItem = PieChartSectionData(
-        titleStyle:
-            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white,fontSize: 7),
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.w400, color: Colors.white, fontSize: 7),
         radius: 110,
         value: total,
         title:
@@ -418,8 +443,8 @@ class _ReportsState extends State<Reports> {
       PieChartSectionData pieChartItem = PieChartSectionData(
         titlePositionPercentageOffset: 0.5,
         radius: 110,
-        titleStyle:
-            const TextStyle(fontWeight: FontWeight.w400, color: Colors.white,fontSize: 7),
+        titleStyle: const TextStyle(
+            fontWeight: FontWeight.w400, color: Colors.white, fontSize: 7),
         value: total,
         title:
             '$category(${categoryMappedIncomes[category]?.toStringAsFixed(2)}%)\n$total$currency',
