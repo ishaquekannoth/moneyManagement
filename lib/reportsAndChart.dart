@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'dart:core';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
@@ -83,9 +85,6 @@ class _ReportsState extends State<Reports> {
         incomeList.value.add(element);
       }
     }
-    myList.notifyListeners();
-    expenseList.notifyListeners();
-    incomeList.notifyListeners();
     await getTotalBalance(myList.value);
     await incomeCategoryMapper(incomeCat, incomeList.value);
     await expenseCategoryMapper(expenseCat, expenseList.value);

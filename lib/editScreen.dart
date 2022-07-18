@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:moneymanager/controllers/category.dart';
@@ -11,8 +13,8 @@ class EditScreen extends StatefulWidget {
   final DateTime dateTime;
   final int id;
   final String category;
-  String type;
-  EditScreen(
+ final  String type;
+  const EditScreen(
       {Key? key,
       required this.value,
       required this.note,
@@ -285,7 +287,8 @@ class _EditScreenState extends State<EditScreen> {
                               await incomeCategoryAdder();
 
                               setState(() {});
-                              Navigator.of(context).pop();
+                                  if (!mounted) return;
+                               Navigator.of(context).pop();
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -348,8 +351,7 @@ class _EditScreenState extends State<EditScreen> {
           backgroundColor: type == 'Income' ? Colors.green : Colors.red,
           extendedTextStyle: const TextStyle(letterSpacing: 2, color: Colors.white),
           onPressed: () async {
-            if (_amount.text != null &&
-                _note.text.isNotEmpty &&
+            if (_note.text.isNotEmpty &&
                 double.parse(_amount.text) > 0.0 &&
                 scg != 'Cateogory Not Selected') {
               Dbhelper dbhelper = Dbhelper();

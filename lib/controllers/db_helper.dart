@@ -40,12 +40,9 @@ class Dbhelper {
     moneyBox.clear();
   }
 
-  Future<void> fetchSingleItem(int id) async {
-    var result = await Future.value(moneyBox.get(id));
-  }
 
   Future<void> removeSingleItem(int id) async {
-    var desiredkey;
+    var desiredkey=-1;
     moneyBox.toMap().forEach((key, value) {
       if (value['id'] == id) {
         desiredkey = key;
@@ -69,7 +66,7 @@ class Dbhelper {
       'category': category,
       'id':id
     };
-    var desiredkey;
+    var desiredkey=-1;
     moneyBox.toMap().forEach((key, value) {
       if (value['id'] == id) {
         desiredkey = key;

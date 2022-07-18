@@ -10,7 +10,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  String UserName = 'UserName';
   String name = '';
   @override
   void initState() {
@@ -51,10 +50,12 @@ class _SplashScreenState extends State<SplashScreen> {
     final String? status = pref.getString('UserName');
     if (status != null) {
       await Future.delayed(const Duration(seconds: 3));
+          if (!mounted) return;
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (conyext) => const MainDisplay()));
     } else {
       await Future.delayed(const Duration(seconds: 3));
+       if (!mounted) return;
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const FirstLogin()));
     }

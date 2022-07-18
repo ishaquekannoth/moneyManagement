@@ -285,6 +285,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                                 setState(() {
                                   category = null;
                                 });
+                               if (!mounted) return;
                                 Navigator.of(context).pop();
                               },
                               child: Row(
@@ -364,6 +365,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                             'Click here to Add an Income item',
                         payload: 'Data');
                   }
+                   if (!mounted) return;
                   Navigator.of(context).pop();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(

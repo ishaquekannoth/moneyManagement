@@ -321,7 +321,6 @@ class SearchScreen extends SearchDelegate<String> {
     sortMapByValue.forEach((key, value) => sortedList.add(value));
     myList.value.clear();
     myList.value.addAll(sortedList);
-    myList.notifyListeners();
   }
 
   SearchScreen() {
@@ -504,7 +503,6 @@ class SearchScreen extends SearchDelegate<String> {
                                 .whenComplete(() => getRawMap()).then((value) => query=query);
 
                             Navigator.of(context).pop();
-                            myList.notifyListeners();
                           },
                           child: const Text("OK"))
                     ],
@@ -598,7 +596,7 @@ class SearchScreen extends SearchDelegate<String> {
                               .removeSingleItem(id)
                               .whenComplete(() => getRawMap()).then((value) => query=query);
                           Navigator.of(context).pop();
-                          myList.notifyListeners();
+                         // myList.notifyListeners();
                         },
                         child: const Text("OK"))
                   ],

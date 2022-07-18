@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:moneymanager/displayer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,8 +14,8 @@ class FirstLogin extends StatefulWidget {
 class _FirstLoginState extends State<FirstLogin> {
   final TextEditingController _controller = TextEditingController();
 
-  String UserName = 'UserName';
-  String Currency = 'Currency';
+  String userName = 'UserName';
+  String currency = 'Currency';
   String setCurrency = 'INR';
 
   String name = '';
@@ -100,8 +102,9 @@ class _FirstLoginState extends State<FirstLogin> {
                         final pref = await SharedPreferences.getInstance();
                         name.trim();
                         if (name != '') {
-                          await pref.setString(UserName, name);
-                          await pref.setString(Currency, setCurrency);
+                          await pref.setString(userName, name);
+                          await pref.setString(currency, setCurrency);
+                              if (!mounted) return;
                           Navigator.of(context).pushReplacement(MaterialPageRoute(
                               builder: (ctx) => const MainDisplay()));
                         }

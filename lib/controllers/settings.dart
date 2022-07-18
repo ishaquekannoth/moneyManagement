@@ -53,7 +53,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
       var dateFormat = DateFormat("h:mm a");
 
       NotificationApi.pref.setBool('isOn', isSwitchOn);
-
+       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
@@ -127,6 +127,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
                                     SharedPreferences pref =
                                         await SharedPreferences.getInstance();
                                     await pref.clear();
+                                        if (!mounted) return;
                                     Navigator.of(context).pushAndRemoveUntil(
                                         MaterialPageRoute(
                                             builder: (context) =>

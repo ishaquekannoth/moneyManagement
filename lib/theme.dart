@@ -1,7 +1,7 @@
   import 'package:flutter/material.dart';
 
 
-      MaterialColor PrimaryMaterialColor = const MaterialColor(
+      MaterialColor primaryMaterialColor = const MaterialColor(
       4279567515,
       <int, Color>{
         50: Color.fromRGBO(
@@ -76,6 +76,6 @@
             const Color(0xff15049b),
           ),
         ),
-      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: PrimaryMaterialColor).copyWith(secondary: const Color(0xff15049b)),
+      ), colorScheme: ColorScheme.fromSwatch(primarySwatch: primaryMaterialColor).copyWith(secondary: const Color(0xff15049b)),
     );
   
