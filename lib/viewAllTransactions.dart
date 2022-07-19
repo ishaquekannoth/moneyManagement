@@ -281,6 +281,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                           children: [
                             selectiveSortedAll.isNotEmpty
                                 ? ListView.builder(
+                                  physics:  const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                                     shrinkWrap: true,
                                     itemCount: selectiveSortedAll.length,
                                     itemBuilder: (context, index) {
@@ -316,6 +317,7 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                 : Image.asset('Assets/images/noData.gif'),
                             selectiveSortedIncomes.isNotEmpty
                                 ? ListView.builder(
+                                  physics:  const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                                     itemCount: selectiveSortedIncomes.length,
                                     itemBuilder: (context, index) {
                                       return (Container(
