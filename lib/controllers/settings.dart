@@ -98,7 +98,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
-        child: ListView(
+        child: ListView(       
           children: [
             GestureDetector(
               child: ListTile(

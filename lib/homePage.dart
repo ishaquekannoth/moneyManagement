@@ -152,8 +152,6 @@ class _HomePageState extends State<HomePage> {
                     margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
                     decoration:  BoxDecoration(
                         gradient: LinearGradient(colors: [
-                          // Color.fromARGB(255, 247, 20, 152),
-                          // Colors.blueAccent
                           color1,color2
                         ]),
                         borderRadius: const BorderRadius.all(Radius.circular(25))),

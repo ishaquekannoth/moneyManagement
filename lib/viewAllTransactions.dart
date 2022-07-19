@@ -339,6 +339,8 @@ class _ViewAllTransactionsState extends State<ViewAllTransactions> {
                                   ),
                             selectiveSortedExpenses.isNotEmpty
                                 ? ListView.builder(
+                                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                                    physics:  const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
                                     itemCount: selectiveSortedExpenses.length,
                                     itemBuilder: (context, index) {
                                       return (Container(
