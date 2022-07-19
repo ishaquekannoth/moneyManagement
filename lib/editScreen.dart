@@ -125,12 +125,14 @@ class _EditScreenState extends State<EditScreen> {
               child: TextField(
                 controller: _amount,
                 inputFormatters: [
+                   LengthLimitingTextInputFormatter(10),
                   FilteringTextInputFormatter.allow(RegExp('[0-9.]')),
                 ],
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                     hintText: 'Put The Amount', border: InputBorder.none),
                 style: const TextStyle(),
+             
               ),
             ),
           ],
@@ -155,6 +157,10 @@ class _EditScreenState extends State<EditScreen> {
             Expanded(
               child: TextField(
                 controller: _note,
+                 inputFormatters: [
+                   LengthLimitingTextInputFormatter(10),
+                  FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                ],
                 decoration: const InputDecoration(
                     hintText: 'Description', border: InputBorder.none),
                 style: const TextStyle(),

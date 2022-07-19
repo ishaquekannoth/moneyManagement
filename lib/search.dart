@@ -297,14 +297,14 @@ import 'package:moneymanager/editScreen.dart';
 
 class SearchScreen extends SearchDelegate<String> {
   @override
-  String get searchFieldLabel => 'Category/Amount/Note/Date to search';
+  String get searchFieldLabel => 'Category/Amount/Note/Date';
 
   @override
   ThemeData appBarTheme(BuildContext context) {
     var superThemeData = super.appBarTheme(context);
     return superThemeData.copyWith(
       textTheme: superThemeData.textTheme.copyWith(
-        headline6: const TextStyle(fontSize: 14),
+        headline6: const TextStyle(fontSize: 12),
       ),
     );
   }

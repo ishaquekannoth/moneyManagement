@@ -112,12 +112,13 @@ class _AddTransactionsState extends State<AddTransactions> {
                   }
                 },
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                  FilteringTextInputFormatter.allow(RegExp("[0-9.]")),
+                   LengthLimitingTextInputFormatter(10),
                 ],
                 keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
                     hintText: 'Put The Amount', border: InputBorder.none),
-                
+                   
               ),
             ),
           ],
@@ -141,6 +142,10 @@ class _AddTransactionsState extends State<AddTransactions> {
             ),
             Expanded(
               child: TextField(
+                 inputFormatters: [
+                   LengthLimitingTextInputFormatter(10),
+                  FilteringTextInputFormatter.allow(RegExp('[a-zA-Z]')),
+                ],
                 decoration: const InputDecoration(
                     hintText: 'Short Note', border: InputBorder.none),
                
@@ -263,6 +268,7 @@ class _AddTransactionsState extends State<AddTransactions> {
                         title: const Text('Enter the category to add'),
                         actions: [
                           TextField(
+    
                               decoration: const InputDecoration(
                                   hintText: 'Category Name',
                                   border: InputBorder.none),
@@ -273,7 +279,8 @@ class _AddTransactionsState extends State<AddTransactions> {
                               },
                               inputFormatters: [
                                 FilteringTextInputFormatter.allow(
-                                    RegExp("[a-zA-Z]"))
+                                    RegExp("[a-zA-Z]")),
+                                    LengthLimitingTextInputFormatter(10),
                               ],
                               keyboardType: TextInputType.text,
                               textCapitalization: TextCapitalization.sentences),

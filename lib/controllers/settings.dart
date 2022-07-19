@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -66,7 +67,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
       setState(() {
         isSwitchOn = false;
       });
-      // SharedPreferences pref = await SharedPreferences.getInstance();
       NotificationApi.pref.setBool('isOn', isSwitchOn);
     }
   }
@@ -190,23 +190,29 @@ class _SettingsMenuState extends State<SettingsMenu> {
                         content: SingleChildScrollView(
                           child: Column(
                             children: const [
+                                Text(
+                                'Devoloped by',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               Text(
-                                'Devoloped by\nIshaque Muhammed kannoth',
+                                'Ishaque Muhammed kannoth',
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               Divider(
                                 thickness: 1,
                               ),
-                              Text('Email\nishaque.kannoth@gmail.com'),
+                               Text('Email',style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text('ishaque.kannoth@gmail.com'),
                               Divider(
                                 thickness: 1,
                               ),
-                              Text('Github'),
+                              Text('Github',style: TextStyle(fontWeight: FontWeight.bold),),
                               Text('https://github.com/ishaquekannoth'),
                               Divider(
                                 thickness: 1,
                               ),
-                              Text('Phone/Whatsapp\n+91-9747344535'),
+                              Text('Phone/Whatsapp',style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text('+91-9747344535'),
                               Divider(
                                 thickness: 1,
                               ),
