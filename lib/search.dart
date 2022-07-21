@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moneymanager/controllers/category.dart';
 import 'package:moneymanager/controllers/db_helper.dart';
 import 'package:moneymanager/editScreen.dart';
+import 'package:moneymanager/notifications.dart';
 
 // class BrutalSearch extends StatefulWidget {
 //   const BrutalSearch({Key? key}) : super(key: key);
@@ -312,7 +313,6 @@ class SearchScreen extends SearchDelegate<String> {
   Dbhelper helper = Dbhelper();
   CategoryBox category = CategoryBox();
   ValueNotifier<List> myList = ValueNotifier([]);
-
   Future<void> getRawMap() async {
     Map unsorted = await helper.fetchAllData();
     var sortMapByValue = Map.fromEntries(unsorted.entries.toList()
@@ -524,7 +524,7 @@ class SearchScreen extends SearchDelegate<String> {
                      
                           color: Colors.black87,
                        )),
-                  Text('-$value AED',
+                  Text('-$value ${NotificationApi.pref.getString('Currency')}',
                       style: const TextStyle(
                        
                           color: Color.fromARGB(255, 170, 20, 9),
@@ -618,7 +618,7 @@ class SearchScreen extends SearchDelegate<String> {
                          
                           color: Colors.black87,
                           )),
-                  Text('+$value AED',
+                  Text('+$value ${NotificationApi.pref.getString('Currency')}',
                       style: const TextStyle(
                           
                           color: Color.fromARGB(255, 4, 112, 8),

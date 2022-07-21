@@ -268,7 +268,7 @@ class _SettingsMenuState extends State<SettingsMenu> {
               title: const Text('Share with Friends'),
               onTap: () async {
                 Share.share(
-                    'https://play.google.com/store/apps/details?id=com.fouvty.MoneyIsh');
+                    'https://play.google.com/store/apps/details?id=com.ishaque.moneyish');
               },
             ),
           ],

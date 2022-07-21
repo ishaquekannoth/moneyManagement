@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             Image.asset('Assets/images/loading.gif'),
             const Text('\n\nMoneyIsh',style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold),),
-             const Text('\n\nVer 1.0.0')
+             const Text('\n\nVer 1.0.1')
           ],
         )),
 
